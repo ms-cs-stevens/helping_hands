@@ -1,2 +1,3 @@
 # DonationBank
-On today's date, we have a lot of generous people who are well settled and earning well and want to help the needy people or the homeless people who stay on the roads and struggle for their bread and butter. But unfortunately they don’t have a proper platform where they can make their donations, or find homeless people for that matter.  This Donation Bank application solves the problem. This app will act as a middleman between the Donors ( the generous people ) and the Recipients ( the needy people ). 
+Most of the people like to support charities or needy people, but we struggle to make donations as often as we should. Sometimes it is because of a lack of a platform to donate goods or some people don't have enough money to donate but can contribute by giving out goods.
+This Donation Bank application helps in solving these problems. This app will act as a middleman between the Donors (the generous people) and the Recipients (the needy people). 
