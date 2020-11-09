@@ -25,10 +25,13 @@
   "homepage": "https://github.com/SonaliChavan95/DonationBank#readme",
   "dependencies": {
     "axios": "^0.21.0",
+    "bootstrap": "^4.5.3",
     "express": "^4.17.1",
     "express-handlebars": "^5.2.0",
     "handlebars": "^4.7.6",
     "mongodb": "^3.6.2",
-    "nodemon": "^2.0.6"
-  }
+    "nodemon": "^2.0.6",
+    "nootstrap": "^1.0.0"
+  },
+  "devDependencies": {}
 }
