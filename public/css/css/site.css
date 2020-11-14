@@ -1,0 +1,44 @@
+
+h1 {
+	color: salmon;
+}
+
+h2 {
+	color: salmon;
+}
+
+.btnClass {
+	background-color: navy;
+	color: white;
+	border: 1px solid red;
+}
+
+.foot{
+	color: red;
+	font-size: 50pt;
+
+}
+
+.is-prime{
+	color: #00E676
+}
+
+.not-prime{
+	color: #FF3D00 
+}
+
+#fail{
+	color: #FF3D00 
+}
+
+.lab{
+	color: blueviolet
+}
+
+body{
+	background-color:white;
+}
+
+#demo{
+	color: orangered
+}
