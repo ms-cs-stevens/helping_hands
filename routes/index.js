@@ -1,10 +1,10 @@
-const initRoutes = (app) => {
-  app.get('/', (req, res) => {
-    res.render('home', {
-      titleName: "Donation"
-    });
-  });
+const home = require('./home');
+const express = require('express')
+const router = express.Router();
 
+
+const initRoutes = (app) => {
+  app.use('/', home);
   app.use('*', (req, res) => {
     res.status(404).render("custom_errors/error", {
       errorReason: "404 Not Found!!!",
