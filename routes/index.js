@@ -6,7 +6,7 @@ const express = require('express');
 const router = express.Router();
 
 const initRoutes = (app) => {
- 
+
   app.use('/', home);
   app.use('/about?', about); //this takes us to the about page
   app.use('/login?', login); //this takes us to the about page
