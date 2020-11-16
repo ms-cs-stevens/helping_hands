@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const static = express.static(__dirname + '/public');
+app.use(express.static('views/images')); 
 
 const configRoutes = require('./routes');
 const exphbs = require('express-handlebars');

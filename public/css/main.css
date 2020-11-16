@@ -5,3 +5,16 @@
     clear:both;
     padding-top:800px;
   } 
+
+#b_w_hands{
+width: 700px;
+border-radius: 50%;
+}
+
+.brow{
+    color: grey;
+}
+
+#hd{
+    color: #53c68c;
+}
