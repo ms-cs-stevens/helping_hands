@@ -4,7 +4,6 @@
   "description": "Most of the people like to support charities or needy people, but we struggle to make donations as often as we should. Sometimes it is because of a lack of a platform to donate goods or some people don't have enough money to donate but can contribute by giving out goods. This app helps us solve that problem. This app will act as a middleware between the donors and the needy people.",
   "main": "app.js",
   "scripts": {
-    "test": "nodemon app.js localhost:3000",
     "start": "nodemon app.js localhost:3000"
   },
   "repository": {
