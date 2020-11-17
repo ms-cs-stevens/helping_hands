@@ -4,6 +4,8 @@
     height: 150px;
     clear:both;
     padding-top:800px;
+    width: 100%;
+    bottom: 0;
   } 
 
 #b_w_hands{
@@ -17,4 +19,8 @@ border-radius: 50%;
 
 #hd{
     color: #53c68c;
+}
+
+.info-text {
+  margin-top: 7em;
 }
