@@ -1,13 +1,17 @@
 const home = require('./home');
-const auth1 = require('./auth1')
-const express = require('express')
+const auth1 = require('./auth1');
+const about = require('./about');
+const login = require('./login');
+const express = require('express');
 const router = express.Router();
 
 
 const initRoutes = (app) => {
  
   app.use('/', home);
-  app.use('/auth1', auth1)
+  app.use('/about?', about); //this takes us to the about page
+  app.use('/login?', login); //this takes us to the about page
+  app.use('/auth1', auth1);
   app.use('*', (req, res) => {
     res.status(404).render("custom_errors/error", {
       errorReason: "404 Not Found!!!",
