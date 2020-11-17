@@ -22,6 +22,11 @@
   "bugs": {
     "url": "https://github.com/SonaliChavan95/DonationBank/issues"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
   "homepage": "https://github.com/SonaliChavan95/DonationBank#readme",
   "dependencies": {
     "axios": "^0.21.0",
@@ -29,6 +34,11 @@
     "express-handlebars": "^5.2.0",
     "handlebars": "^4.7.6",
     "mongodb": "^3.6.2",
-    "nodemon": "^2.0.6"
+    "nodemon": "^2.0.6",
+    "prettier": "^2.1.2"
+  },
+  "devDependencies": {
+    "husky": "^4.3.0",
+    "pretty-quick": "^3.1.0"
   }
 }
