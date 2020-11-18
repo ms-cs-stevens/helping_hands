@@ -34,7 +34,6 @@
   "homepage": "https://github.com/helpinghands2/helping_hands#readme",
   "dependencies": {
     "axios": "^0.21.0",
-    "bootstrap": "^4.5.3",
     "express": "^4.17.1",
     "express-handlebars": "^5.2.0",
     "handlebars": "^4.7.6",
