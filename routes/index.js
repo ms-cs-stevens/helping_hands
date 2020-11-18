@@ -1,6 +1,8 @@
 const login = require('./login');
 
 module.exports = (app) => {
+  app.use('/login', login);
+
   // static paths
   app.get('/', async (req, res) => {
     res.status(200).render('static/home', { title: 'Home' });
@@ -11,8 +13,6 @@ module.exports = (app) => {
   app.get('/auth', async (req, res) => {
     res.status(200).render('auth/form', { title: 'Login/Signup' });
   });
-
-  app.use('/login', login);
 
   // unknown paths
   app.use('*', (req, res) => {
