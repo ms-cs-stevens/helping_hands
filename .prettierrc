@@ -1,0 +1,16 @@
+{
+  "tabWidth": 2,
+  "useTabs": false,
+  "singleQuote": true,
+  "overrides": [
+    {
+      "files": "*.handlebars",
+      "options": {
+        "singleQuote": false
+      }
+    }
+  ],
+  "trailingComma": "es5",
+  "semi": false,
+  "htmlWhitespaceSensitivity": "strict"
+}
