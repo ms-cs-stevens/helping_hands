@@ -1,0 +1,42 @@
+footer {
+  width: 100%;
+  bottom: 0;
+  position: fixed;
+}
+
+#b_w_hands {
+  width: 700px;
+  border-radius: 50%;
+}
+
+.brow {
+  color: grey;
+}
+
+#hd {
+  color: #53c68c;
+}
+
+.info-text {
+  margin-top: 7em;
+}
+
+.container {
+  margin-top: 7em;
+}
+
+.input1 {
+  margin-top: 70px;
+}
+
+.mat1 {
+  margin-top: 90px;
+}
+
+#hd12 {
+  text-align: left;
+}
+
+.info-text {
+  margin-top: 7em;
+}
