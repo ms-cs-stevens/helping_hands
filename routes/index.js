@@ -1,14 +1,14 @@
 const login = require('./login');
 
-const initRoutes = (app) => {
+module.exports = (app) => {
   // static paths
-  app.use('/', (req, res) => {
+  app.get('/', async (req, res) => {
     res.status(200).render('static/home', { title: 'Home' });
   });
-  app.use('/about', (req, res) => {
+  app.get('/about', async (req, res) => {
     res.status(200).render('static/about', { title: 'About' });
   });
-  app.use('/auth', (req, res) => {
+  app.get('/auth', async (req, res) => {
     res.status(200).render('auth/form', { title: 'Login/Signup' });
   });
 
@@ -22,5 +22,3 @@ const initRoutes = (app) => {
     });
   });
 };
-
-module.exports = initRoutes;

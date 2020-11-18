@@ -1,13 +1,15 @@
 const express = require('express');
 const app = express();
 const static = express.static(__dirname + '/public');
-const host = '0.0.0.0';
-const port = process.env.PORT || 3000;
+
 const configRoutes = require('./routes');
 const exphbs = require('express-handlebars');
 
-app.use(express.static('public/images'));
+const host = '0.0.0.0';
+const port = process.env.PORT || 3000;
+
 app.use('/public', static);
+app.use(express.static('public/images'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
