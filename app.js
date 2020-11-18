@@ -1,21 +1,22 @@
-const express = require('express')
-const app = express()
-const static = express.static(__dirname + '/public')
-const host = '0.0.0.0'
-const port = process.env.PORT || 3000
-const configRoutes = require('./routes')
-const exphbs = require('express-handlebars')
+const express = require('express');
+const app = express();
+const static = express.static(__dirname + '/public');
+const host = '0.0.0.0';
+const port = process.env.PORT || 3000;
+const configRoutes = require('./routes');
+const exphbs = require('express-handlebars');
 
-app.use(express.static('views/images'))
-app.use('/public', static)
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(express.static('public/images'));
+app.use('/public', static);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
-app.set('view engine', 'handlebars')
+app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
+app.set('view engine', 'handlebars');
 
-configRoutes(app)
+configRoutes(app);
+
 app.listen(port, host, () => {
-  console.log("We've now got a server!")
-  console.log('Your routes will be running on http://localhost:3000')
-})
+  console.log("We've now got a server!");
+  console.log('Your routes will be running on http://localhost:3000');
+});

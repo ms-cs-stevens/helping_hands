@@ -1,25 +1,26 @@
-const home = require('./home')
-const auth1 = require('./auth1')
-const about = require('./about')
-const login = require('./login')
-const d_login = require('./d_login')
-const r_login = require('./r_login')
-const express = require('express')
-const router = express.Router()
+const login = require('./login');
 
 const initRoutes = (app) => {
-  app.use('/', home)
-  app.use('/about', about) //this takes us to the about page
-  app.use('/login', login)
-  app.use('/d_login', d_login)
-  app.use('/r_login', r_login)
-  app.use('/auth1', auth1)
+  // static paths
+  app.use('/', (req, res) => {
+    res.status(200).render('static/home', { title: 'Home' });
+  });
+  app.use('/about', (req, res) => {
+    res.status(200).render('static/about', { title: 'About' });
+  });
+  app.use('/auth', (req, res) => {
+    res.status(200).render('auth/form', { title: 'Login/Signup' });
+  });
+
+  app.use('/login', login);
+
+  // unknown paths
   app.use('*', (req, res) => {
     res.status(404).render('customError', {
       errorReason: '404 Not Found!!!',
       message: "Page you're looking for is not found. Please check your URL",
-    })
-  })
-}
+    });
+  });
+};
 
-module.exports = initRoutes
+module.exports = initRoutes;
