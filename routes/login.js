@@ -5,14 +5,12 @@ router.get('/', async (req, res) => {
   try {
     res
       .status(200)
-      .render('auth/login', { title: 'Become a Donnor or Receiver' });
+      .render('auth/login', { title: 'Become a Donor or Receiver' });
   } catch (e) {
-    res
-      .status(404)
-      .render('customError', {
-        title: 'Not found',
-        errorReason: "Sorry, We can't find the link",
-      });
+    res.status(404).render('customError', {
+      title: 'Not found',
+      errorReason: "Sorry, We can't find the link",
+    });
   }
 });
 
