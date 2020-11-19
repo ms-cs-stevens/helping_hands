@@ -1,12 +1,17 @@
+body {
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
 footer {
-  width: 100%;
+  position: absolute;
   bottom: 0;
-  position: fixed;
+  font-size: 10px;
+  left: 12%;
 }
 
 #b_w_hands {
   width: 700px;
-  border-radius: 50%;
+  border-radius: 40%;
 }
 
 .brow {
@@ -17,12 +22,8 @@ footer {
   color: #53c68c;
 }
 
-.info-text {
-  margin-top: 7em;
-}
-
 .container {
-  margin-top: 7em;
+  margin-top: 3em;
 }
 
 .input1 {
@@ -35,8 +36,4 @@ footer {
 
 #hd12 {
   text-align: left;
-}
-
-.info-text {
-  margin-top: 7em;
 }
