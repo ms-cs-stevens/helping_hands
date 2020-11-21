@@ -1,4 +1,6 @@
 const login = require('./login');
+const data = require('../data');
+const donationData = data.donations;
 
 module.exports = (app) => {
   app.use('/login', login);
@@ -12,6 +14,14 @@ module.exports = (app) => {
   });
   app.get('/auth', async (req, res) => {
     res.status(200).render('auth/form', { title: 'Login/Signup' });
+  });
+
+  app.get('/browse', async (req, res) => {
+    let approvedDonations = await donationData.getApprovedDonations();
+    res.status(200).render('donations/browse', {
+      title: 'Browse',
+      donations: approvedDonations,
+    });
   });
 
   // unknown paths

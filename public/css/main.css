@@ -1,6 +1,7 @@
 @import './donations.css';
 @import './landing.css';
 @import './users.css';
+@import './browse.css';
 
 .footer {
   position: absolute;
