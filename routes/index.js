@@ -1,9 +1,9 @@
-const login = require('./login');
-const data = require('../data');
-const donationData = data.donations;
+const loginRoutes = require('./login');
+const donationRoutes = require('./donations');
 
 module.exports = (app) => {
-  app.use('/login', login);
+  app.use('/login', loginRoutes);
+  app.use('/donations', donationRoutes);
 
   // static paths
   app.get('/', async (req, res) => {
@@ -14,14 +14,6 @@ module.exports = (app) => {
   });
   app.get('/auth', async (req, res) => {
     res.status(200).render('auth/form', { title: 'Login/Signup' });
-  });
-
-  app.get('/browse', async (req, res) => {
-    let approvedDonations = await donationData.getApprovedDonations();
-    res.status(200).render('donations/browse', {
-      title: 'Browse',
-      donations: approvedDonations,
-    });
   });
 
   // unknown paths

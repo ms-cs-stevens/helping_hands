@@ -1,6 +1,6 @@
 module.exports = {
-  getApprovedDonations() {
-    let donations = [
+  allDonations() {
+    return [
       {
         _id: 1,
         name: 'Center Table',
@@ -133,7 +133,25 @@ module.exports = {
         updated_on: '11/10/2020',
       },
     ];
+  },
 
-    return donations.filter((d) => d.status == 'approved');
+  getApprovedDonations() {
+    return this.allDonations().filter((d) => d.status == 'approved');
+  },
+
+  getById(id) {
+    return {
+      _id: id,
+      name: 'Laptop bag',
+      quantity: 2,
+      description: 'Laptop Bag',
+      region: 'Jersey City',
+      zip_code: '07307',
+      images: [1, 2, 3],
+      donor_id: 1,
+      created_on: '11/01/2020',
+      status: 'approved',
+      updated_on: '11/10/2020',
+    };
   },
 };
