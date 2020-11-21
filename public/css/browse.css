@@ -1,4 +1,12 @@
 .col {
-  border: 1px solid #333;
+  margin-top: 2em;
+}
+
+.row a {
+  text-decoration: none;
+  color: #333;
+}
+
+.donation-details {
   margin-top: 2em;
 }
