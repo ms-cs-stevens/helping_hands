@@ -1,3 +1,7 @@
+@import './donations.css';
+@import './landing.css';
+@import './users.css';
+
 .footer {
   position: absolute;
   bottom: 0;
