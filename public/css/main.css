@@ -3,6 +3,10 @@
 @import './users.css';
 @import './browse.css';
 
+/* body {
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+} */
+
 .footer {
   font-size: 10px;
   width: 100%;
