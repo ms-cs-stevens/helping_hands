@@ -1,3 +1,6 @@
+@import './donations.css';
+@import './home.css';
+@import './users.css';
 @import './browse.css';
 
 .footer {

@@ -8,20 +8,6 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="donations">
-      <div class="row row-cols-4">
-        {{#each donations}}
-          <a href="/donations/{{_id}}">
-            <div class="col">
-              <img src="https://www.staples-3p.com/s7/is/image/Staples/sp82712270_sc7?wid=200&hei=250" alt="" srcset="">
-              <br>
-              {{name}}
-              ({{quantity}})
-            </div>
-          </a>
-        {{/each}}
-      </div>
-    </div>
+  <div class="listings">
+    {{> donation_listing donations=donations}}
   </div>
-</div>
