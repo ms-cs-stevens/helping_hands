@@ -1,9 +1,12 @@
 const loginRoutes = require('./login');
 const donationRoutes = require('./donations');
+const userRoutes = require('./users');
 
 module.exports = (app) => {
   app.use('/login', loginRoutes);
   app.use('/donations', donationRoutes);
+  //routes for respective profile pages
+  app.use('/user', userRoutes);
 
   // static paths
   app.get('/', async (req, res) => {
