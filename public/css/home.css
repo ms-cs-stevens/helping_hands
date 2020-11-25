@@ -1,0 +1,23 @@
+.view-more {
+  font-size: 1.3em;
+  text-decoration: none;
+}
+
+.recent-donations-heading {
+  font-weight: bold;
+  font-size: 1.6em;
+}
+
+.recent-donations a {
+  color: #333;
+  text-decoration: none;
+}
+
+.recent-donations a:hover {
+  color: #333;
+  text-decoration: none;
+}
+
+.recent-p {
+  font-weight: unset;
+}
