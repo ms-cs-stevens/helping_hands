@@ -12,8 +12,11 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/recent', async (req, res) => {
-  let approvedDonations = await donationData.getApprovedDonations().slice(0, 6);
-  res.status(200).json({ donations: approvedDonations });
+  let approvedDonations = await donationData.getApprovedDonations().slice(0, 8);
+  res.render('partials/donation_listing', {
+    layout: null,
+    donations: approvedDonations,
+  });
 });
 
 router.get('/:id', async (req, res) => {
