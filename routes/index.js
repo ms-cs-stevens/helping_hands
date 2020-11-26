@@ -1,7 +1,9 @@
-const login = require('./login');
+const loginRoutes = require('./login');
+const donationRoutes = require('./donations');
 
 module.exports = (app) => {
-  app.use('/login', login);
+  app.use('/login', loginRoutes);
+  app.use('/donations', donationRoutes);
 
   // static paths
   app.get('/', async (req, res) => {

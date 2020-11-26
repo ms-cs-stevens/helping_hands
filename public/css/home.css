@@ -1,0 +1,18 @@
+#home {
+  padding: 2em 0;
+}
+
+.view-more {
+  font-size: 1.3em;
+  text-decoration: none;
+}
+
+.recent-donations-heading {
+  margin: 3em 0;
+}
+
+#home .donation-card-link,
+#home .donation-card-link:hover {
+  color: #333;
+  text-decoration: none;
+}

@@ -1,0 +1,18 @@
+<div class="container-sm">
+  <div class="row row-cols-4">
+    {{#each donations}}
+      <div class="col">
+        <a class="donation-card-link" href="/donations/{{_id}}">
+          <div class="card mb-5 box-shadow">
+            <img class="card-img-top" src="https://www.staples-3p.com/s7/is/image/Staples/sp82712270_sc7?wid=200&hei=250" alt={{name}}>
+            <div class="card-body">
+              <p class="card-title">
+                {{name}}({{quantity}})
+              </p>
+            </div>
+          </div>
+        </a>
+      </div>
+    {{/each}}
+  </div>
+</div>
