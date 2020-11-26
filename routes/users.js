@@ -18,7 +18,7 @@ module.exports = (app) => {
     res.status(200).render('users/profile', donor);
   });
   //recipient
-  app.use('/recipient/:id', auth, async (req, res) => {
+  app.use('/recipient/:id', async (req, res) => {
     let recipient = userData.getUserById(req.params.id);
     recipient.title = `${recipient.firstName}'s Recipient Profile`;
     res.status(200).render('users/profile', recipient);
