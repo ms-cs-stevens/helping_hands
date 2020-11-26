@@ -11,17 +11,8 @@
   margin: 3em 0;
 }
 
-#home a {
+#home .donation-card-link,
+#home .donation-card-link:hover {
   color: #333;
-  text-decoration: none;
-}
-
-#home a:hover {
-  color: #333;
-  text-decoration: none;
-}
-
-#home a.view-all:hover {
-  color: #f8f8f8;
   text-decoration: none;
 }
