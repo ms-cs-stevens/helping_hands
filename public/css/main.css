@@ -1,0 +1,10 @@
+@import './donation.css';
+@import './home.css';
+@import './users.css';
+@import './browse.css';
+
+.footer {
+  font-size: 10px;
+  width: 100%;
+  text-align: center;
+}
