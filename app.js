@@ -29,6 +29,9 @@ const handlebarsInstance = exphbs.create({
   defaultLayout: 'main',
   // Specify helpers which are only registered on this instance.
   helpers: {
+    concat: (string1, string2) => {
+      return string1 + string2;
+    },
     asJSON: (obj, spacing) => {
       if (typeof spacing === 'number')
         return new Handlebars.SafeString(JSON.stringify(obj, null, spacing));
@@ -37,6 +40,29 @@ const handlebarsInstance = exphbs.create({
     },
   },
   partialsDir: ['views/partials/'],
+});
+
+app.use('/donations/:id/edit', (req, res, next) => {
+  if (req.body.method == 'patch') {
+    req.method = 'PATCH';
+  }
+  next();
+});
+
+app.use('/donations/:id/delete', (req, res, next) => {
+  req.method = 'DELETE';
+  next();
+});
+
+app.use('/', (req, res, next) => {
+  let authType =
+    req.session && req.session.user ? 'Authenticated' : 'Not-Authenticated';
+  console.log(
+    `[${new Date().toUTCString()}]: ${req.method} ${
+      req.originalUrl
+    } (${authType} User)`
+  );
+  next();
 });
 
 app.engine('handlebars', handlebarsInstance.engine);
