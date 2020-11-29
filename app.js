@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const session = require('express-session');
 const static = express.static(__dirname + '/public');
 const session = require('express-session');
 const mongoose = require('mongoose');
@@ -42,6 +43,27 @@ const handlebarsInstance = exphbs.create({
 app.engine('handlebars', handlebarsInstance.engine);
 
 app.set('view engine', 'handlebars');
+
+// Set session for application
+app.use(
+  session({
+    name: 'HelpingHands',
+    secret: process.env.SECRET_KEY || 'some secret string!',
+    saveUninitialized: true,
+    resave: false,
+  })
+);
+
+// Logging Middleware
+app.use(async (req, res, next) => {
+  let authType = req.session.user ? 'Authenticated' : 'Non-Authenticated';
+  console.log(
+    `[${new Date().toUTCString()}]: ${req.method} ${
+      req.originalUrl
+    } (${authType} User)`
+  );
+  next();
+});
 
 configRoutes(app);
 
