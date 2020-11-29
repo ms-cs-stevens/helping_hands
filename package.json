@@ -35,11 +35,13 @@
   "dependencies": {
     "axios": "^0.21.0",
     "bootstrap": "^4.5.3",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-handlebars": "^5.2.0",
     "handlebars": "^4.7.6",
     "jquery": "^3.5.1",
     "mongodb": "^3.6.2",
+    "mongoose": "^5.10.17",
     "nodemon": "^2.0.6"
   },
   "devDependencies": {
