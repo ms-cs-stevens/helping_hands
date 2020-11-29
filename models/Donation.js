@@ -31,12 +31,12 @@ const donationSchema = mongoose.Schema({
   },
   zipcode: {
     type: String,
-    // validate: {
-    //   validator: function (v) {
-    //     return String(v).length === 6;
-    //   },
-    //   message: 'Invalid Zipcode!',
-    // },
+    validate: {
+      validator: function (v) {
+        return v.length === 5;
+      },
+      message: 'Invalid Zipcode!',
+    },
   },
   created_on: { type: Date, default: Date.now },
   updated_on: { type: Date, default: Date.now },
