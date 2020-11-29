@@ -7,6 +7,7 @@ yarn-error.log*
 lerna-debug.log*
 yarn.lock
 package-lock.json
+variables.env
 
 yarn.lock
 package-json.lock

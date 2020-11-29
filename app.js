@@ -2,17 +2,29 @@ const express = require('express');
 const app = express();
 const session = require('express-session');
 const static = express.static(__dirname + '/public');
-
+const session = require('express-session');
+const mongoose = require('mongoose');
+const MongoStore = require('connect-mongo')(session);
 const configRoutes = require('./routes');
 const exphbs = require('express-handlebars');
-
-const host = '0.0.0.0';
-const port = process.env.PORT || 3000;
 
 app.use('/public', static);
 app.use(express.static('public/images'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+require('dotenv').config({ path: 'variables.env' });
+
+app.use(
+  session({
+    name: 'HelpingHands',
+    secret: process.env.SECRET,
+    key: process.env.KEY,
+    resave: false,
+    saveUninitialized: false,
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
+  })
+);
 
 const handlebarsInstance = exphbs.create({
   defaultLayout: 'main',
@@ -55,7 +67,5 @@ app.use(async (req, res, next) => {
 
 configRoutes(app);
 
-app.listen(port, host, () => {
-  console.log("We've now got a server!");
-  console.log('Your routes will be running on http://localhost:3000');
-});
+// done! we export it so we can start the site in start.js
+module.exports = app;
