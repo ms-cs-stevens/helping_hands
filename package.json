@@ -4,7 +4,8 @@
   "description": "Most of the people like to support charities or needy people, but we struggle to make donations as often as we should. Sometimes it is because of a lack of a platform to donate goods or some people don't have enough money to donate but can contribute by giving out goods. This app helps us solve that problem. This app will act as a middleware between the donors and the needy people.",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js localhost:3000"
+    "start": "node app.js",
+    "serve": "nodemon app.js localhost:3000"
   },
   "repository": {
     "type": "git",
@@ -34,13 +35,19 @@
   "homepage": "https://github.com/helpinghands2/helping_hands#readme",
   "dependencies": {
     "axios": "^0.21.0",
+    "bcryptjs": "^2.4.3",
     "bootstrap": "^4.5.3",
+    "connect-mongo": "^3.2.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-handlebars": "^5.2.0",
+    "express-session": "^1.17.1",
     "handlebars": "^4.7.6",
     "jquery": "^3.5.1",
     "mongodb": "^3.6.2",
-    "nodemon": "^2.0.6"
+    "mongoose": "^5.10.17",
+    "nodemon": "^2.0.6",
+    "validator": "^13.1.17"
   },
   "devDependencies": {
     "husky": "^4.3.0",
