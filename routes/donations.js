@@ -24,22 +24,43 @@ router.get('/recent', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
-  let id = req.params.id;
   try {
-    res.status(200).render('donations/show', {
-      donation: donationData.getById(id),
-      title: 'Donation',
-    });
+    let donation = await donationData.getById(req.params.id);
+    if (donation) {
+      res.status(200).render('donations/show', {
+        donation: donation,
+        title: 'Donation',
+      });
+    } else {
+      res.status(404).render('customError', {
+        title: 'Not found',
+        errorReason: 'Donation not found!',
+      });
+    }
   } catch (e) {
-    res.status(404).render('customError', {
-      title: 'Not found',
-      errorReason: "Sorry, We can't find the link",
+    res.status(500).render('customError', {
+      title: 'Internal Server Error',
+      errorReason: e,
     });
   }
 });
 
 router.post('/:id', async (req, res) => {
-  res.redirect('/donations/1');
+  try {
+    let { name, description, quantity, region, zipcode } = req.body;
+    let newDonation = await donationData.create(
+      name,
+      description,
+      quantity,
+      region,
+      zipcode,
+      req.session.user._id
+    );
+
+    res.redirect(`/donations/${newDonation._id}`);
+  } catch (e) {
+    res.json({ error: e });
+  }
 });
 
 router.get('/:id/edit', async (req, res) => {
@@ -72,7 +93,6 @@ router.patch('/:id/edit', async (req, res) => {
 router.delete('/:id/delete', async (req, res) => {
   let deleted = true;
   if (deleted) {
-    req.flash('info', 'Donation deleted successfully');
     res.redirect('/donations');
   }
 });

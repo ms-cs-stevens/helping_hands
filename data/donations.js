@@ -1,3 +1,7 @@
+const mongoose = require('mongoose');
+const Donation = mongoose.model('Donation');
+const { nanoid: nanoid } = require('nanoid');
+
 module.exports = {
   allDonations() {
     return [
@@ -139,19 +143,30 @@ module.exports = {
     return this.allDonations().filter((d) => d.status == 'approved');
   },
 
-  getById(id) {
-    return {
-      _id: id,
-      name: 'Laptop bag',
-      quantity: 2,
-      description: 'Laptop Bag',
-      region: 'Jersey City',
-      zip_code: '07307',
-      images: [1, 2, 3],
-      donor_id: 1,
-      created_on: '11/01/2020',
-      status: 'approved',
-      updated_on: '11/10/2020',
-    };
+  async getById(id) {
+    let donation = await Donation.findById(id).exec();
+    return donation;
+  },
+
+  async create(
+    name,
+    description,
+    quantity,
+    region,
+    zipcode,
+    donor,
+    status = 'submitted'
+  ) {
+    const donation = await new Donation({
+      _id: nanoid(),
+      name,
+      description,
+      quantity,
+      region,
+      zipcode,
+      donor,
+      status,
+    }).save();
+    return donation;
   },
 };

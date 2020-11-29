@@ -6,7 +6,10 @@ const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo')(session);
 const configRoutes = require('./routes');
 const exphbs = require('express-handlebars');
-
+const {
+  allowInsecurePrototypeAccess,
+} = require('@handlebars/allow-prototype-access');
+var handlebars = require('handlebars');
 app.use('/public', static);
 app.use(express.static('public/images'));
 app.use(express.json());
@@ -27,6 +30,8 @@ app.use(
 
 const handlebarsInstance = exphbs.create({
   defaultLayout: 'main',
+  // Fixes Access has been denied to resolve the property "name" because it is not an "own property" of its parent.
+  handlebars: allowInsecurePrototypeAccess(handlebars),
   // Specify helpers which are only registered on this instance.
   helpers: {
     concat: (string1, string2) => {
@@ -53,6 +58,9 @@ app.use('/donations/:id/delete', (req, res, next) => {
   req.method = 'DELETE';
   next();
 });
+
+// import all of our models
+require('./models/Donation');
 
 app.use('/', (req, res, next) => {
   let authType =
