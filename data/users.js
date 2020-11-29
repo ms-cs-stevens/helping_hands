@@ -6,10 +6,10 @@ let exportedMethods = {
     if (typeof email != 'string' || email.trim().length === 0)
       throw 'You must provide a valid email';
 
-    const user = users.filter((user) => user.email === email);
+    const user = users.find((user) => user.email === email);
 
-    if (user.length === 0) throw 'User not found';
-    return user[0];
+    if (!user) throw 'User not found';
+    return user;
   },
 };
 

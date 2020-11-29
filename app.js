@@ -36,7 +36,7 @@ app.set('view engine', 'handlebars');
 app.use(
   session({
     name: 'HelpingHands',
-    secret: 'some secret string!',
+    secret: process.env.SECRET_KEY || 'some secret string!',
     saveUninitialized: true,
     resave: false,
   })

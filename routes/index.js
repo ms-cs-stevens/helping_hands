@@ -1,7 +1,9 @@
+const authRoutes = require('./auth');
 const userRoutes = require('./users');
 const donationRoutes = require('./donations');
 
 module.exports = (app) => {
+  app.use('/auth', authRoutes);
   app.use('/users', userRoutes);
   app.use('/donations', donationRoutes);
 
