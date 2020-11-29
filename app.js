@@ -1,18 +1,18 @@
 const express = require('express');
 const app = express();
 const static = express.static(__dirname + '/public');
+const session = require('express-session');
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo')(session);
-const session = require('express-session');
 const configRoutes = require('./routes');
 const exphbs = require('express-handlebars');
-
-const host = '0.0.0.0';
 
 app.use('/public', static);
 app.use(express.static('public/images'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+require('dotenv').config({ path: 'variables.env' });
 
 app.use(
   session({
