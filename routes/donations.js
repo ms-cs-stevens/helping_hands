@@ -1,8 +1,10 @@
 const express = require('express');
+const app = require('../app');
 const donationData = require('../data/donations');
 
 const router = express.Router();
 
+// gets all approved donations for display
 router.get('/', async (req, res) => {
   let donations = await donationData.getApprovedDonations();
   res.status(200).render('donations/index', {
@@ -11,18 +13,41 @@ router.get('/', async (req, res) => {
   });
 });
 
+// gets most-recent 8 new donation creation form
+router.get('/recent', async (req, res) => {
+  let approvedDonations = await donationData.getApprovedDonations();
+  let recentDonations = approvedDonations && approvedDonations.slice(0, 8);
+  res.render('partials/donation_listing', {
+    layout: null,
+    donations: recentDonations,
+  });
+});
+
+// renders new donation creation form
 router.get('/new', async (req, res) => {
   res.render('donations/new', { title: 'New Donation' });
 });
 
-router.get('/recent', async (req, res) => {
-  let approvedDonations = await donationData.getApprovedDonations().slice(0, 8);
-  res.render('partials/donation_listing', {
-    layout: null,
-    donations: approvedDonations,
-  });
+// creates a new donation
+router.post('/:id', async (req, res) => {
+  try {
+    let { name, description, quantity, region, zipcode } = req.body;
+    let newDonation = await donationData.create(
+      name,
+      description,
+      quantity,
+      region,
+      zipcode,
+      req.session.user._id
+    );
+
+    res.redirect(`/donations/${newDonation._id}`);
+  } catch (e) {
+    res.json({ error: e });
+  }
 });
 
+// gets donation by id
 router.get('/:id', async (req, res) => {
   try {
     let donation = await donationData.getById(req.params.id);
@@ -45,24 +70,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.post('/:id', async (req, res) => {
-  try {
-    let { name, description, quantity, region, zipcode } = req.body;
-    let newDonation = await donationData.create(
-      name,
-      description,
-      quantity,
-      region,
-      zipcode,
-      req.session.user._id
-    );
-
-    res.redirect(`/donations/${newDonation._id}`);
-  } catch (e) {
-    res.json({ error: e });
-  }
-});
-
+// gets edit donation form
 router.get('/:id/edit', async (req, res) => {
   let donation = {
     _id: 1,
@@ -81,6 +89,7 @@ router.get('/:id/edit', async (req, res) => {
   res.render('donations/edit', { title: 'Edit Donation', donation: donation });
 });
 
+// edits the donation form
 router.patch('/:id/edit', async (req, res) => {
   let edited = false;
   if (edited) {
@@ -90,9 +99,12 @@ router.patch('/:id/edit', async (req, res) => {
   }
 });
 
+// deletes the donation from database
 router.delete('/:id/delete', async (req, res) => {
-  let deleted = true;
+  let deleted = donationData.delete(req.params.id);
   if (deleted) {
+    let deletedDonation = deleted.name;
+    console.log(`Donation '${deletedDonation}' was deleted successfully.`);
     res.redirect('/donations');
   }
 });

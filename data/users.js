@@ -1,4 +1,5 @@
-const users = require('../seed');
+const seed = require('../seed');
+const users = seed.users;
 
 let exportedMethods = {
   getUserByEmail(email) {
