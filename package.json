@@ -4,8 +4,7 @@
   "description": "Most of the people like to support charities or needy people, but we struggle to make donations as often as we should. Sometimes it is because of a lack of a platform to donate goods or some people don't have enough money to donate but can contribute by giving out goods. This app helps us solve that problem. This app will act as a middleware between the donors and the needy people.",
   "main": "app.js",
   "scripts": {
-    "start": "node start.js",
-    "serve": "nodemon start.js localhost:3000",
+    "start": "nodemon start.js localhost:3000",
     "seed": "node seed.js"
   },
   "repository": {
@@ -50,7 +49,8 @@
     "jquery": "^3.5.1",
     "mongodb": "^3.6.2",
     "mongoose": "^5.10.17",
-    "nanoid": "^3.1.18",
+    "mongoose-unique-validator": "^2.0.3",
+    "nanoid": "^3.1.20",
     "nodemon": "^2.0.6",
     "validator": "^13.1.17"
   },
