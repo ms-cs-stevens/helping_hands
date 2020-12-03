@@ -6,7 +6,7 @@ const userData = data.users;
 
 router.get('/login', async (req, res) => {
   if (req.session && req.session.user) {
-    req.flash('success', 'Logged in successfully!');
+    req.flash('success', 'Already logged in!');
     return res.redirect('/');
   } else {
     res.render('auth/login', {
@@ -30,7 +30,7 @@ router.post('/login', async (req, res) => {
         profession: user.profession,
         bio: user.bio,
       };
-
+      req.flash('success', 'Logged in successfully!');
       res.redirect('/');
     } else {
       res.status(401).render('auth/login', {

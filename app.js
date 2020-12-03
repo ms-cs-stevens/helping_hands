@@ -28,8 +28,14 @@ const handlebarsInstance = exphbs.create({
     concat: (string1, string2) => {
       return string1 + string2;
     },
-    getKey: (obj) => {
-      return Object.keys(obj);
+    dateToString: (date) => {
+      let options = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      };
+      return date.toLocaleDateString(undefined, options);
     },
     asJSON: (obj, spacing) => {
       if (typeof spacing === 'number')

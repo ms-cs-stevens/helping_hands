@@ -8,7 +8,7 @@
           <p>Description: {{donation.description}}</p>
           <p>Region: {{donation.region}}</p>
           <p>Zipcode: {{donation.zipcode}}</p>
-          <p>Donated On: {{donation.created_on}}</p>
+          <p>Donated On: {{dateToString donation.createdAt}}</p>
           <a class="btn btn-success" href="/donations/{{donation._id}}/edit">Edit</a>
           <a class="btn btn-danger" href="/donations/{{donation._id}}/delete">Delete</a>
         </div>

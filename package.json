@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node start.js",
-    "serve": "nodemon start.js localhost:3000"
+    "serve": "nodemon start.js localhost:3000",
+    "seed": "node seed.js"
   },
   "repository": {
     "type": "git",

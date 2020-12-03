@@ -1,11 +1,10 @@
-const mongoose = require('mongoose');
-const Donation = mongoose.model('Donation');
+const { Donation } = require('../models');
 const { nanoid: nanoid } = require('nanoid');
 
 module.exports = {
   async allDonations() {
     // sort all the donations by created_on date
-    return await Donation.find().sort({ created_on: 'desc' });
+    return await Donation.find().sort({ createdAt: 'desc' });
   },
 
   async getApprovedDonations() {
@@ -28,7 +27,7 @@ module.exports = {
     donor,
     status = 'submitted'
   ) {
-    const donation = await new Donation({
+    const donation = await Donation.create({
       _id: nanoid(),
       name,
       description,
@@ -37,7 +36,7 @@ module.exports = {
       zipcode,
       donor,
       status,
-    }).save();
+    });
     return donation;
   },
 
