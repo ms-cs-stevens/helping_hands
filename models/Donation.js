@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
+const { nanoid } = require('nanoid');
 mongoose.Promise = global.Promise;
 
 const donationSchema = mongoose.Schema(
   {
-    _id: { type: String },
+    _id: { type: String, default: () => nanoid() },
     name: {
       type: String,
       required: 'You must supply a name',

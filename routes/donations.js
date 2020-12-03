@@ -30,7 +30,7 @@ router.get('/new', async (req, res) => {
 });
 
 // creates a new donation
-router.post('/:id', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     let { name, description, quantity, region, zipcode } = req.body;
     let newDonation = await donationData.create(
@@ -43,9 +43,11 @@ router.post('/:id', async (req, res) => {
     );
 
     req.flash('success', 'Donation Created Successfully!!');
+
     res.redirect(`/donations/${newDonation._id}`);
   } catch (e) {
-    res.json({ error: e });
+    req.flash('danger', e.message);
+    res.redirect(`/donations/new`, { donation: newDonation });
   }
 });
 
@@ -91,7 +93,7 @@ router.get('/:id/edit', async (req, res) => {
 });
 
 // edits the donation form
-router.patch('/:id/edit', async (req, res) => {
+router.patch('/:id/update', async (req, res) => {
   let id = req.params.id;
   let donationInfo = req.body;
   let updatedObject = {};

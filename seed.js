@@ -1,3 +1,21 @@
+const mongoose = require('mongoose');
+// import environmental variables from our variables.env file
+require('dotenv').config({ path: 'variables.env' });
+
+// Connect to our Database and handle any bad connections // move to another file later
+mongoose.connect(process.env.DATABASE, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+  useCreateIndex: true,
+});
+mongoose.Promise = global.Promise; // Tell Mongoose to use ES6 promises
+mongoose.connection.on('error', (err) => {
+  console.error(`🙅 🚫 🙅 🚫 🙅 🚫 🙅 🚫 → ${err.message}`);
+});
+
+// READY?! Let's go!
+
 const Donation = require('./models/Donation');
 const { nanoid: nanoid } = require('nanoid');
 
@@ -58,6 +76,7 @@ let donations = [
       'A center table with a glass top. Used but in a good condition.',
     region: 'Jersey City',
     donor: 1,
+    zipcode: '07307',
     status: 'submitted',
   },
   {
@@ -66,7 +85,7 @@ let donations = [
     quantity: 1,
     description: 'Cushioned Chairs set of 4.',
     region: 'Jersey City',
-    zip_code: '07307',
+    zipcode: '07307',
     donor: 1,
     status: 'approved',
   },
@@ -76,7 +95,7 @@ let donations = [
     quantity: 4,
     description: 'Hydraulic Office Chairs with head rest',
     region: 'Jersey City',
-    zip_code: '07307',
+    zipcode: '07307',
     donor: 1,
     status: 'approved',
   },
@@ -86,7 +105,7 @@ let donations = [
     quantity: 4,
     description: 'Twin bed with mattress',
     region: 'Jersey City',
-    zip_code: '07307',
+    zipcode: '07307',
     donor: 1,
     status: 'submitted',
   },
@@ -96,7 +115,7 @@ let donations = [
     quantity: 3,
     description: 'Table lamp with bulbs',
     region: 'Jersey City',
-    zip_code: '07307',
+    zipcode: '07307',
     donor: 1,
     status: 'approved',
   },
@@ -106,7 +125,7 @@ let donations = [
     quantity: 6,
     description: 'Bed Bath and Beyond area rug 37 X 60',
     region: 'Jersey City',
-    zip_code: '07307',
+    zipcode: '07307',
     donor: 1,
     status: 'approved',
   },
@@ -116,7 +135,7 @@ let donations = [
     quantity: 8,
     description: 'Utopia Twin XL comforter',
     region: 'Jersey City',
-    zip_code: '07307',
+    zipcode: '07307',
     donor: 1,
     status: 'approved',
   },
@@ -126,7 +145,7 @@ let donations = [
     quantity: 3,
     description: 'Leather winter boots',
     region: 'Jersey City',
-    zip_code: '07307',
+    zipcode: '07307',
     donor: 1,
     status: 'submitted',
   },
@@ -136,7 +155,7 @@ let donations = [
     quantity: 10,
     description: 'BedSheet',
     region: 'Jersey City',
-    zip_code: '07307',
+    zipcode: '07307',
     donor: 1,
     status: 'approved',
   },
@@ -146,12 +165,18 @@ let donations = [
     quantity: 2,
     description: 'Laptop Bag',
     region: 'Jersey City',
-    zip_code: '07307',
+    zipcode: '07307',
     donor: 1,
     status: 'submitted',
   },
 ];
 
-Donation.create(donations);
+async function createDonations() {
+  const createdDonations = await Donation.create(donations);
+  setTimeout(() => {
+    console.log(`${createdDonations.length} donations created !!`);
+    process.exit();
+  }, 1000);
+}
 
-// module.exports = users;
+createDonations();

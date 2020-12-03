@@ -1,5 +1,4 @@
 const { Donation } = require('../models');
-const { nanoid: nanoid } = require('nanoid');
 
 module.exports = {
   async allDonations() {
@@ -27,8 +26,7 @@ module.exports = {
     donor,
     status = 'submitted'
   ) {
-    const donation = await Donation.create({
-      _id: nanoid(),
+    let donationObj = {
       name,
       description,
       quantity,
@@ -36,8 +34,10 @@ module.exports = {
       zipcode,
       donor,
       status,
-    });
-    return donation;
+    };
+
+    const newDonation = await Donation.create(donationObj);
+    return newDonation;
   },
 
   async delete(id) {

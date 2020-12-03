@@ -49,7 +49,7 @@ app.use(async (req, res, next) => {
   next();
 });
 
-app.use('/donations/:id/edit', (req, res, next) => {
+app.use('/donations/:id/update', (req, res, next) => {
   if (req.body.method == 'patch') {
     req.method = 'PATCH';
   }
