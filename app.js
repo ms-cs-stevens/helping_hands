@@ -1,51 +1,19 @@
 const express = require('express');
 const app = express();
 const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const flash = require('express-flash');
 const static = express.static(__dirname + '/public');
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo')(session);
 const configRoutes = require('./routes');
-const exphbs = require('express-handlebars');
-const {
-  allowInsecurePrototypeAccess,
-} = require('@handlebars/allow-prototype-access');
-const handlebars = require('handlebars');
-const cookieParser = require('cookie-parser');
-const flash = require('express-flash');
-require('dotenv').config({ path: 'variables.env' });
+const { handlebarsInstance } = require('./helpers/handlebar');
 
+require('dotenv').config({ path: 'variables.env' });
 app.use('/public', static);
 app.use(express.static('public/images'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-const handlebarsInstance = exphbs.create({
-  defaultLayout: 'main',
-  // Fixes Access has been denied to resolve the property "name" because it is not an "own property" of its parent.
-  handlebars: allowInsecurePrototypeAccess(handlebars),
-  // Specify helpers which are only registered on this instance.
-  helpers: {
-    concat: (string1, string2) => {
-      return string1 + string2;
-    },
-    dateToString: (date) => {
-      let options = {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      };
-      return date.toLocaleDateString(undefined, options);
-    },
-    asJSON: (obj, spacing) => {
-      if (typeof spacing === 'number')
-        return new Handlebars.SafeString(JSON.stringify(obj, null, spacing));
-
-      return new Handlebars.SafeString(JSON.stringify(obj));
-    },
-  },
-  partialsDir: ['views/partials/'],
-});
 
 // populates req.cookies with any cookies that came along with the request
 app.use(cookieParser('secret'));
