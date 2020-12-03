@@ -12,6 +12,8 @@ module.exports = (app) => {
     res.status(200).render('static/home', {
       title: 'Home',
       authenticated: req.session.user ? true : false,
+      message: req.flash('success'),
+      sessionMessage: res.locals.sessionFlash,
     });
   });
   app.get('/about', async (req, res) => {

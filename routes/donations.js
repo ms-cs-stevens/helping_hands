@@ -1,5 +1,4 @@
 const express = require('express');
-const app = require('../app');
 const donationData = require('../data/donations');
 
 const router = express.Router();
@@ -10,16 +9,18 @@ router.get('/', async (req, res) => {
   res.status(200).render('donations/index', {
     title: 'Browse',
     donations: donations,
+    message: req.flash(),
   });
 });
 
 // gets most-recent 8 new donation creation form
 router.get('/recent', async (req, res) => {
   let approvedDonations = await donationData.getApprovedDonations();
-  let recentDonations = approvedDonations && approvedDonations.slice(0, 8);
+  let recentDonations = approvedDonations && approvedDonations.slice(0, 4);
   res.render('partials/donation_listing', {
     layout: null,
     donations: recentDonations,
+    showViewButton: true,
   });
 });
 
@@ -41,6 +42,7 @@ router.post('/:id', async (req, res) => {
       req.session.user._id
     );
 
+    req.flash('success', 'Donation Created Successfully!!');
     res.redirect(`/donations/${newDonation._id}`);
   } catch (e) {
     res.json({ error: e });
@@ -55,6 +57,7 @@ router.get('/:id', async (req, res) => {
       res.status(200).render('donations/show', {
         donation: donation,
         title: 'Donation',
+        message: req.flash('success'),
       });
     } else {
       res.status(404).render('customError', {
@@ -72,40 +75,116 @@ router.get('/:id', async (req, res) => {
 
 // gets edit donation form
 router.get('/:id/edit', async (req, res) => {
-  let donation = {
-    _id: 1,
-    name: 'Center Table',
-    quantity: 4,
-    description:
-      'A center table with a glass top. Used but in a good condition.',
-    region: 'Jersey City',
-    zip_code: '07307',
-    images: [1, 2, 3],
-    donor_id: 1,
-    created_on: '11/01/2020',
-    status: 'rejected',
-    updated_on: '11/10/2020',
-  };
-  res.render('donations/edit', { title: 'Edit Donation', donation: donation });
+  try {
+    let donation = await donationData.getById(req.params.id);
+    if (!donation) throw 'Donation not found!';
+    res.render('donations/edit', {
+      title: 'Edit Donation',
+      donation: donation,
+    });
+  } catch (error) {
+    res.status(404).render('customError', {
+      title: 'Not found',
+      errorReason: error,
+    });
+  }
 });
 
 // edits the donation form
 router.patch('/:id/edit', async (req, res) => {
-  let edited = false;
-  if (edited) {
-    res.redirect('/1');
+  let id = req.params.id;
+  let donationInfo = req.body;
+  let updatedObject = {};
+  try {
+    let donation = await donationData.getById(id);
+    if (donationInfo.name && donationInfo.name !== donation.name) {
+      updatedObject.name = donationInfo.name;
+    }
+    if (
+      donationInfo.description &&
+      donationInfo.description !== donation.description
+    ) {
+      updatedObject.description = donationInfo.description;
+    }
+
+    if (donationInfo.quantity && donationInfo.quantity !== donation.quantity) {
+      updatedObject.quantity = donationInfo.quantity;
+    }
+
+    if (donationInfo.region && donationInfo.region !== donation.region) {
+      updatedObject.region = donationInfo.region;
+    }
+
+    if (donationInfo.zipcode && donationInfo.zipcode !== donation.zipcode) {
+      updatedObject.zipcode = donationInfo.zipcode;
+    }
+  } catch (e) {
+    res.status(404).json({ error: 'Donation not found' });
+    return;
+  }
+  if (Object.keys(updatedObject).length > 0) {
+    try {
+      const updatedDonation = await donationData.updateDonation(
+        id,
+        updatedObject
+      );
+      if (updatedDonation) {
+        req.flash('success', 'Donation updated successfully');
+        res.redirect(`/donations/${id}`);
+      }
+    } catch (e) {
+      res.status(500).json({ error: e });
+    }
   } else {
-    res.json({ message: 'inside put' });
+    res.status(400).json({
+      error:
+        'No fields have been changed from their inital values, so no update has occurred',
+    });
   }
 });
 
 // deletes the donation from database
 router.delete('/:id/delete', async (req, res) => {
-  let deleted = donationData.delete(req.params.id);
+  let deleted = await donationData.delete(req.params.id);
   if (deleted) {
-    let deletedDonation = deleted.name;
-    console.log(`Donation '${deletedDonation}' was deleted successfully.`);
+    let deletedDonationName = deleted.name;
+    req.flash(
+      'success',
+      `Donation '${deletedDonationName}' was deleted successfully.`
+    );
     res.redirect('/donations');
+  }
+});
+
+router.patch('/:id/approve', async (req, res) => {
+  let id = req.params.id;
+  let updatedObject = { status: 'approved' };
+  try {
+    let donation = await donationData.getById(id);
+    if (!donation) throw 'Donation Not found';
+    const updatedDonation = await donationData.updateDonation(
+      id,
+      updatedObject
+    );
+    res.json({ message: updatedDonation.status });
+  } catch (error) {
+    res.json({ error: error });
+  }
+});
+
+router.patch('/:id/reject', async (req, res) => {
+  let id = req.params.id;
+  let updatedObject = { status: 'rejected' };
+  try {
+    let donation = await donationData.getById(id);
+    if (!donation) throw 'Donation Not found';
+    const updatedDonation = await donationData.updateDonation(
+      id,
+      updatedObject
+    );
+    res.json({ message: updatedDonation.status });
+  } catch (error) {
+    res.json({ error: error });
   }
 });
 

@@ -9,13 +9,40 @@ const exphbs = require('express-handlebars');
 const {
   allowInsecurePrototypeAccess,
 } = require('@handlebars/allow-prototype-access');
-var handlebars = require('handlebars');
+const handlebars = require('handlebars');
+const cookieParser = require('cookie-parser');
+const flash = require('express-flash');
+require('dotenv').config({ path: 'variables.env' });
+
 app.use('/public', static);
 app.use(express.static('public/images'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-require('dotenv').config({ path: 'variables.env' });
+const handlebarsInstance = exphbs.create({
+  defaultLayout: 'main',
+  // Fixes Access has been denied to resolve the property "name" because it is not an "own property" of its parent.
+  handlebars: allowInsecurePrototypeAccess(handlebars),
+  // Specify helpers which are only registered on this instance.
+  helpers: {
+    concat: (string1, string2) => {
+      return string1 + string2;
+    },
+    getKey: (obj) => {
+      return Object.keys(obj);
+    },
+    asJSON: (obj, spacing) => {
+      if (typeof spacing === 'number')
+        return new Handlebars.SafeString(JSON.stringify(obj, null, spacing));
+
+      return new Handlebars.SafeString(JSON.stringify(obj));
+    },
+  },
+  partialsDir: ['views/partials/'],
+});
+
+// populates req.cookies with any cookies that came along with the request
+app.use(cookieParser('secret'));
 
 app.use(
   session({
@@ -28,54 +55,14 @@ app.use(
   })
 );
 
-const handlebarsInstance = exphbs.create({
-  defaultLayout: 'main',
-  // Fixes Access has been denied to resolve the property "name" because it is not an "own property" of its parent.
-  handlebars: allowInsecurePrototypeAccess(handlebars),
-  // Specify helpers which are only registered on this instance.
-  helpers: {
-    concat: (string1, string2) => {
-      return string1 + string2;
-    },
-    asJSON: (obj, spacing) => {
-      if (typeof spacing === 'number')
-        return new Handlebars.SafeString(JSON.stringify(obj, null, spacing));
+app.use(flash());
 
-      return new Handlebars.SafeString(JSON.stringify(obj));
-    },
-  },
-  partialsDir: ['views/partials/'],
-});
-
-app.use('/donations/:id/edit', (req, res, next) => {
-  if (req.body.method == 'patch') {
-    req.method = 'PATCH';
-  }
+app.use(function (req, res, next) {
+  // if there's a flash message in the session request, make it available in the response, then delete it
+  res.locals.sessionFlash = req.session.sessionFlash;
+  delete req.session.sessionFlash;
   next();
 });
-
-app.use('/donations/:id/delete', (req, res, next) => {
-  req.method = 'DELETE';
-  next();
-});
-
-// import all of our models
-require('./models/Donation');
-
-app.use('/', (req, res, next) => {
-  let authType =
-    req.session && req.session.user ? 'Authenticated' : 'Not-Authenticated';
-  console.log(
-    `[${new Date().toUTCString()}]: ${req.method} ${
-      req.originalUrl
-    } (${authType} User)`
-  );
-  next();
-});
-
-app.engine('handlebars', handlebarsInstance.engine);
-
-app.set('view engine', 'handlebars');
 
 // Logging Middleware
 app.use(async (req, res, next) => {
@@ -87,6 +74,32 @@ app.use(async (req, res, next) => {
   );
   next();
 });
+
+app.use('/donations/:id/edit', (req, res, next) => {
+  if (req.body.method == 'patch') {
+    req.method = 'PATCH';
+  }
+  next();
+});
+
+app.use('/donations/:id/approve', (req, res, next) => {
+  req.method = 'PATCH';
+  next();
+});
+
+app.use('/donations/:id/reject', (req, res, next) => {
+  req.method = 'PATCH';
+  next();
+});
+
+app.use('/donations/:id/delete', (req, res, next) => {
+  req.method = 'DELETE';
+  next();
+});
+
+app.engine('handlebars', handlebarsInstance.engine);
+
+app.set('view engine', 'handlebars');
 
 configRoutes(app);
 

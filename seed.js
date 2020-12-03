@@ -3,7 +3,7 @@ module.exports = {
     {
       // admin user
       _id: 1,
-      email: 'masterdetective123@gmail.com',
+      email: 'test1@gmail.com',
       firstName: 'Sherlock',
       lastName: 'Holmes',
       gender: 'Male',

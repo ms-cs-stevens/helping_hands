@@ -30,10 +30,10 @@ const donationSchema = mongoose.Schema({
     default: 'pending',
   },
   zipcode: {
-    type: Number,
+    type: String,
     validate: {
       validator: function (v) {
-        return RegExp(/[0-9]{5}/g).test(v);
+        return v.length == 5;
       },
       message: 'Invalid Zipcode!',
     },
