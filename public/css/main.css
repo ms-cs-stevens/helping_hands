@@ -8,3 +8,7 @@
   width: 100%;
   text-align: center;
 }
+
+.flash-message {
+  margin-top: 10px;
+}

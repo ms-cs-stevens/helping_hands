@@ -1,5 +1,5 @@
-const donation = require('./Donation');
+const Donation = require('./Donation');
 
 module.exports = {
-  Donation: donation,
+  Donation,
 };

@@ -1,157 +1,68 @@
+const { Donation } = require('../models');
+
 module.exports = {
-  allDonations() {
-    return [
-      {
-        _id: 1,
-        name: 'Center Table',
-        quantity: 4,
-        description:
-          'A center table with a glass top. Used but in a good condition.',
-        region: 'Jersey City',
-        zip_code: '07307',
-        images: [1, 2, 3],
-        donor_id: 1,
-        created_on: '11/01/2020',
-        status: 'rejected',
-        updated_on: '11/10/2020',
-      },
-      {
-        _id: 2,
-        name: 'Chairs',
-        quantity: 1,
-        description: 'Cushioned Chairs set of 4.',
-        region: 'Jersey City',
-        zip_code: '07307',
-        images: [1, 2, 3],
-        donor_id: 1,
-        created_on: '11/01/2020',
-        status: 'approved',
-        updated_on: '11/10/2020',
-      },
-      {
-        _id: 3,
-        name: 'Office Chairs',
-        quantity: 4,
-        description: 'Hydraulic Office Chairs with head rest',
-        region: 'Jersey City',
-        zip_code: '07307',
-        images: [1, 2, 3],
-        donor_id: 1,
-        created_on: '11/01/2020',
-        status: 'approved',
-        updated_on: '11/10/2020',
-      },
-      {
-        _id: 4,
-        name: 'Bed',
-        quantity: 4,
-        description: 'Twin bed with mattress',
-        region: 'Jersey City',
-        zip_code: '07307',
-        images: [1, 2, 3],
-        donor_id: 1,
-        created_on: '11/01/2020',
-        status: 'approved',
-        updated_on: '11/10/2020',
-      },
-      {
-        _id: 5,
-        name: 'Table Lamp',
-        quantity: 3,
-        description: 'Table lamp with bulbs',
-        region: 'Jersey City',
-        zip_code: '07307',
-        images: [1, 2, 3],
-        donor_id: 1,
-        created_on: '11/01/2020',
-        status: 'approved',
-        updated_on: '11/10/2020',
-      },
-      {
-        _id: 6,
-        name: 'Floor Mat',
-        quantity: 6,
-        description: 'Bed Bath and Beyond area rug 37 X 60',
-        region: 'Jersey City',
-        zip_code: '07307',
-        images: [1, 2, 3],
-        donor_id: 1,
-        created_on: '11/01/2020',
-        status: 'approved',
-        updated_on: '11/10/2020',
-      },
-      {
-        _id: 7,
-        name: 'Comforter',
-        quantity: 8,
-        description: 'Utopia Twin XL comforter',
-        region: 'Jersey City',
-        zip_code: '07307',
-        images: [1, 2, 3],
-        donor_id: 1,
-        created_on: '11/01/2020',
-        status: 'approved',
-        updated_on: '11/10/2020',
-      },
-      {
-        _id: 8,
-        name: 'Boots',
-        quantity: 3,
-        description: 'Leather winter boots',
-        region: 'Jersey City',
-        zip_code: '07307',
-        images: [1, 2, 3],
-        donor_id: 1,
-        created_on: '11/01/2020',
-        status: 'approved',
-        updated_on: '11/10/2020',
-      },
-      {
-        _id: 9,
-        name: 'BedSheet',
-        quantity: 10,
-        description: 'BedSheet',
-        region: 'Jersey City',
-        zip_code: '07307',
-        images: [1, 2, 3],
-        donor_id: 1,
-        created_on: '11/01/2020',
-        status: 'approved',
-        updated_on: '11/10/2020',
-      },
-      {
-        _id: 10,
-        name: 'Laptop bag',
-        quantity: 2,
-        description: 'Laptop Bag',
-        region: 'Jersey City',
-        zip_code: '07307',
-        images: [1, 2, 3],
-        donor_id: 1,
-        created_on: '11/01/2020',
-        status: 'approved',
-        updated_on: '11/10/2020',
-      },
-    ];
+  async allDonations() {
+    // sort all the donations by created_on date
+    return await Donation.find().sort({ createdAt: 'desc' });
   },
 
-  getApprovedDonations() {
-    return this.allDonations().filter((d) => d.status == 'approved');
+  async getApprovedDonations() {
+    let donations = await this.allDonations();
+    return donations;
+    // return donations && donations.filter((d) => d.status == 'approved');
   },
 
-  getById(id) {
-    return {
-      _id: id,
-      name: 'Laptop bag',
-      quantity: 2,
-      description: 'Laptop Bag',
-      region: 'Jersey City',
-      zip_code: '07307',
-      images: [1, 2, 3],
-      donor_id: 1,
-      created_on: '11/01/2020',
-      status: 'approved',
-      updated_on: '11/10/2020',
+  async getById(id) {
+    let donation = await Donation.findById(id).exec();
+    return donation;
+  },
+
+  async create(
+    name,
+    description,
+    quantity,
+    region,
+    zipcode,
+    donor,
+    status = 'submitted'
+  ) {
+    let donationObj = {
+      name,
+      description,
+      quantity,
+      region,
+      zipcode,
+      donor,
+      status,
     };
+
+    const newDonation = await Donation.create(donationObj);
+    return newDonation;
+  },
+
+  async delete(id) {
+    let deletedDonation = await Donation.findOneAndDelete({ _id: id });
+    return deletedDonation;
+  },
+
+  //update donation info
+  async updateDonation(id, donationUpdateInfo) {
+    //find the specified donation and all his/her information
+    const donation = await this.getById(id);
+    if (!donation) throw 'Donation not found';
+    //handle no information being provided for a specified donation
+    if (!Object.keys(donationUpdateInfo))
+      throw `No information has been specified to update the specified donation`;
+
+    const updateInfo = await Donation.findOneAndUpdate(
+      { _id: id },
+      { $set: donationUpdateInfo },
+      { runValidators: true }
+    );
+
+    if (updateInfo.errors)
+      throw 'Could not find and update the specified donation!';
+
+    return await this.getById(id);
   },
 };

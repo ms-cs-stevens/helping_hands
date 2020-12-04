@@ -1,8 +1,29 @@
-module.exports = [
+const mongoose = require('mongoose');
+// import environmental variables from our variables.env file
+require('dotenv').config({ path: 'variables.env' });
+
+// Connect to our Database and handle any bad connections // move to another file later
+mongoose.connect(process.env.DATABASE, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false,
+  useCreateIndex: true,
+});
+mongoose.Promise = global.Promise; // Tell Mongoose to use ES6 promises
+mongoose.connection.on('error', (err) => {
+  console.error(`🙅 🚫 🙅 🚫 🙅 🚫 🙅 🚫 → ${err.message}`);
+});
+
+// READY?! Let's go!
+
+const Donation = require('./models/Donation');
+const { nanoid: nanoid } = require('nanoid');
+
+users: [
   {
     // admin user
     _id: 1,
-    email: 'masterdetective123@gmail.com',
+    email: 'test1@gmail.com',
     firstName: 'Sherlock',
     lastName: 'Holmes',
     gender: 'Male',
@@ -45,3 +66,117 @@ module.exports = [
     // Password: 'quidditch'
   },
 ];
+
+let donations = [
+  {
+    _id: nanoid(),
+    name: 'Center Table',
+    quantity: 4,
+    description:
+      'A center table with a glass top. Used but in a good condition.',
+    region: 'Jersey City',
+    donor: 1,
+    zipcode: '07307',
+    status: 'submitted',
+  },
+  {
+    _id: nanoid(),
+    name: 'Chairs',
+    quantity: 1,
+    description: 'Cushioned Chairs set of 4.',
+    region: 'Jersey City',
+    zipcode: '07307',
+    donor: 1,
+    status: 'approved',
+  },
+  {
+    _id: nanoid(),
+    name: 'Office Chairs',
+    quantity: 4,
+    description: 'Hydraulic Office Chairs with head rest',
+    region: 'Jersey City',
+    zipcode: '07307',
+    donor: 1,
+    status: 'approved',
+  },
+  {
+    _id: nanoid(),
+    name: 'Bed',
+    quantity: 4,
+    description: 'Twin bed with mattress',
+    region: 'Jersey City',
+    zipcode: '07307',
+    donor: 1,
+    status: 'submitted',
+  },
+  {
+    _id: nanoid(),
+    name: 'Table Lamp',
+    quantity: 3,
+    description: 'Table lamp with bulbs',
+    region: 'Jersey City',
+    zipcode: '07307',
+    donor: 1,
+    status: 'approved',
+  },
+  {
+    _id: nanoid(),
+    name: 'Floor Mat',
+    quantity: 6,
+    description: 'Bed Bath and Beyond area rug 37 X 60',
+    region: 'Jersey City',
+    zipcode: '07307',
+    donor: 1,
+    status: 'approved',
+  },
+  {
+    _id: nanoid(),
+    name: 'Comforter',
+    quantity: 8,
+    description: 'Utopia Twin XL comforter',
+    region: 'Jersey City',
+    zipcode: '07307',
+    donor: 1,
+    status: 'approved',
+  },
+  {
+    _id: nanoid(),
+    name: 'Boots',
+    quantity: 3,
+    description: 'Leather winter boots',
+    region: 'Jersey City',
+    zipcode: '07307',
+    donor: 1,
+    status: 'submitted',
+  },
+  {
+    _id: nanoid(),
+    name: 'BedSheet',
+    quantity: 10,
+    description: 'BedSheet',
+    region: 'Jersey City',
+    zipcode: '07307',
+    donor: 1,
+    status: 'approved',
+  },
+  {
+    _id: nanoid(),
+    name: 'Laptop bag',
+    quantity: 2,
+    description: 'Laptop Bag',
+    region: 'Jersey City',
+    zipcode: '07307',
+    donor: 1,
+    status: 'submitted',
+  },
+];
+
+async function createDonations() {
+  const createdDonations = await Donation.create(donations);
+  setTimeout(() => {
+    console.log(`${createdDonations.length} donations created !!`);
+    process.exit();
+  }, 1000);
+}
+
+createDonations();
