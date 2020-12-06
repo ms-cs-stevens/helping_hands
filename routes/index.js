@@ -16,8 +16,17 @@ module.exports = (app) => {
       sessionMessage: res.locals.sessionFlash,
     });
   });
+
   app.get('/about', async (req, res) => {
-    res.status(200).render('static/about', { title: 'About' });
+    res.status(200).render('static/aboutUs', { title: 'About Helping Hands' });
+  });
+
+  app.get('/terms&conditions', async (req, res) => {
+    res
+      .status(200)
+      .render('static/terms&conditions', {
+        title: 'Helping Hands: Terms of Service',
+      });
   });
 
   // unknown paths
