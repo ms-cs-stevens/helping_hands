@@ -3,7 +3,7 @@ const router = express.Router();
 const data = require('../data');
 const userData = data.users;
 const { Role } = require('../models');
-const authMiddlewares = require('../middlewares/authMiddlewares');
+const authMiddlewares = require('../middlewares/auth');
 
 router.get('/login', authMiddlewares.isLoggedIn, async (req, res) => {
   res.render('auth/login', {

@@ -1,3 +1,16 @@
+#wrapper {
+  overflow-x: hidden;
+}
+
+#sidebar-wrapper {
+  min-height: 100vh;
+  margin-left: -15rem;
+  -webkit-transition: margin 0.25s ease-out;
+  -moz-transition: margin 0.25s ease-out;
+  -o-transition: margin 0.25s ease-out;
+  transition: margin 0.25s ease-out;
+}
+
 #sidebar-wrapper .sidebar-heading {
   padding: 0.875rem 1.25rem;
   font-size: 1.2rem;
@@ -33,14 +46,6 @@
 .jumbotron {
   padding-top: -300px;
 }
-/* .add_dona1{
-  margin-top: 50px;
-}
-
-#profile_pic{
-  height: 200px;
-  width: 200px;
-} */
 
 .d_p_img {
   height: 200px;
