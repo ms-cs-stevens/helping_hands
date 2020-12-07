@@ -1,61 +1,66 @@
-const users = [
-  {
-    // admin user
-    _id: 1,
-    email: 'test1@gmail.com',
-    firstName: 'Sherlock',
-    lastName: 'Holmes',
-    gender: 'Male',
-    role_id: 1,
-    profession: 'Detective',
-    bio:
-      "Sherlock Holmes (/ˈʃɜːrlɒk ˈhoʊmz/) is a fictional private detective created by British author Sir Arthur Conan Doyle. Known as a 'consulting detective' in the stories, Holmes is known for a proficiency with observation, forensic science, and logical reasoning that borders on the fantastic, which he employs when investigating cases for a wide variety of clients, including Scotland Yard.",
-    hashedPassword:
-      '$2a$16$7JKSiEmoP3GNDSalogqgPu0sUbwder7CAN/5wnvCWe6xCKAKwlTD.',
-    // Password: 'elementarymydearwatson'
-  },
-  {
-    // donor user
-    _id: 2,
-    email: 'lemon@gmail.com',
-    firstName: 'Elizabeth',
-    lastName: 'Lemon',
-    gender: 'Female',
-    role_id: 2,
-    profession: 'Writer',
-    bio:
-      "Elizabeth Miervaldis 'Liz' Lemon is the main character of the American television series 30 Rock. She created and writes for the fictional comedy-sketch show The Girlie Show or TGS with Tracy Jordan.",
-    hashedPassword:
-      '$2a$16$SsR2TGPD24nfBpyRlBzINeGU61AH0Yo/CbgfOlU1ajpjnPuiQaiDm',
-    // Password: 'damnyoujackdonaghy'
-  },
-  {
-    // recipient user
-    _id: 3,
-    email: 'theboywholived@gmail.com',
-    firstName: 'Harry',
-    lastName: 'Potter',
-    gender: 'Male',
-    role_id: 3,
-    profession: 'Student',
-    bio:
-      "Harry Potter is a series of fantasy novels written by British author J. K. Rowling. The novels chronicle the life of a young wizard, Harry Potter, and his friends Hermione Granger and Ron Weasley, all of whom are students at Hogwarts School of Witchcraft and Wizardry . The main story arc concerns Harry's struggle against Lord Voldemort, a dark wizard who intends to become immortal, overthrow the wizard governing body known as the Ministry of Magic, and subjugate all wizards and Muggles.",
-    hashedPassword:
-      '$2a$16$4o0WWtrq.ZefEmEbijNCGukCezqWTqz1VWlPm/xnaLM8d3WlS5pnK',
-    // Password: 'quidditch'
-  },
-];
+const bcrypt = require('bcryptjs');
+const { User, Role } = require('../models');
+const saltRounds = 10; // TODO: Update later to some higher value
+
+userObject = (user) => {
+  return {
+    _id: user._id,
+    firstname: user.firstname,
+    lastname: user.lastname,
+    email: user.email,
+    gender: user.gender,
+    phone: user.phone,
+  };
+};
 
 let exportedMethods = {
-  getUserByEmail(email) {
+  async getUserByEmail(email) {
     if (!email) throw 'You must provide a email';
     if (typeof email != 'string' || email.trim().length === 0)
       throw 'You must provide a valid email';
 
-    const user = users.find((user) => user.email === email);
+    const user = await User.findOne({ email: email });
 
     if (!user) throw 'User not found';
+    // return userObject(user);
     return user;
+  },
+
+  async create(userInfo) {
+    this.validateUserInfo(userInfo);
+    const hash = await bcrypt.hash(userInfo.password, saltRounds);
+
+    let user = await User.create({
+      firstname: userInfo.firstname,
+      lastname: userInfo.lastname,
+      email: userInfo.email,
+      hashedPassword: hash,
+      gender: userInfo.gender,
+      role_id: userInfo.role_id,
+    });
+
+    if (!user) throw 'Trouble signing you up';
+    return userObject(user);
+  },
+
+  validateUserInfo(user) {
+    if (!user) throw 'Provide user details';
+    if (!user.firstname) throw 'Provide firstname';
+    if (!user.lastname) throw 'Provide lastname';
+    if (!user.email) throw 'Provide email';
+
+    if (!user.password) throw 'Provide password';
+    if (user.password !== user.password2) throw 'Password does not match';
+    if (user.password < 6) throw 'Password is less than 6 characters';
+
+    // TODO: Add more validations here for data checking
+  },
+
+  async isAuthorizedUser(email, password) {
+    const user = await this.getUserByEmail(email);
+    let match = await bcrypt.compare(password, user.hashedPassword);
+    if (!match) throw 'Provide a valid username and/or password.';
+    return userObject(user);
   },
 };
 
