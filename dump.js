@@ -1,3 +1,4 @@
+// TODO: Remove password value before submitting the project
 module.exports = {
   roles: [
     {

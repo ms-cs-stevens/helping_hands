@@ -3,15 +3,15 @@ const router = express.Router();
 const data = require('../data');
 const userData = data.users;
 const { Role } = require('../models');
-const authHelpers = require('../helpers/auth');
+const authMiddlewares = require('../middlewares/authMiddlewares');
 
-router.get('/login', authHelpers.isLoggedIn, async (req, res) => {
+router.get('/login', authMiddlewares.isLoggedIn, async (req, res) => {
   res.render('auth/login', {
     title: 'Login',
   });
 });
 
-router.post('/login', authHelpers.isLoggedIn, async (req, res) => {
+router.post('/login', authMiddlewares.isLoggedIn, async (req, res) => {
   try {
     const { email, password } = req.body;
     req.session.user = await userData.isAuthorizedUser(email, password);
@@ -20,31 +20,38 @@ router.post('/login', authHelpers.isLoggedIn, async (req, res) => {
   } catch (e) {
     res.status(401).render('auth/login', {
       title: 'Signin',
-      error: e || 'Provide a valid username and/or password.',
+      error: 'Provide a valid username and/or password.',
     });
   }
 });
 
-router.get('/logout', authHelpers.loginRequired, async (req, res) => {
+router.get('/logout', authMiddlewares.loginRequired, async (req, res) => {
   req.session.destroy();
   return res.redirect('/');
 });
 
-router.get('/signup', authHelpers.isLoggedIn, async (req, res) => {
+router.get('/signup', authMiddlewares.isLoggedIn, async (req, res) => {
+  if (!req.query.uType || !['Donor', 'Recipient'].includes(req.query.uType)) {
+    res.status(404).render('customError', {
+      title: 'Not found',
+      errorReason: 'The page you are looking for is not found',
+    });
+  }
   let roles = await Role.find(
     { name: { $in: ['Donor', 'Recipient'] } },
     '_id name'
   );
+
   res.render('auth/signup', {
     title: 'Sign Up',
     roles: roles,
+    uType: req.query.uType,
   });
 });
 
-router.post('/register', authHelpers.isLoggedIn, async (req, res) => {
+router.post('/register', authMiddlewares.isLoggedIn, async (req, res) => {
   try {
     let userInfo = req.body;
-    console.log(userInfo);
     userData.validateUserInfo(userInfo);
     let user = await userData.create(userInfo);
     if (user) {

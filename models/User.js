@@ -3,6 +3,8 @@ const uniqueValidator = require('mongoose-unique-validator');
 const { Schema } = mongoose;
 const { nanoid } = require('nanoid');
 
+// TODO: Need to check what happend if we get id value in api request
+// TODO: validation for phone in mongoose
 const userSchema = new Schema(
   {
     _id: {
@@ -41,7 +43,9 @@ const userSchema = new Schema(
     role_id: { type: String, ref: 'Role', required: true },
     address: [{ type: String, ref: 'Address' }],
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
 userSchema.plugin(uniqueValidator);
