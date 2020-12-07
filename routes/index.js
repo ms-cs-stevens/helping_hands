@@ -20,6 +20,17 @@ module.exports = (app) => {
     res.status(200).render('static/about', { title: 'About' });
   });
 
+  //dynamic paths
+  app.get('/donnor', async (req, res) => {
+    res.status(200).render('users/donnor', { title: 'Donnors Page' });
+  });
+  app.get('/admin', async (req, res) => {
+    res.status(200).render('users/admin', { title: 'Admin Page' });
+  });
+  app.get('/receipt', async (req, res) => {
+    res.status(200).render('users/receipt', { title: 'Receipt Page' });
+  });
+
   // unknown paths
   app.use('*', (req, res) => {
     res.status(404).render('customError', {
