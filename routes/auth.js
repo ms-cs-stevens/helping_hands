@@ -1,69 +1,66 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcryptjs');
 const data = require('../data');
 const userData = data.users;
+const { Role } = require('../models');
+const authMiddlewares = require('../middlewares/auth');
 
-router.get('/login', async (req, res) => {
-  if (req.session && req.session.user) {
-    req.flash('success', 'Already logged in!');
-    return res.redirect('/');
-  } else {
-    res.render('auth/login', {
-      title: 'Login',
-    });
-  }
-});
-
-router.post('/login', async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const user = userData.getUserByEmail(email);
-    console.log(user);
-    let match = await bcrypt.compare(password, user.hashedPassword);
-    if (match) {
-      req.session.user = {
-        _id: user._id,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        profession: user.profession,
-        bio: user.bio,
-      };
-      req.flash('success', 'Logged in successfully!');
-      res.redirect('/');
-    } else {
-      res.status(401).render('auth/login', {
-        title: 'Signin',
-        error: 'Provide a valid username and/or password.',
-      });
-    }
-  } catch (e) {
-    res.status(401).render('auth/login', {
-      title: 'Signin',
-      error: e || 'Provide a valid username and/or password.',
-    });
-  }
-});
-
-router.get('/logout', async (req, res) => {
-  req.session.destroy();
-  return res.redirect('/');
-  // res.render('customError', {
-  //   title: 'Logout',
-  //   message: 'You have been succesfully logged out of the application.',
-  // });
-});
-
-router.get('/signup', async (req, res) => {
-  res.render('auth/signup', {
-    title: 'Sign Up',
+router.get('/login', authMiddlewares.isLoggedIn, async (req, res) => {
+  res.render('auth/login', {
+    title: 'Login',
   });
 });
 
-router.post('/create', async (req, res) => {
-  console.log('inside user post');
+router.post('/login', authMiddlewares.isLoggedIn, async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    req.session.user = await userData.isAuthorizedUser(email, password);
+    req.flash('success', 'Logged in successfully!');
+    res.redirect('/');
+  } catch (e) {
+    res.status(401).render('auth/login', {
+      title: 'Signin',
+      error: 'Provide a valid username and/or password.',
+    });
+  }
+});
+
+router.get('/logout', authMiddlewares.loginRequired, async (req, res) => {
+  req.session.destroy();
   return res.redirect('/');
+});
+
+router.get('/signup', authMiddlewares.isLoggedIn, async (req, res) => {
+  if (!req.query.uType || !['Donor', 'Recipient'].includes(req.query.uType)) {
+    res.status(404).render('customError', {
+      title: 'Not found',
+      errorReason: 'The page you are looking for is not found',
+    });
+  }
+  let roles = await Role.find(
+    { name: { $in: ['Donor', 'Recipient'] } },
+    '_id name'
+  );
+
+  res.render('auth/signup', {
+    title: 'Sign Up',
+    roles: roles,
+    uType: req.query.uType,
+  });
+});
+
+router.post('/register', authMiddlewares.isLoggedIn, async (req, res) => {
+  try {
+    let userInfo = req.body;
+    userData.validateUserInfo(userInfo);
+    let user = await userData.create(userInfo);
+    if (user) {
+      req.session.user = user;
+    }
+    res.redirect('/');
+  } catch (error) {
+    res.status(400).json({ error: error });
+  }
 });
 
 module.exports = router;

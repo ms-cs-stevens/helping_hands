@@ -28,6 +28,9 @@ const handlebarsInstance = exphbs.create({
 
       return new Handlebars.SafeString(JSON.stringify(obj));
     },
+    userType: (name, uType) => {
+      return name === uType ? 'selected' : '';
+    },
   },
   partialsDir: ['views/partials/'],
 });

@@ -23,7 +23,7 @@ module.exports = {
     quantity,
     region,
     zipcode,
-    donor,
+    donor_id,
     status = 'submitted'
   ) {
     let donationObj = {
@@ -32,7 +32,7 @@ module.exports = {
       quantity,
       region,
       zipcode,
-      donor,
+      donor_id,
       status,
     };
 

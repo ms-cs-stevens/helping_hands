@@ -22,7 +22,7 @@ const donationSchema = mongoose.Schema(
       type: String,
       required: 'You must supply a region',
     },
-    donor: {
+    donor_id: {
       type: String,
       ref: 'User',
       required: 'You must supply a donor!',
