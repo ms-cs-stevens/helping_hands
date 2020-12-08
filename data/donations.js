@@ -8,8 +8,7 @@ module.exports = {
 
   async getApprovedDonations() {
     let donations = await this.allDonations();
-    return donations;
-    // return donations && donations.filter((d) => d.status == 'approved');
+    return donations && donations.filter((d) => d.status == 'approved');
   },
 
   async getById(id) {

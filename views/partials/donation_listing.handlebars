@@ -1,25 +1,17 @@
-<div class="container-sm">
-  <div class="row row-cols-4">
-    {{#each donations}}
-      <div class="col">
-        <a class="donation-card-link" href="/donations/{{_id}}">
-          <div class="card mb-5 box-shadow">
-            <img class="card-img-top" src="https://www.staples-3p.com/s7/is/image/Staples/sp82712270_sc7?wid=200&hei=250" alt={{name}}>
-            <div class="card-body">
-              <p class="card-title">
-                {{name}}({{quantity}})
-              </p>
-            </div>
-          </div>
-        </a>
+{{#each donations}}
+  <div class="col">
+    <a class="donation-card-link" href="/donations/{{_id}}">
+      <div class="card bg-light mb-5 box-shadow">
+        <div class="card-body">
+          <p class="card-title">
+            {{name}}({{quantity}})
+          </p>
+        </div>
+        <img class="card-img-top" src="https://www.staples-3p.com/s7/is/image/Staples/sp82712270_sc7?wid=400&hei=450" alt={{name}}>
+        {{#if ../showApproveReject}}
+          {{>approve-reject status=status id=_id}}
+        {{/if}}
       </div>
-    {{/each}}
+    </a>
   </div>
-  {{#if showViewButton}}
-    <div class="row">
-      <div class="col-12">
-        <a class="view-all btn btn-outline-success btn-block" href="/donations">View all donations</a>
-      </div>
-    </div>
-  {{/if}}
-</div>
+{{/each}}

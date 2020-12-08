@@ -14,9 +14,12 @@ router.get('/login', authMiddlewares.isLoggedIn, async (req, res) => {
 router.post('/login', authMiddlewares.isLoggedIn, async (req, res) => {
   try {
     const { email, password } = req.body;
-    req.session.user = await userData.isAuthorizedUser(email, password);
+    let user = await userData.isAuthorizedUser(email, password);
+    req.session.user = user;
     req.flash('success', 'Logged in successfully!');
-    res.redirect('/');
+    let role = await Role.findById(user.role_id);
+    let role_name = role.name.toLocaleLowerCase();
+    res.redirect(`/users/${role_name}/${user._id}`);
   } catch (e) {
     res.status(401).render('auth/login', {
       title: 'Signin',

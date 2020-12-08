@@ -31,6 +31,9 @@ const handlebarsInstance = exphbs.create({
     userType: (name, uType) => {
       return name === uType ? 'selected' : '';
     },
+    equal: (a, b) => {
+      return a == b;
+    },
   },
   partialsDir: ['views/partials/'],
 });

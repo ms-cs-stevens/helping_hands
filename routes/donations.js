@@ -168,7 +168,10 @@ router.patch('/:id/approve', async (req, res) => {
       id,
       updatedObject
     );
-    res.json({ message: updatedDonation.status });
+    if (updatedDonation) {
+      req.flash('success', 'Donation approved!');
+      res.redirect(`/users/admin/${req.session.user._id}`);
+    }
   } catch (error) {
     res.json({ error: error });
   }
@@ -180,11 +183,11 @@ router.patch('/:id/reject', async (req, res) => {
   try {
     let donation = await donationData.getById(id);
     if (!donation) throw 'Donation Not found';
-    const updatedDonation = await donationData.updateDonation(
-      id,
-      updatedObject
-    );
-    res.json({ message: updatedDonation.status });
+    let updatedDonation = await donationData.updateDonation(id, updatedObject);
+    if (updatedDonation) {
+      req.flash('success', 'Donation Rejected!');
+      res.redirect(`/users/admin/${req.session.user._id}`);
+    }
   } catch (error) {
     res.json({ error: error });
   }
