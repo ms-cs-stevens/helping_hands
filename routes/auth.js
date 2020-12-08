@@ -19,6 +19,8 @@ router.post('/login', authMiddlewares.isLoggedIn, async (req, res) => {
     req.flash('success', 'Logged in successfully!');
     let role = await Role.findById(user.role_id);
     let role_name = role.name.toLocaleLowerCase();
+
+    // redirect users to their specific dashboards
     res.redirect(`/users/${role_name}/${user._id}`);
   } catch (e) {
     res.status(401).render('auth/login', {
