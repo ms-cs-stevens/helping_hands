@@ -61,8 +61,12 @@ router.post('/register', authMiddlewares.isLoggedIn, async (req, res) => {
     let user = await userData.create(userInfo);
     if (user) {
       req.session.user = user;
+      let role = await Role.findById(user.role_id);
+      let role_name = role.name.toLocaleLowerCase();
+
+      // redirect users to their specific dashboards
+      res.redirect(`/users/${role_name}/${user._id}`);
     }
-    res.redirect('/');
   } catch (error) {
     res.status(400).json({ error: error });
   }
