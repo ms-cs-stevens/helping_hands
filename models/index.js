@@ -1,5 +1,9 @@
-const donation = require('./Donation');
+const Donation = require('./Donation');
+const User = require('./User');
+const Role = require('./Role');
 
 module.exports = {
-  Donation: donation,
+  Donation,
+  User,
+  Role,
 };

@@ -1,5 +1,7 @@
 $(document).ready(function () {
-  new get_recent_donations();
+  if ($('#home').length) {
+    new get_recent_donations();
+  }
 });
 
 function get_recent_donations() {

@@ -1,0 +1,85 @@
+{{!-- Used to remove the default NAV  --}}
+<div class="hide_nav"></div>
+{{!-- Creating a new NAV for the donnor page --}}
+<div class="d-flex" id="wrapper">
+  <!-- Sidebar -->
+  <div class="bg-light border-right" id="sidebar-wrapper">
+    <div class="sidebar-heading"></div>
+    <div class="add_dona1 list-group list-group-flush">
+      <div class="container">
+        <img src="obama.jpg" class="img-thumbnail" alt="Cinque Terre" id="profile_pic">
+      </div>
+      <button type="button" class="btn btn-success btn-md">
+        <i class="fa fa-plus"></i> ADD NEW DONATION
+      </button>
+      <br>
+      <br>
+      <a href="#" class="list-group-item list-group-item-action bg-light"><i class="fa fa-address-card-o"
+          aria-hidden="true"> Profile</i></a>
+      <a href="#" class="list-group-item list-group-item-action bg-light"><i class="fa fa-plus-square"
+          aria-hidden="true"> My Donations</i></a>
+      <a href="#" class="list-group-item list-group-item-action bg-light"><i class="fa fa-plus-square-o"
+          aria-hidden="true"> View Donations</i> </a>
+      <a href="#" class="list-group-item list-group-item-action bg-light"><i class="fa fa-cog" aria-hidden="true">
+          Settings</i></a>
+      <a href="#" class="list-group-item list-group-item-action bg-light"><i class="fa fa-arrow-circle-o-left"
+          aria-hidden="true"> Logout</i></a>
+    </div>
+  </div>
+  <!-- /#sidebar-wrapper -->
+  <!-- Page Content -->
+  <div id="page-content-wrapper">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+      <button class="btn btn-success" id="menu-toggle">
+        <i class="fa fa-user-circle-o" aria-hidden="true">Welcome, Ikenna</i>
+      </button>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+          <li class="nav-item active">
+            <a class="nav-link" href="/"><i class="fa fa-home" aria-hidden="true"> Home</i><span
+                class="sr-only">(current)</span></a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container-fluid text-center">
+      <h1 class="mt-4">My recent donations</h1>
+    </div>
+    <div class="container text-center">
+      <div class="row">
+        <div class="col-sm">
+          First donation
+          <img class="d_p_img" src="public/images/do1.jpg" class="img-thumbnail" alt="chair">
+        </div>
+        <div class="col-sm">
+          Second donation
+          <img class="d_p_img" src="public/images/do2.jpg" class="img-thumbnail" alt="chair">
+        </div>
+        <div class="col-sm">
+          Third donation
+          <img class="d_p_img" src="public/images/do3.jpg" class="img-thumbnail" alt="chair">
+        </div>
+      </div>
+      <br><br><br>
+      <div class="row">
+        <div class="col-sm">
+          Fourth donation
+          <img class="d_p_img" src="public/images/do4.jpg" class="img-thumbnail" alt="chair">
+        </div>
+        <div class="col-sm">
+          fith donation
+          <img class="d_p_img" src="public/images/do5.jpg" class="img-thumbnail" alt="chair">
+        </div>
+        <div class="col-sm">
+          Sixth donation
+          <img class="d_p_img" src="public/images/do6.jpg" class="img-thumbnail" alt="chair">
+        </div>
+      </div>
+    </div>
+    <!-- /#page-content-wrapper -->
+  </div>
+  <!-- /#wrapper -->
