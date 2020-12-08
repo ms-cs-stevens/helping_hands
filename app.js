@@ -49,6 +49,14 @@ app.use(async (req, res, next) => {
   next();
 });
 
+// Setup loggedInUser local to use  middleware for storing user
+app.use(function (req, res, next) {
+  if (req.session.user) {
+    res.locals.loggedInUser = req.session.user;
+  }
+  next();
+});
+
 app.use('/donations/:id/update', (req, res, next) => {
   if (req.body.method == 'patch') {
     req.method = 'PATCH';
