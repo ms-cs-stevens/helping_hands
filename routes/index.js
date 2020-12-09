@@ -14,32 +14,35 @@ module.exports = (app) => {
       authenticated: req.session.user ? true : false,
       message: req.flash('success'),
       sessionMessage: res.locals.sessionFlash,
+      layout: 'main.handlebars',
     });
   });
   app.get('/about', async (req, res) => {
-    res.status(200).render('static/about', { title: 'About' });
+    res
+      .status(200)
+      .render('static/about', { title: 'About', layout: 'main.handlebars' });
   });
 
   //dynamic paths
   app.get('/donnor', async (req, res) => {
-    res.status(200).render('users/donnor', { title: 'Donnors Page' });
+    res.status(200).render('users/donnor', { title: 'Donors Page' });
   });
   app.get('/admin', async (req, res) => {
     res.status(200).render('users/admin', { title: 'Admin Page' });
   });
   app.get('/receipt', async (req, res) => {
-    res.status(200).render('users/receipt', { title: 'Receipt Page' });
+    res.status(200).render('users/receipt', { title: 'Receipient Page' });
   });
 
   //dynamic paths
   app.get('/donnor', async (req, res) => {
-    res.status(200).render('users/donnor', { title: 'Donnors Page' });
+    res.status(200).render('users/donnor', { title: 'Donors Page' });
   });
   app.get('/admin', async (req, res) => {
     res.status(200).render('users/admin', { title: 'Admin Page' });
   });
   app.get('/receipt', async (req, res) => {
-    res.status(200).render('users/receipt', { title: 'Receipt Page' });
+    res.status(200).render('users/receipt', { title: 'Receipient Page' });
   });
   // unknown paths
   app.use('*', (req, res) => {
