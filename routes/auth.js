@@ -8,6 +8,7 @@ const authMiddlewares = require('../middlewares/auth');
 router.get('/login', authMiddlewares.isLoggedIn, async (req, res) => {
   res.render('auth/login', {
     title: 'Login',
+    layout: 'main.handlebars',
   });
 });
 
@@ -26,6 +27,7 @@ router.post('/login', authMiddlewares.isLoggedIn, async (req, res) => {
     res.status(401).render('auth/login', {
       title: 'Signin',
       error: 'Provide a valid username and/or password.',
+      layout: 'main.handlebars',
     });
   }
 });
@@ -40,6 +42,7 @@ router.get('/signup', authMiddlewares.isLoggedIn, async (req, res) => {
     res.status(404).render('customError', {
       title: 'Not found',
       errorReason: 'The page you are looking for is not found',
+      layout: 'main.handlebars',
     });
   }
   let roles = await Role.find(
@@ -51,6 +54,7 @@ router.get('/signup', authMiddlewares.isLoggedIn, async (req, res) => {
     title: 'Sign Up',
     roles: roles,
     uType: req.query.uType,
+    layout: 'main.handlebars',
   });
 });
 
