@@ -50,9 +50,10 @@ app.use(async (req, res, next) => {
 });
 
 // Setup loggedInUser local to use  middleware for storing user
-app.use(function (req, res, next) {
+app.use(async (req, res, next) => {
   if (req.session.user) {
     res.locals.loggedInUser = req.session.user;
+    res.locals.userRole = req.session.user.role;
   }
   next();
 });
