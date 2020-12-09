@@ -16,10 +16,11 @@ router.post('/login', authMiddlewares.isLoggedIn, async (req, res) => {
   try {
     const { email, password } = req.body;
     let user = await userData.isAuthorizedUser(email, password);
-    req.session.user = user;
-    req.flash('success', 'Logged in successfully!');
     let role = await Role.findById(user.role_id);
     let role_name = role.name.toLocaleLowerCase();
+    user.role_name = role_name; // Save user role nema in session
+    req.session.user = user;
+    req.flash('success', 'Logged in successfully!');
 
     // redirect users to their specific dashboards
     res.redirect(`/users/${role_name}/${user._id}`);
@@ -64,9 +65,10 @@ router.post('/register', authMiddlewares.isLoggedIn, async (req, res) => {
     userData.validateUserInfo(userInfo);
     let user = await userData.create(userInfo);
     if (user) {
-      req.session.user = user;
       let role = await Role.findById(user.role_id);
       let role_name = role.name.toLocaleLowerCase();
+      user.role_name = role_name; // Save user role nema in session
+      req.session.user = user;
 
       // redirect users to their specific dashboards
       res.redirect(`/users/${role_name}/${user._id}`);
