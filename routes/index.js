@@ -1,6 +1,7 @@
 const authRoutes = require('./auth');
 const userRoutes = require('./users');
 const donationRoutes = require('./donations');
+const authMiddlewares = require('../middlewares/auth');
 
 module.exports = (app) => {
   app.use('/auth', authRoutes);
@@ -8,14 +9,14 @@ module.exports = (app) => {
   app.use('/donations', donationRoutes);
 
   // static paths
-  app.get('/', async (req, res) => {
+  app.get('/', authMiddlewares.isLoggedIn, async (req, res) => {
     res.status(200).render('static/home', {
       title: 'Home',
-      authenticated: req.session.user ? true : false,
       message: req.flash('success'),
       sessionMessage: res.locals.sessionFlash,
     });
   });
+
   app.get('/about', async (req, res) => {
     res.status(200).render('static/about', { title: 'About' });
   });

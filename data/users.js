@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs');
-const { User, Role } = require('../models');
+const { User } = require('../models');
 const saltRounds = 10; // TODO: Update later to some higher value
 
 userObject = (user) => {
