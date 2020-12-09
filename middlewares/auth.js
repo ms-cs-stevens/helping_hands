@@ -4,9 +4,10 @@ function loginRequired(req, res, next) {
 }
 
 function isLoggedIn(req, res, next) {
-  if (req.session.user) {
+  let user = req.session.user;
+  if (user) {
     req.flash('success', 'Already logged in!');
-    return res.redirect('/donations');
+    return res.redirect(`/users/${user._id}/dashboard`);
   }
   return next();
 }

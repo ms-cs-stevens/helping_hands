@@ -14,16 +14,17 @@ router.get('/login', authMiddlewares.isLoggedIn, async (req, res) => {
 
 router.post('/login', authMiddlewares.isLoggedIn, async (req, res) => {
   try {
+    //validate login
     const { email, password } = req.body;
     let user = await userData.isAuthorizedUser(email, password);
     let role = await Role.findById(user.role_id);
     let role_name = role.name.toLocaleLowerCase();
-    user.role_name = role_name; // Save user role nema in session
+    user.role_name = role_name; // Save user role name in session
     req.session.user = user;
     req.flash('success', 'Logged in successfully!');
 
     // redirect users to their specific dashboards
-    res.redirect(`/users/${role_name}/${user._id}`);
+    res.redirect(`/users/${user._id}/dashboard`);
   } catch (e) {
     res.status(401).render('auth/login', {
       title: 'Signin',
@@ -67,11 +68,11 @@ router.post('/register', authMiddlewares.isLoggedIn, async (req, res) => {
     if (user) {
       let role = await Role.findById(user.role_id);
       let role_name = role.name.toLocaleLowerCase();
-      user.role_name = role_name; // Save user role nema in session
+      user.role_name = role_name; // Save user role name in session
       req.session.user = user;
 
       // redirect users to their specific dashboards
-      res.redirect(`/users/${role_name}/${user._id}`);
+      res.redirect(`/users/${user._id}/dashboard`);
     }
   } catch (error) {
     res.status(400).json({ error: error });
