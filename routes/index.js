@@ -17,12 +17,14 @@ module.exports = (app) => {
       layout: 'main.handlebars',
     });
   });
-  app.get('/about', async (req, res) => {
-    res
-      .status(200)
-      .render('static/about', { title: 'About', layout: 'main.handlebars' });
+  app.get('/aboutUs', async (req, res) => {
+    res.status(200).render('static/aboutUs', { title: 'About Helping Hands' });
   });
-
+  app.get('/terms&conditions', async (req, res) => {
+    res.status(200).render('static/terms&conditions', {
+      title: 'Helping Hands: Terms of Service',
+    });
+  });
   // unknown paths
   app.use('*', (req, res) => {
     res.status(404).render('customError', {
