@@ -1,1 +1,10 @@
-<h1> Admin Dashboard </h1>
+<div class="admin-panel">
+  <div class="container">
+    <h1 class="admin-dashboard"> Dashboard </h1>
+    <div class="container-sm">
+      <div class="row row-cols-3 recent-donations">
+        {{>donation_listing donations=donations}}
+      </div>
+    </div>
+  </div>
+</div>

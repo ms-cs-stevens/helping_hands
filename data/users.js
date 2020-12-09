@@ -10,6 +10,7 @@ userObject = (user) => {
     email: user.email,
     gender: user.gender,
     phone: user.phone,
+    role_id: user.role_id,
   };
 };
 
