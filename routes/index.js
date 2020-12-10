@@ -14,15 +14,22 @@ module.exports = (app) => {
       title: 'Home',
       message: req.flash('success'),
       sessionMessage: res.locals.sessionFlash,
-      layout: 'main.handlebars',
+      layout: 'main',
     });
   });
+
   app.get('/aboutUs', async (req, res) => {
-    res.status(200).render('static/aboutUs', { title: 'About Helping Hands' });
+    res.status(200).render('static/aboutUs', {
+      title: 'About Helping Hands',
+      layout: 'main'
+    });
+
   });
+
   app.get('/terms&conditions', async (req, res) => {
     res.status(200).render('static/terms&conditions', {
       title: 'Helping Hands: Terms of Service',
+      layout: 'main'
     });
 
   });
