@@ -170,7 +170,7 @@ router.patch('/:id/approve', async (req, res) => {
     );
     if (updatedDonation) {
       req.flash('success', 'Donation approved!');
-      res.redirect(`/users/admin/${req.session.user._id}`);
+      res.redirect(`/users/${req.session.user._id}/dashboard`);
     }
   } catch (error) {
     res.json({ error: error });
@@ -186,7 +186,7 @@ router.patch('/:id/reject', async (req, res) => {
     let updatedDonation = await donationData.updateDonation(id, updatedObject);
     if (updatedDonation) {
       req.flash('success', 'Donation Rejected!');
-      res.redirect(`/users/admin/${req.session.user._id}`);
+      res.redirect(`/users/${req.session.user._id}/dashboard`);
     }
   } catch (error) {
     res.json({ error: error });
