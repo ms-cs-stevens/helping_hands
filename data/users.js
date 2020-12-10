@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs');
-const { User, Role } = require('../models');
+const { User } = require('../models');
 const saltRounds = 10; // TODO: Update later to some higher value
 
 userObject = (user) => {
@@ -15,6 +15,17 @@ userObject = (user) => {
 };
 
 let exportedMethods = {
+  async getUserById(id) {
+    if (!id) throw 'You must provide an id';
+    if (typeof id != 'string' || id.trim().length === 0)
+      throw 'You must provide a valid id';
+
+    const user = await User.findById(id);
+
+    if (!user) throw 'User not found';
+    return user;
+  },
+
   async getUserByEmail(email) {
     if (!email) throw 'You must provide a email';
     if (typeof email != 'string' || email.trim().length === 0)
