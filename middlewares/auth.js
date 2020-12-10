@@ -4,36 +4,43 @@ function loginRequired(req, res, next) {
 }
 
 function isLoggedIn(req, res, next) {
-  if (req.session.user) {
+  let user = req.session.user;
+  if (user) {
     req.flash('success', 'Already logged in!');
-    return res.redirect('/');
+    return res.redirect(`/users/${user._id}/dashboard`);
   }
   return next();
 }
 
-function donorRequired(res, req, next) {
-  if (!req.session.user) return res.redirect('/auth/login');
-
-  return next();
+function donorRequired(req, res, next) {
+  authorizeUser(req, res, 'donor');
 }
 
-function recipientRequired(res, req, next) {
-  return next();
+function recipientRequired(req, res, next) {
+  authorizeUser(req, res, 'recipient');
 }
 
 function adminRequired(req, res, next) {
-  if (!req.user) res.status(401).json({ status: 'Please log in' });
-  return knex('users')
-    .where({ username: req.user.username })
-    .first()
-    .then((user) => {
-      if (!user.admin)
-        res.status(401).json({ status: 'You are not authorized' });
-      return next();
-    })
-    .catch((err) => {
-      res.status(500).json({ status: 'Something bad happened' });
+  authorizeUser(req, res, 'admin');
+}
+
+function authorizeUser(req, res, role_name) {
+  try {
+    let user = req.session.user;
+    if (!user) return res.redirect('/auth/login');
+    if (user.role_name !== role_name)
+      return res.status(401).render('customError', {
+        title: 'Unauthorized Access',
+        errorReason: 'You do not have access to this page.',
+      });
+
+    return next();
+  } catch (error) {
+    res.status(500).render('customError', {
+      title: 'Server error',
+      errorReason: 'Something bad happened',
     });
+  }
 }
 
 module.exports = {

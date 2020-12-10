@@ -5,7 +5,7 @@ const {
 const handlebars = require('handlebars');
 
 const handlebarsInstance = exphbs.create({
-  defaultLayout: 'main',
+  defaultLayout: 'main2',
   // Fixes Access has been denied to resolve the property "name" because it is not an "own property" of its parent.
   handlebars: allowInsecurePrototypeAccess(handlebars),
   // Specify helpers which are only registered on this instance.
@@ -30,6 +30,9 @@ const handlebarsInstance = exphbs.create({
     },
     userType: (name, uType) => {
       return name === uType ? 'selected' : '';
+    },
+    equal: (a, b) => {
+      return a == b;
     },
   },
   partialsDir: ['views/partials/'],

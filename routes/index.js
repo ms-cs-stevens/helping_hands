@@ -1,6 +1,7 @@
 const authRoutes = require('./auth');
 const userRoutes = require('./users');
 const donationRoutes = require('./donations');
+const authMiddlewares = require('../middlewares/auth');
 
 module.exports = (app) => {
   app.use('/auth', authRoutes);
@@ -8,39 +9,21 @@ module.exports = (app) => {
   app.use('/donations', donationRoutes);
 
   // static paths
-  app.get('/', async (req, res) => {
+  app.get('/', authMiddlewares.isLoggedIn, async (req, res) => {
     res.status(200).render('static/home', {
       title: 'Home',
-      authenticated: req.session.user ? true : false,
       message: req.flash('success'),
       sessionMessage: res.locals.sessionFlash,
+      layout: 'main.handlebars',
     });
   });
+
   app.get('/about', async (req, res) => {
-    res.status(200).render('static/about', { title: 'About' });
+    res
+      .status(200)
+      .render('static/about', { title: 'About', layout: 'main.handlebars' });
   });
 
-  //dynamic paths
-  app.get('/donnor', async (req, res) => {
-    res.status(200).render('users/donnor', { title: 'Donnors Page' });
-  });
-  app.get('/admin', async (req, res) => {
-    res.status(200).render('users/admin', { title: 'Admin Page' });
-  });
-  app.get('/receipt', async (req, res) => {
-    res.status(200).render('users/receipt', { title: 'Receipt Page' });
-  });
-
-  //dynamic paths
-  app.get('/donnor', async (req, res) => {
-    res.status(200).render('users/donnor', { title: 'Donnors Page' });
-  });
-  app.get('/admin', async (req, res) => {
-    res.status(200).render('users/admin', { title: 'Admin Page' });
-  });
-  app.get('/receipt', async (req, res) => {
-    res.status(200).render('users/receipt', { title: 'Receipt Page' });
-  });
   // unknown paths
   app.use('*', (req, res) => {
     res.status(404).render('customError', {

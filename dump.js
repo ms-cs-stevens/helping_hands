@@ -14,6 +14,7 @@ module.exports = {
   users: [
     {
       // admin user
+      _id: 'adm-123',
       email: 'admin@gmail.com',
       firstname: 'Sherlock',
       lastname: 'Holmes',
@@ -25,6 +26,7 @@ module.exports = {
     },
     {
       // donor user
+      _id: 'don-123',
       email: 'donor@gmail.com',
       firstname: 'Elizabeth',
       lastname: 'Lemon',
@@ -36,6 +38,7 @@ module.exports = {
     },
     {
       // recipient user
+      _id: 'rec-123',
       email: 'recipient@gmail.com',
       firstname: 'Harry',
       lastname: 'Potter',
@@ -53,7 +56,7 @@ module.exports = {
       description:
         'A center table with a glass top. Used but in a good condition.',
       region: 'Jersey City',
-      donor_id: 1,
+      donor_id: 'don-123',
       zipcode: '07307',
       status: 'submitted',
     },
@@ -63,7 +66,7 @@ module.exports = {
       description: 'Cushioned Chairs set of 4.',
       region: 'Jersey City',
       zipcode: '07307',
-      donor_id: 1,
+      donor_id: 'don-123',
       status: 'approved',
     },
     {
@@ -72,7 +75,7 @@ module.exports = {
       description: 'Hydraulic Office Chairs with head rest',
       region: 'Jersey City',
       zipcode: '07307',
-      donor_id: 1,
+      donor_id: 'don-123',
       status: 'approved',
     },
     {
@@ -81,7 +84,7 @@ module.exports = {
       description: 'Twin bed with mattress',
       region: 'Jersey City',
       zipcode: '07307',
-      donor_id: 1,
+      donor_id: 'don-123',
       status: 'submitted',
     },
     {
@@ -90,7 +93,7 @@ module.exports = {
       description: 'Table lamp with bulbs',
       region: 'Jersey City',
       zipcode: '07307',
-      donor_id: 1,
+      donor_id: 'don-123',
       status: 'approved',
     },
     {
@@ -99,7 +102,7 @@ module.exports = {
       description: 'Bed Bath and Beyond area rug 37 X 60',
       region: 'Jersey City',
       zipcode: '07307',
-      donor_id: 1,
+      donor_id: 'don-123',
       status: 'approved',
     },
     {
@@ -108,7 +111,7 @@ module.exports = {
       description: 'Utopia Twin XL comforter',
       region: 'Jersey City',
       zipcode: '07307',
-      donor_id: 1,
+      donor_id: 'don-123',
       status: 'approved',
     },
     {
@@ -117,7 +120,7 @@ module.exports = {
       description: 'Leather winter boots',
       region: 'Jersey City',
       zipcode: '07307',
-      donor_id: 1,
+      donor_id: 'don-123',
       status: 'submitted',
     },
     {
@@ -126,7 +129,7 @@ module.exports = {
       description: 'BedSheet',
       region: 'Jersey City',
       zipcode: '07307',
-      donor_id: 1,
+      donor_id: 'don-123',
       status: 'approved',
     },
     {
@@ -135,7 +138,7 @@ module.exports = {
       description: 'Laptop Bag',
       region: 'Jersey City',
       zipcode: '07307',
-      donor_id: 1,
+      donor_id: 'don-123',
       status: 'submitted',
     },
   ],

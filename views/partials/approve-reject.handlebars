@@ -1,0 +1,26 @@
+<div class="card-body">
+  {{#if (equal status 'submitted')}}
+    <div class="row">
+      <div class="col-6">
+        <a class="btn btn-success form-control" href="/donations/{{id}}/approve">Approve</a>
+      </div>
+      <div class="col-6">
+        <a class="btn btn-danger form-control" href="/donations/{{id}}/reject">Reject</a>
+      </div>
+    </div>
+  {{else}}
+    {{#if (equal status 'approved')}}
+      <div class="row">
+        <div class="col-6 offset-md-3">
+          <a class="btn btn-danger form-control" href="/donations/{{id}}/reject">Reject</a>
+        </div>
+      </div>
+    {{else}}
+      <div class="row">
+        <div class="col-6 offset-md-3">
+          <a class="btn btn-success form-control" href="/donations/{{id}}/approve">Approve</a>
+        </div>
+      </div>
+    {{/if}}
+  {{/if}}
+</div>
