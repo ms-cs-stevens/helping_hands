@@ -14,14 +14,15 @@ module.exports = (app) => {
       title: 'Home',
       message: req.flash('success'),
       sessionMessage: res.locals.sessionFlash,
-      layout: 'main.handlebars',
+      layout: 'main',
     });
   });
 
   app.get('/about', async (req, res) => {
-    res
-      .status(200)
-      .render('static/about', { title: 'About', layout: 'main.handlebars' });
+    res.status(200).render('static/about', {
+      title: 'About',
+      layout: req.session.user ? 'main2' : 'main',
+    });
   });
 
   // unknown paths

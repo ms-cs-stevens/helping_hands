@@ -26,6 +26,7 @@ router.get('/:id/dashboard', authMiddleWare.loginRequired, async (req, res) => {
         allDonations.filter((d) => ['submitted'].includes(d.status));
 
       options = {
+        pageName: 'Admin Dashboard',
         showApproveReject: true,
         reviewedDonations,
         submittedDonations,
@@ -34,11 +35,13 @@ router.get('/:id/dashboard', authMiddleWare.loginRequired, async (req, res) => {
       let myDonations =
         allDonations && allDonations.filter((d) => d.donor_id == req.params.id);
       options = {
+        pageName: 'Donor Dashboard',
         myDonations,
       };
     } else {
       let donations = await donationData.getApprovedDonations();
       options = {
+        pageName: 'Recipient Dashboard',
         donations,
       };
     }
