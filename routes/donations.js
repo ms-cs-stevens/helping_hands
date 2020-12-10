@@ -151,7 +151,7 @@ router.delete('/:id/delete', async (req, res) => {
   if (deleted) {
     let deletedDonationName = deleted.name;
     req.flash(
-      'success',
+      'danger',
       `Donation '${deletedDonationName}' was deleted successfully.`
     );
     res.redirect('/donations');
@@ -185,7 +185,7 @@ router.patch('/:id/reject', async (req, res) => {
     if (!donation) throw 'Donation Not found';
     let updatedDonation = await donationData.updateDonation(id, updatedObject);
     if (updatedDonation) {
-      req.flash('success', 'Donation Rejected!');
+      req.flash('info', 'Donation Rejected!');
       res.redirect(`/users/${req.session.user._id}/dashboard`);
     }
   } catch (error) {
