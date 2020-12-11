@@ -11,7 +11,7 @@ window.setTimeout(function () {
     .slideUp(500, function () {
       $(this).remove();
     });
-}, 2000);
+}, 5000);
 
 $(document).ready(function () {
   $('#sidebar').mCustomScrollbar({

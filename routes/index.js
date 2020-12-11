@@ -23,7 +23,6 @@ module.exports = (app) => {
       title: 'About Helping Hands',
       layout: 'main'
     });
-
   });
 
   app.get('/terms&conditions', async (req, res) => {
