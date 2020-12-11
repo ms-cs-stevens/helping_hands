@@ -18,13 +18,20 @@ module.exports = (app) => {
     });
   });
 
-  app.get('/about', async (req, res) => {
-    res.status(200).render('static/about', {
-      title: 'About',
+  app.get('/aboutUs', async (req, res) => {
+    res.status(200).render('static/aboutUs', {
+      title: 'About Helping Hands',
       layout: req.session.user ? 'main2' : 'main',
     });
   });
 
+  app.get('/terms&conditions', async (req, res) => {
+    res.status(200).render('static/terms&conditions', {
+      title: 'Helping Hands: Terms of Service',
+      layout: req.session.user ? 'main2' : 'main',
+    });
+
+  });
   // unknown paths
   app.use('*', (req, res) => {
     res.status(404).render('customError', {
