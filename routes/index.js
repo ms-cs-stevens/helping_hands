@@ -21,7 +21,7 @@ module.exports = (app) => {
   app.get('/aboutUs', async (req, res) => {
     res.status(200).render('static/aboutUs', {
       title: 'About Helping Hands',
-      layout: 'main'
+      layout: req.session.user ? 'main2' : 'main',
     });
   });
 
