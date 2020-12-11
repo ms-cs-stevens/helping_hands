@@ -28,7 +28,7 @@ module.exports = (app) => {
   app.get('/terms&conditions', async (req, res) => {
     res.status(200).render('static/terms&conditions', {
       title: 'Helping Hands: Terms of Service',
-      layout: 'main'
+      layout: req.session.user ? 'main2' : 'main',
     });
 
   });
