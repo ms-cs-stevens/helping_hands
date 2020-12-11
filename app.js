@@ -11,7 +11,35 @@ const MongoStore = require('connect-mongo')(session);
 const configRoutes = require('./routes');
 const { handlebarsInstance } = require('./helpers/handlebar');
 
+//set storage Engine
+const storage = multer.diskStorage({
+  destination: './public/uploads/',
+  //cb means call back
+  //this randomly generates a name for the image everytime its uplopaded
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      file.fieldname + '-' + Data.now() + path.extname(file.originalname)
+    );
+  },
+});
+
+//init upload
+const upload = multer({
+  storage: storage,
+}).single('myImage');
+
 require('dotenv').config({ path: 'variables.env' });
+
+app.post('/donations', (req, res) => {
+  upload(req, res, (err) => {
+    if (err) {
+      res.render('/donations/new.handlebars', {
+        msg: err,
+      });
+    }
+  });
+});
 app.use('/public', static);
 app.use(express.static('public/images'));
 app.use(express.json());
