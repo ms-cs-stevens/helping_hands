@@ -1,27 +1,34 @@
-<div class="admin-panel">
-  <div class="container">
-    <h1 class="admin-dashboard" align="center"> {{pageName}} </h1>
-    <div class="container-sm">
-      {{#if (equal userRole 'admin')}}
-        <h2>Pending For Review:</h2>
+<div class="container">
+  <div class="container-fluid">
+    {{#if (equal userRole 'admin')}}
+      {{#if myDonations }}
+        <h2>My Donations</h2>
+        <div class="row row-cols-3 recent-donations">
+          {{>donation_listing donations=myDonations}}
+        </div>
+      {{/if}}
+      {{#if submittedDonations}}
+        <h2>Pending For Review</h2>
         <div class="row row-cols-3 recent-donations">
           {{>donation_listing donations=submittedDonations}}
         </div>
-        <h2>Reviewed Donations:</h2>
+      {{/if}}
+      {{#if reviewedDonations}}
+        <h2>Reviewed Donations</h2>
         <div class="row row-cols-3 recent-donations">
           {{>donation_listing donations=reviewedDonations}}
         </div>
-      {{else}}
-        {{#if (equal userRole 'donor')}}
-          <div class="row row-cols-3 recent-donations">
-            {{>donation_listing donations=myDonations}}
-          </div>
-        {{else}}
-          <div class="row row-cols-3 recent-donations">
-            {{>donation_listing donations=donations}}
-          </div>
-        {{/if}}
       {{/if}}
-    </div>
+    {{else}}
+      {{#if (equal userRole 'donor')}}
+        <div class="row row-cols-3 recent-donations">
+          {{>donation_listing donations=myDonations}}
+        </div>
+      {{else}}
+        <div class="row row-cols-3 recent-donations">
+          {{>donation_listing donations=donations}}
+        </div>
+      {{/if}}
+    {{/if}}
   </div>
 </div>

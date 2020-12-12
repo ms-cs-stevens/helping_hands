@@ -5,12 +5,84 @@ const userData = require('../data/users');
 const router = express.Router();
 const authMiddleWare = require('../middlewares/auth');
 
-router.get('/:id/dashboard', authMiddleWare.loginRequired, async (req, res) => {
-  try {
+// router.get('/:id/dashboard', authMiddleWare.loginRequired, async (req, res) => {
+//   try {
+//     let sessionUser = req.session.user;
+//     // search for user from id given in params
+//     let searchedUser = await userData.getUserById(req.params.id);
+//     if (searchedUser && searchedUser._id != sessionUser._id)
+//       throw 'Invalid User';
+
+//     // proceed if user is valid and checks are passed
+//     let role_name = sessionUser.role_name;
+//     let allDonations = await donationData.allDonations();
+
+//     let options = {};
+//     if (role_name == 'admin') {
+//       let reviewedDonations =
+//         allDonations &&
+//         allDonations.filter((d) => ['approved', 'rejected'].includes(d.status));
+//       let submittedDonations =
+//         allDonations &&
+//         allDonations.filter((d) => ['submitted'].includes(d.status));
+
+//       options = {
+//         pageName: 'Admin Dashboard',
+//         showApproveReject: true,
+//         reviewedDonations,
+//         submittedDonations,
+//       };
+//     } else if (role_name == 'donor') {
+//       let myDonations =
+//         allDonations && allDonations.filter((d) => d.donor_id == req.params.id);
+//       options = {
+//         pageName: 'Donor Dashboard',
+//         myDonations,
+//       };
+//     } else {
+//       let donations = await donationData.getApprovedDonations();
+//       options = {
+//         pageName: 'Recipient Dashboard',
+//         donations,
+//       };
+//     }
+//     res.status(200).render('users/dashboard', {
+//       ...options,
+//       title: 'Dashboard',
+//       message: req.flash(),
+//     });
+//   } catch (error) {
+//     res.status(404).render('customError', {
+//       errorReason: 'Not Found',
+//       message: "The page you're looking for is not found!",
+//     });
+//   }
+// });
+
+router.get('/:id/donations', authMiddleWare.donorRequired, async (req, res) => {
+  let allDonations = await donationData.allDonations();
+  let myDonations =
+    allDonations && allDonations.filter((d) => d.donor_id == req.params.id);
+  options = {
+    pageName: 'My Donations',
+    myDonations,
+  };
+  res.status(200).render('users/dashboard', {
+    ...options,
+    title: 'User Donations',
+    message: req.flash(),
+  });
+});
+
+router.get(
+  '/:id/review_donations',
+  authMiddleWare.adminRequired,
+  async (req, res) => {
     let sessionUser = req.session.user;
     // search for user from id given in params
     let searchedUser = await userData.getUserById(req.params.id);
-    if (searchedUser.role_id != sessionUser.role_id) throw 'Invalid User';
+    if (searchedUser && searchedUser._id != sessionUser._id)
+      throw 'Invalid User';
 
     // proceed if user is valid and checks are passed
     let role_name = sessionUser.role_name;
@@ -26,36 +98,16 @@ router.get('/:id/dashboard', authMiddleWare.loginRequired, async (req, res) => {
         allDonations.filter((d) => ['submitted'].includes(d.status));
 
       options = {
-        pageName: 'Admin Dashboard',
+        pageName: 'Review Donations',
         showApproveReject: true,
         reviewedDonations,
         submittedDonations,
+        title: 'Review Donations',
       };
-    } else if (role_name == 'donor') {
-      let myDonations =
-        allDonations && allDonations.filter((d) => d.donor_id == req.params.id);
-      options = {
-        pageName: 'Donor Dashboard',
-        myDonations,
-      };
-    } else {
-      let donations = await donationData.getApprovedDonations();
-      options = {
-        pageName: 'Recipient Dashboard',
-        donations,
-      };
+
+      res.render('users/dashboard', options);
     }
-    res.status(200).render('users/dashboard', {
-      ...options,
-      title: 'Dashboard',
-      message: req.flash(),
-    });
-  } catch (error) {
-    res.status(404).render('customError', {
-      errorReason: 'Not Found',
-      message: "The page you're looking for is not found!",
-    });
   }
-});
+);
 
 module.exports = router;

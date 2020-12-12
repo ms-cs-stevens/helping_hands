@@ -1,0 +1,39 @@
+<div class="sidebar-header">
+  <h3> <a href="/">Helping Hands</a></h3>
+</div>
+<ul class="list-unstyled components">
+  <li><a href="/users/{{loggedInUser._id}}/edit"><i class="fa fa-address-card mr-2" aria-hidden="true"></i>
+        Profile</a></li>
+  <li><a href="/donations"><i class="fa fa-boxes mr-2" aria-hidden="true"></i> View Donations</a></li>
+  {{#if (equal userRole 'admin')}}
+    <li><a href="/users/{{loggedInUser._id}}/donations"><i class="fa fa-plus-square mr-2" aria-hidden="true"></i>
+      My Donations</a></li>
+    <li><a href="/users/{{loggedInUser._id}}/review_donations"><i class="fa fa-clipboard-check mr-2" aria-hidden="true"></i>
+      Review Donations</a></li>
+    <li><a href="/users/{{loggedInUser._id}}/review_donations"><i class="fa fa-dolly mr-2" aria-hidden="true"></i>
+      Review Orders</a></li>
+    <li><a href="/users/{{loggedInUser._id}}/review_donations"><i class="fa fa-user mr-2" aria-hidden="true"></i>
+      View Users</a></li>
+  {{else}}
+    {{#if (equal userRole 'donor')}}
+      <li><a href="/users/{{loggedInUser._id}}/donations"><i class="fa fa-plus-square mr-2" aria-hidden="true"></i>
+          My Donations</a></li>
+    {{else}}
+      <li><a href="/users/{{loggedInUser._id}}/donations"><i class="fa fa-plus-square mr-2" aria-hidden="true"></i>
+          My Orders</a></li>
+    {{/if}}
+  {{/if}}
+  <li><a href="/"><i class="fa fa-cog mr-2" aria-hidden="true"></i> Settings</a></li>
+  <li><a href="/aboutUs"><i class="fa fa-briefcase mr-2" aria-hidden="true"></i> About</a></li>
+  <li><a href="/auth/logout"><i class="fa fa-arrow-alt-circle-left mr-2" aria-hidden="true"></i> Logout</a></li>
+</ul>
+
+<ul class="list-unstyled CTAs">
+  <li>
+    <a href="/donations/new" class="download"><i class="fa fa-plus mr-2"></i> ADD NEW DONATION</a>
+  </li>
+</ul>
+<p class="text-center small">
+  Copyright © 2020
+  <a href="/">Helping Hands</a>
+</p>

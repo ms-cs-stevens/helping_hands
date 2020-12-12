@@ -7,8 +7,9 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   let donations = await donationData.getApprovedDonations();
   res.status(200).render('donations/index', {
-    title: 'Browse',
+    title: 'Donations',
     donations: donations,
+    pageName: 'Donation Listing',
     message: req.flash(),
   });
 });
@@ -26,7 +27,10 @@ router.get('/recent', async (req, res) => {
 
 // renders new donation creation form
 router.get('/new', async (req, res) => {
-  res.render('donations/new', { title: 'New Donation' });
+  res.render('donations/new', {
+    title: 'New Donation',
+    pageName: 'New Donation',
+  });
 });
 
 // creates a new donation
@@ -59,17 +63,20 @@ router.get('/:id', async (req, res) => {
       res.status(200).render('donations/show', {
         donation: donation,
         title: 'Donation',
+        pageName: 'Donation Details',
         message: req.flash('success'),
       });
     } else {
       res.status(404).render('customError', {
         title: 'Not found',
+        pageName: 'Error',
         errorReason: 'Donation not found!',
       });
     }
   } catch (e) {
     res.status(500).render('customError', {
       title: 'Internal Server Error',
+      pageName: 'Error',
       errorReason: e,
     });
   }
@@ -82,12 +89,14 @@ router.get('/:id/edit', async (req, res) => {
     if (!donation) throw 'Donation not found!';
     res.render('donations/edit', {
       title: 'Edit Donation',
+      pageName: 'Edit Donation',
       donation: donation,
     });
   } catch (error) {
     res.status(404).render('customError', {
       title: 'Not found',
       errorReason: error,
+      pageName: 'Error',
     });
   }
 });
@@ -139,6 +148,7 @@ router.patch('/:id/update', async (req, res) => {
     }
   } else {
     res.status(400).json({
+      pageName: 'Edit Donation',
       error:
         'No fields have been changed from their inital values, so no update has occurred',
     });
