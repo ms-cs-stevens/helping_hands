@@ -7,22 +7,25 @@
 
 {{{msg}}}
 <h1>File upload test</h1>
-<form action="/upload" method="POST" enctype="multipart/form-data">
-  <div class="file-field input-field">
-    <div class="btn">
-      <span>File</span>
-      <input type="file" name="myImage" multiple>
+<div>
+  <form action="/donations/upload" method="POST" enctype="multipart/form-data">
+    <div class="file-field input-field">
+      <div class="btn">
+        <span>File</span>
+        <input type="file" name="myImage" multiple>
+      </div>
+      <div class="file-path-wrapper">
+        <input class="file-path validate" type="text" placeholder="Upload one or more files">
+      </div>
     </div>
-    <div class="file-path-wrapper">
-      <input class="file-path validate" type="text" placeholder="Upload one or more files">
-    </div>
-  </div>
-  <button type="submit" class="btn btn-success">Submit</button>
-</form>
-<br><br>
+    <button type="submit" class="btn btn-success">Submit</button>
+  </form>
+  {{#if file}}
+    <img class="img-responsive" src={{file}} width="400" height="400"/>
+  {{else}}
+    {{mul}}
+  {{/if}}
 
-{{#if file}}
-  <img src="{{file}}" class="img-responsive" alt="">
-{{else}}
-  {{file}}
-{{/if}}
+</div>
+<br>
+

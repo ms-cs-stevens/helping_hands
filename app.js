@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     cb(
       null,
-      file.fieldname + '-' + Data.now() + path.extname(file.originalname)
+      file.fieldname + '-' + Date.now() + path.extname(file.originalname)
     );
   },
 });
@@ -27,19 +27,52 @@ const storage = multer.diskStorage({
 //init upload
 const upload = multer({
   storage: storage,
+  limits: { fileSize: 1000000 },
+  fileFilter: function (req, file, cb) {
+    checkFileType(file, cb);
+  },
 }).single('myImage');
+
+//check file type
+function checkFileType(file, cb) {
+  //allowed extension
+  const filetypes = /jpeg|jpg|png|gif/;
+  //check ext
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  //check mime type
+  const mimetype = filetypes.test(file.mimetype);
+  if (mimetype && extname) {
+    return cb(null, true);
+  } else {
+    cb('Error: Images Only!');
+  }
+}
 
 require('dotenv').config({ path: 'variables.env' });
 
-app.post('/donations', (req, res) => {
+//waiting for the posted image to filter
+app.post('/donations/upload', (req, res) => {
   upload(req, res, (err) => {
     if (err) {
-      res.render('/donations/new.handlebars', {
-        msg: err,
-      });
+      res.render('donations/upload', { msg: err });
+    } else {
+      if (req.file == undefined) {
+        res.render('donations/upload', { msg: 'Error: No file selected' });
+      } else {
+        res.render('donations/upload', {
+          msg: 'File Uploaded!',
+          file: `/${req.file.path}`,
+          mul: 'No file Selected',
+        });
+        //`uploads/${req.file.filename}`
+      }
+
+      // console.log(req.file)
+      // res.send("test")
     }
   });
 });
+
 app.use('/public', static);
 app.use(express.static('public/images'));
 app.use(express.json());
