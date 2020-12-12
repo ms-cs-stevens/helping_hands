@@ -10,6 +10,12 @@ const handlebarsInstance = exphbs.create({
   handlebars: allowInsecurePrototypeAccess(handlebars),
   // Specify helpers which are only registered on this instance.
   helpers: {
+    asJSON: (obj, spacing) => {
+      if (typeof spacing === 'number')
+        return new Handlebars.SafeString(JSON.stringify(obj, null, spacing));
+
+      return new Handlebars.SafeString(JSON.stringify(obj));
+    },
     concat: (string1, string2) => {
       return string1 + string2;
     },
@@ -21,15 +27,6 @@ const handlebarsInstance = exphbs.create({
         day: 'numeric',
       };
       return date.toLocaleDateString(undefined, options);
-    },
-    asJSON: (obj, spacing) => {
-      if (typeof spacing === 'number')
-        return new Handlebars.SafeString(JSON.stringify(obj, null, spacing));
-
-      return new Handlebars.SafeString(JSON.stringify(obj));
-    },
-    userType: (name, uType) => {
-      return name === uType ? 'selected' : '';
     },
     equal: (a, b) => {
       return a == b;

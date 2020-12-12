@@ -11,6 +11,7 @@ router.get('/', async (req, res) => {
     donations: donations,
     pageName: 'Donation Listing',
     message: req.flash(),
+    layout: req.session.user ? 'main2' : 'main',
   });
 });
 
