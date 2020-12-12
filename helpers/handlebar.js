@@ -34,6 +34,9 @@ const handlebarsInstance = exphbs.create({
     equal: (a, b) => {
       return a == b;
     },
+    or: (exp1, exp2) => {
+      return exp1 || exp2;
+    },
   },
   partialsDir: ['views/partials/'],
 });

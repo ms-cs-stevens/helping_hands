@@ -28,11 +28,13 @@
   <li><a href="/auth/logout"><i class="fa fa-arrow-alt-circle-left mr-2" aria-hidden="true"></i> Logout</a></li>
 </ul>
 
-<ul class="list-unstyled CTAs">
-  <li>
-    <a href="/donations/new" class="download"><i class="fa fa-plus mr-2"></i> DONATE GOODS</a>
-  </li>
-</ul>
+{{#if (or (equal userRole 'admin') (equal userRole 'donor'))}}
+  <ul class="list-unstyled CTAs">
+    <li>
+      <a href="/donations/new" class="download"><i class="fa fa-plus mr-2"></i> DONATE GOODS</a>
+    </li>
+  </ul>
+{{/if}}
 <p class="text-center small">
   Copyright © 2020
   <a href="/">Helping Hands</a>
