@@ -55,6 +55,14 @@ router.get(
   }
 );
 
+router.get(
+  '/:id/orders',
+  authMiddleWare.recipientRequired,
+  async (req, res) => {
+    res.json({ message: 'Implement Settings page here' });
+  }
+);
+
 router.get('/:id/settings', async (req, res) => {
   res.json({ message: 'Implement Settings page here' });
 });

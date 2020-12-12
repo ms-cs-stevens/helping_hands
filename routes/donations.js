@@ -1,6 +1,6 @@
 const express = require('express');
 const donationData = require('../data/donations');
-
+const authMiddleware = require('../middlewares/auth');
 const router = express.Router();
 
 // gets all approved donations for display
@@ -27,7 +27,7 @@ router.get('/recent', async (req, res) => {
 });
 
 // renders new donation creation form
-router.get('/new', async (req, res) => {
+router.get('/new', authMiddleware.donorRequired, async (req, res) => {
   res.render('donations/new', {
     title: 'New Donation',
     pageName: 'New Donation',
@@ -35,7 +35,7 @@ router.get('/new', async (req, res) => {
 });
 
 // creates a new donation
-router.post('/', async (req, res) => {
+router.post('/', authMiddleware.donorRequired, async (req, res) => {
   try {
     let { name, description, quantity, region, zipcode } = req.body;
     let newDonation = await donationData.create(
@@ -84,7 +84,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // gets edit donation form
-router.get('/:id/edit', async (req, res) => {
+router.get('/:id/edit', authMiddleware.donorRequired, async (req, res) => {
   try {
     let donation = await donationData.getById(req.params.id);
     if (!donation) throw 'Donation not found!';
@@ -103,7 +103,7 @@ router.get('/:id/edit', async (req, res) => {
 });
 
 // edits the donation form
-router.patch('/:id/update', async (req, res) => {
+router.patch('/:id/update', authMiddleware.donorRequired, async (req, res) => {
   let id = req.params.id;
   let donationInfo = req.body;
   let updatedObject = {};
@@ -157,7 +157,7 @@ router.patch('/:id/update', async (req, res) => {
 });
 
 // deletes the donation from database
-router.delete('/:id/delete', async (req, res) => {
+router.delete('/:id/delete', authMiddleware.donorRequired, async (req, res) => {
   let deleted = await donationData.delete(req.params.id);
   if (deleted) {
     let deletedDonationName = deleted.name;
@@ -169,7 +169,7 @@ router.delete('/:id/delete', async (req, res) => {
   }
 });
 
-router.patch('/:id/approve', async (req, res) => {
+router.patch('/:id/approve', authMiddleware.adminRequired, async (req, res) => {
   let id = req.params.id;
   let updatedObject = { status: 'approved' };
   try {
@@ -188,7 +188,7 @@ router.patch('/:id/approve', async (req, res) => {
   }
 });
 
-router.patch('/:id/reject', async (req, res) => {
+router.patch('/:id/reject', authMiddleware.adminRequired, async (req, res) => {
   let id = req.params.id;
   let updatedObject = { status: 'rejected' };
   try {
