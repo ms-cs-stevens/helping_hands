@@ -12,7 +12,7 @@ router.get('/:id/donations', authMiddleWare.donorRequired, async (req, res) => {
     pageName: 'My Donations',
     myDonations,
   };
-  res.status(200).render('users/dashboard', {
+  res.status(200).render('users/my_donations', {
     ...options,
     title: 'User Donations',
     message: req.flash(),
@@ -50,7 +50,7 @@ router.get(
         title: 'Review Donations',
       };
 
-      res.render('users/dashboard', options);
+      res.render('users/review_donations', options);
     }
   }
 );
