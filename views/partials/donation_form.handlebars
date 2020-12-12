@@ -1,11 +1,10 @@
-
-{{#if msg}}
+{{!-- {{#if msg}}
   {{{''}}}
 {{else}}
   {{{msg}}}
-{{/if}}
+{{/if}} --}}
 
-<form id="donation_form" action={{action}} method={{method}}>
+<form id="donation_form" enctype="multipart/form-data" action={{action}} method={{method}}>
   <div class="form-row">
     <div class="form-group col-md-12">
       <label for="name">Donation Name</label>
