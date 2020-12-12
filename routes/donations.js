@@ -7,9 +7,9 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   let donations = await donationData.getApprovedDonations();
   res.status(200).render('donations/index', {
-    title: 'Donations',
+    title: 'Donated Goods',
     donations: donations,
-    pageName: 'Donation Listing',
+    pageName: 'Donated Goods',
     message: req.flash(),
     layout: req.session.user ? 'main2' : 'main',
   });
