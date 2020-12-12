@@ -2,7 +2,6 @@
 @import './home.css';
 @import './users.css';
 @import './browse.css';
-@import './dashboard.css';
 
 body {
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;

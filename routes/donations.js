@@ -1,15 +1,17 @@
 const express = require('express');
 const donationData = require('../data/donations');
-
+const authMiddleware = require('../middlewares/auth');
 const router = express.Router();
 
 // gets all approved donations for display
 router.get('/', async (req, res) => {
   let donations = await donationData.getApprovedDonations();
   res.status(200).render('donations/index', {
-    title: 'Browse',
+    title: 'Donated Goods',
     donations: donations,
+    pageName: 'Donated Goods',
     message: req.flash(),
+    layout: req.session.user ? 'main2' : 'main',
   });
 });
 
@@ -25,12 +27,15 @@ router.get('/recent', async (req, res) => {
 });
 
 // renders new donation creation form
-router.get('/new', async (req, res) => {
-  res.render('donations/new', { title: 'New Donation' });
+router.get('/new', authMiddleware.donorRequired, async (req, res) => {
+  res.render('donations/new', {
+    title: 'New Donation',
+    pageName: 'New Donation',
+  });
 });
 
 // creates a new donation
-router.post('/', async (req, res) => {
+router.post('/', authMiddleware.donorRequired, async (req, res) => {
   try {
     let { name, description, quantity, region, zipcode } = req.body;
     let newDonation = await donationData.create(
@@ -59,41 +64,46 @@ router.get('/:id', async (req, res) => {
       res.status(200).render('donations/show', {
         donation: donation,
         title: 'Donation',
+        pageName: 'Donation Details',
         message: req.flash('success'),
       });
     } else {
       res.status(404).render('customError', {
         title: 'Not found',
+        pageName: 'Error',
         errorReason: 'Donation not found!',
       });
     }
   } catch (e) {
     res.status(500).render('customError', {
       title: 'Internal Server Error',
+      pageName: 'Error',
       errorReason: e,
     });
   }
 });
 
 // gets edit donation form
-router.get('/:id/edit', async (req, res) => {
+router.get('/:id/edit', authMiddleware.donorRequired, async (req, res) => {
   try {
     let donation = await donationData.getById(req.params.id);
     if (!donation) throw 'Donation not found!';
     res.render('donations/edit', {
       title: 'Edit Donation',
+      pageName: 'Edit Donation',
       donation: donation,
     });
   } catch (error) {
     res.status(404).render('customError', {
       title: 'Not found',
       errorReason: error,
+      pageName: 'Error',
     });
   }
 });
 
 // edits the donation form
-router.patch('/:id/update', async (req, res) => {
+router.patch('/:id/update', authMiddleware.donorRequired, async (req, res) => {
   let id = req.params.id;
   let donationInfo = req.body;
   let updatedObject = {};
@@ -139,6 +149,7 @@ router.patch('/:id/update', async (req, res) => {
     }
   } else {
     res.status(400).json({
+      pageName: 'Edit Donation',
       error:
         'No fields have been changed from their inital values, so no update has occurred',
     });
@@ -146,7 +157,7 @@ router.patch('/:id/update', async (req, res) => {
 });
 
 // deletes the donation from database
-router.delete('/:id/delete', async (req, res) => {
+router.delete('/:id/delete', authMiddleware.donorRequired, async (req, res) => {
   let deleted = await donationData.delete(req.params.id);
   if (deleted) {
     let deletedDonationName = deleted.name;
@@ -158,7 +169,7 @@ router.delete('/:id/delete', async (req, res) => {
   }
 });
 
-router.patch('/:id/approve', async (req, res) => {
+router.patch('/:id/approve', authMiddleware.adminRequired, async (req, res) => {
   let id = req.params.id;
   let updatedObject = { status: 'approved' };
   try {
@@ -177,7 +188,7 @@ router.patch('/:id/approve', async (req, res) => {
   }
 });
 
-router.patch('/:id/reject', async (req, res) => {
+router.patch('/:id/reject', authMiddleware.adminRequired, async (req, res) => {
   let id = req.params.id;
   let updatedObject = { status: 'rejected' };
   try {

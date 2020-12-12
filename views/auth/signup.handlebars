@@ -20,7 +20,7 @@
       <div class="form-group col-md-6">
         <label for="inputType">Type</label>
         {{#each roles}}
-          {{#if (userType name ../uType)}}
+          {{#if (equal name ../uType)}}
             <input type="hidden" class="form-control" id="inputType" name="role_id" required value={{_id}}>
             <input type="text" class="form-control" id="inputRole" name="role_id" disabled value={{name}}>
           {{/if}}

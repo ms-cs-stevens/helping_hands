@@ -13,6 +13,7 @@ module.exports = (app) => {
     res.status(200).render('static/home', {
       title: 'Home',
       message: req.flash('success'),
+      pageName: 'Home',
       sessionMessage: res.locals.sessionFlash,
       layout: 'main',
     });
@@ -22,6 +23,7 @@ module.exports = (app) => {
     res.status(200).render('static/aboutUs', {
       title: 'About Helping Hands',
       layout: req.session.user ? 'main2' : 'main',
+      pageName: 'About Us',
     });
   });
 
@@ -29,13 +31,14 @@ module.exports = (app) => {
     res.status(200).render('static/terms&conditions', {
       title: 'Helping Hands: Terms of Service',
       layout: req.session.user ? 'main2' : 'main',
+      pageName: 'Terms and Conditions',
     });
-
   });
   // unknown paths
   app.use('*', (req, res) => {
     res.status(404).render('customError', {
       errorReason: '404 Not Found!!!',
+      pageName: 'Error!!',
       message: "Page you're looking for is not found. Please check your URL",
     });
   });
