@@ -1,6 +1,13 @@
 
+{{#if msg}}
+  {{'hey'}}
+{{else}}
+  {{msg}}
+{{/if}}
+{{{msg}}}
+
 <form id="donation_form" enctype="multipart/form-data" action={{action}} method={{method}}>
-  {{!-- <div class="form-row">
+  <div class="form-row">
     <div class="form-group col-md-12">
       <label for="name">Donation Name</label>
       <input type="text" name="name" class="form-control" id="name" required placeholder="Enter Name" value="{{donation.name}}">
@@ -10,19 +17,19 @@
       <textarea type="description" name="description" class="form-control" id="description"
       placeholder="Enter donation description" required>{{donation.description}}</textarea>
     </div>
-  </div> --}}
-  {{!-- <div class="form-group">
+  </div>
+  <div class="form-group">
     <label for="quantity">Quantity</label>
     <input type="number" name="quantity" class="form-control" id="quantity" value="{{donation.quantity}}" placeholder="Input number of items">
-  </div> --}}
-  {{!-- <div class="form-group">
+  </div>
+  <div class="form-group">
     <label for="region">Region</label>
     <input type="text" name="region" class="form-control" id="region" value="{{donation.region}}" placeholder="Enter Region">
-  </div> --}}
-  {{!-- <div class="form-group">
+  </div>
+  <div class="form-group">
     <label for="zipcode">Zipcode</label>
     <input type="number" name="zipcode" class="form-control" id="zipcode" value="{{donation.zipcode}}" placeholder="Input number of items">
-  </div> --}}
+  </div>
 
   <div class="file-field input-field">
     <div class="btn">
@@ -31,7 +38,6 @@
     </div>
   </div>
   <br>
-
 
   {{#if donation}}
     <div class="form-group">

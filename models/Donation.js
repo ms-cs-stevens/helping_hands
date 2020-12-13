@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { nanoid } = require('nanoid');
 mongoose.Promise = global.Promise;
 
-const donationSchema = mongoose.Schema(
+const donationSchema = new mongoose.Schema(
   {
     _id: { type: String, default: () => nanoid() },
     name: {
@@ -39,6 +39,10 @@ const donationSchema = mongoose.Schema(
         },
         message: 'Invalid Zipcode!',
       },
+    },
+    images: {
+      type: Array,
+      required: 'You must select an image',
     },
   },
   { timestamps: true }
