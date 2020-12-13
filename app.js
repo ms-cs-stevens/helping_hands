@@ -60,58 +60,59 @@ function checkFileType(file, cb) {
 require('dotenv').config({ path: 'variables.env' });
 
 //waiting for the posted image to filter
-// app.post('/donations/upload', (req, res) => {
-//   upload(req, res, (err) => {
-//     if (err) {
-//       res.render('donations/upload', { msg: err });
-//     } else {
-//       if (req.file == undefined) {
-//         res.render('donations/upload', { msg: 'Error: No file selected' });
-//       } else {
-//         res.render('donations/upload', {
-//           msg: 'File Uploaded!',
-//           file: `/${req.file.path}`,
-//           mul: 'No file Selected',
-//         });
-//         //`uploads/${req.file.filename}`
-//       }
+app.post('/donations/new', (req, res) => {
+  upload(req, res, (err) => {
+    if (err) {
+      res.render('donations/new', { msg: err });
+    } else {
+      if (req.file == undefined) {
+        res.render('donations/new', { msg: 'Error: No file selected' });
+      } else {
+        res.render('donations/new', {
+          msg: 'File Uploaded!',
+          file: `/${req.file.path}`,
+          mul: 'No file Selected',
+        });
+        //`uploads/${req.file.filename}`
+      }
 
-//       // console.log(req.file)
-//       // res.send("test")
-//     }
-//   });
-// });
-
-app.use('/donations/upload', upload, async (req, res) => {
-  const uploader = async (path) => await cloudinary.uploads(path, 'Images');
-  if (req.method === 'POST') {
-    const urls = [];
-    const files = req.files;
-    for (const file of files) {
-      const { path } = file;
-      const newPath = await uploader(path);
-      urls.push(newPath);
-
-      //deleting file from server after upload
-      fs.unlinkSync(path);
+      // console.log(req.file)
+      // res.send("test")
     }
-    res.status(200).json({
-      message: 'Images uploaded successfully',
-      data: urls,
-    });
-  } else if (req.method === 'GET') {
-    res
-      .status(200)
-      .render('donations/upload', {
-        title: 'upload',
-        layout: 'main.handlebars',
-      });
-  } else {
-    res.status(405).json({
-      err: 'Images not uploaded successfully',
-    });
-  }
+  });
 });
+
+//app.use('/donations/upload', upload, async (req, res) => {
+// app.use('/donations/new', upload, async (req, res) => {
+//   const uploader = async (path) => await cloudinary.uploads(path, 'Images');
+//   if (req.method === 'POST') {
+//     const urls = [];
+//     const files = req.files;
+//     for (const file of files) {
+//       const { path } = file;
+//       const newPath = await uploader(path);
+//       urls.push(newPath);
+
+//       //deleting file from server after upload
+//       // fs.unlinkSync(path);
+//     }
+//     res.status(200).json({
+//       message: 'Images uploaded successfully',
+//       data: urls,
+//     });
+//   } else if (req.method === 'GET') {
+//     res
+//       .status(200)
+//       .render('donations/new', {
+//         title: 'upload',
+//         layout: 'main.handlebars',
+//       });
+//   } else {
+//     res.status(405).json({
+//       err: 'Images not uploaded successfully',
+//     });
+//   }
+// });
 
 app.use('/public', static);
 app.use(express.static('public/images'));

@@ -1,11 +1,6 @@
-{{!-- {{#if msg}}
-  {{{''}}}
-{{else}}
-  {{{msg}}}
-{{/if}} --}}
 
 <form id="donation_form" enctype="multipart/form-data" action={{action}} method={{method}}>
-  <div class="form-row">
+  {{!-- <div class="form-row">
     <div class="form-group col-md-12">
       <label for="name">Donation Name</label>
       <input type="text" name="name" class="form-control" id="name" required placeholder="Enter Name" value="{{donation.name}}">
@@ -15,27 +10,24 @@
       <textarea type="description" name="description" class="form-control" id="description"
       placeholder="Enter donation description" required>{{donation.description}}</textarea>
     </div>
-  </div>
-  <div class="form-group">
+  </div> --}}
+  {{!-- <div class="form-group">
     <label for="quantity">Quantity</label>
     <input type="number" name="quantity" class="form-control" id="quantity" value="{{donation.quantity}}" placeholder="Input number of items">
-  </div>
-  <div class="form-group">
+  </div> --}}
+  {{!-- <div class="form-group">
     <label for="region">Region</label>
     <input type="text" name="region" class="form-control" id="region" value="{{donation.region}}" placeholder="Enter Region">
-  </div>
-  <div class="form-group">
+  </div> --}}
+  {{!-- <div class="form-group">
     <label for="zipcode">Zipcode</label>
     <input type="number" name="zipcode" class="form-control" id="zipcode" value="{{donation.zipcode}}" placeholder="Input number of items">
-  </div>
+  </div> --}}
 
-  <div class="form-group">
-    <div class="input-group-prepend">
-      <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
-    </div>
-    <div class="custom-file">
-      <input type="file" name="myImage"class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
-      <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+  <div class="file-field input-field">
+    <div class="btn">
+      <span>Select Images</span>
+      <input type="file" name="myImage" multiple>
     </div>
   </div>
   <br>
@@ -54,3 +46,8 @@
     {{/if}}
   </button>
 </form>
+{{#if file}}
+  <img class="img-responsive" src={{file}} width="400" height="400" />
+{{else}}
+  {{mul}}
+{{/if}}
