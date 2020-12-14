@@ -88,6 +88,16 @@ app.use('/donations/:id/reject', (req, res, next) => {
   next();
 });
 
+app.use('/donations/:id/donate', (req, res, next) => {
+  req.method = 'PATCH';
+  next();
+});
+
+app.use('/donations/:id/withdraw', (req, res, next) => {
+  req.method = 'PATCH';
+  next();
+});
+
 app.use('/donations/:id/delete', (req, res, next) => {
   req.method = 'DELETE';
   next();

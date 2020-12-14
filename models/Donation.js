@@ -4,7 +4,10 @@ mongoose.Promise = global.Promise;
 
 const donationSchema = new mongoose.Schema(
   {
-    _id: { type: String, default: () => nanoid() },
+    _id: {
+      type: String,
+      default: () => nanoid(),
+    },
     name: {
       type: String,
       required: 'You must supply a name',
@@ -12,6 +15,10 @@ const donationSchema = new mongoose.Schema(
     description: {
       type: String,
       required: 'You must supply a description',
+    },
+    in_stock: {
+      type: Number,
+      min: 0,
     },
     quantity: {
       type: Number,
@@ -29,7 +36,9 @@ const donationSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      default: 'pending',
+      default: 'submitted',
+      enum: ['submitted', 'approved', 'rejected', 'ordered'],
+      lowercase: true,
     },
     zipcode: {
       type: String,
@@ -57,5 +66,13 @@ donationSchema.index({ '$**': 'text' });
 
 // donationSchema.pre('find', autopopulate);
 // donationSchema.pre('findOne', autopopulate);
+
+donationSchema.pre('save', function (next) {
+  if (this.isNew || this.status === 'submitted' || this.status === 'rejected')
+    this.in_stock = this.get('quantity'); // considering quantity is input by client
+
+  if (this.in_stock === 0) this.status = 'ordered';
+  next();
+});
 
 module.exports = mongoose.model('Donation', donationSchema);

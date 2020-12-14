@@ -1,0 +1,16 @@
+<div class="card-body">
+  <div class="input-group">
+    <span class="input-group-prepend">
+      <button type="button" class="quantity-left-minus btn btn-danger btn-number" data-type="minus" data-field="">
+        <span class="fa fa-minus"></span>
+      </button>
+    </span>
+    <input type="number" id="quantity" name="quantity" class="form-control input-number" value={{itemQuantity items id}}
+      min="0" max={{in_stock}} readonly>
+    <span class="input-group-append">
+      <button type="button" class="quantity-right-plus btn btn-success btn-number" data-type="plus" data-field="">
+        <i class="fa fa-plus"></i>
+      </button>
+    </span>
+  </div>
+</div>

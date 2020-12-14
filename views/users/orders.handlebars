@@ -1,0 +1,36 @@
+{{#if (ordersAvailable orders) }}
+  <div class="listings">
+    <div class="container-sm">
+      <div class="row">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Order Id</th>
+              <th scope="col">Status</th>
+              <th scope="col">Placed On</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each orders}}
+              <tr>
+                <th scope="row">{{_id}}</th>
+                <td>{{status}}</td>
+                <td>{{dateToString createdAt}}</td>
+                <td><a href="/orders/{{_id}}" class='btn btn-info'>View</a></td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{{else }}
+  <div class="container-sm">
+    <div class="row">
+      <div class="col">
+        <p>You don't have any orders. </p>
+      </div>
+    </div>
+  </div>
+{{/if}}

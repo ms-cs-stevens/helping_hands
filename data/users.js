@@ -22,7 +22,7 @@ let exportedMethods = {
     return users;
   },
 
-  async getUserById(id) {
+  async getById(id) {
     if (!id) throw 'You must provide an id';
     if (typeof id != 'string' || id.trim().length === 0)
       throw 'You must provide a valid id';
@@ -41,7 +41,7 @@ let exportedMethods = {
     const user = await User.findOne({ email: email });
 
     if (!user) throw 'User not found';
-    // return userObject(user);
+
     return user;
   },
 
@@ -65,8 +65,8 @@ let exportedMethods = {
   //update user
   async update(id, updateData) {
     //find the specified user and all his/her information
-    const old = await this.getUserById(id);
-    if (!old) throw 'User does not Exist';
+    const oldUser = await this.getById(id);
+    if (!oldUser) throw 'User does not Exist';
 
     try {
       this.validateUpdateInfo(updateData);
@@ -84,7 +84,7 @@ let exportedMethods = {
     if (updateInfo.errors)
       throw `Error ecountered while updating the specified user: ${updateInfo.errors}`;
 
-    return await this.getUserById(id);
+    return await this.getById(id);
   },
 
   validateUserInfo(user) {

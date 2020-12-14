@@ -64,7 +64,12 @@ module.exports = {
   },
 
   async getById(id) {
-    let donation = await Donation.findById(id).exec();
+    if (!id) throw 'You must provide an id';
+    if (typeof id != 'string' || id.trim().length === 0)
+      throw 'You must provide a valid id';
+
+    let donation = await Donation.findById(id);
+    if (!donation) throw 'Donation not found';
     return donation;
   },
 
@@ -98,13 +103,15 @@ module.exports = {
       zipcode,
       images,
       donor_id,
-      status,
     };
     const newDonation = await Donation.create(donationObj);
     return newDonation;
   },
 
   async delete(id) {
+    if (!id) throw 'You must provide an donation id';
+    if (typeof id != 'string' || id.trim().length === 0)
+      throw 'You must provide a valid donation id';
     let deletedDonation = await Donation.findOneAndDelete({ _id: id });
     return deletedDonation;
   },

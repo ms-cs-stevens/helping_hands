@@ -1,0 +1,15 @@
+<div class="container-sm">
+  <div class="row">
+    {{order}}
+    {{#if showPlaceOrderBtn}}
+      <a href="/orders/{{order._id}}/checkout" class="btn btn-success" id="place-order">Place Order</a>
+    {{/if}}
+  </div>
+</div>
+<div class="listings">
+  <div class="container-sm">
+    <div class="row row-cols-4">
+      {{> item_listing items=items}}
+    </div>
+  </div>
+</div>

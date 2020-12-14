@@ -1,19 +1,21 @@
 {{#if donations}}
   {{#each donations}}
     <div class="col">
-      <a class="donation-card-link" href="/donations/{{_id}}">
-        <div class="card bg-light mb-5 box-shadow">
-          <div class="card-body">
-            <p class="card-title">
-              {{name}}({{quantity}})
-            </p>
+      <div class="card bg-light mb-5 box-shadow" data-donation-id={{_id}}>
+        <a class="donation-card-link" href="/donations/{{_id}}">
+          <div class="card-header text-center">
+            {{name}}({{quantity}})
           </div>
-          <img class="card-img-top" src="{{returnFirst images}}" onerror="this.src='/public/images/no_preview.jpg'" alt={{name}}>
-          {{#if ../showApproveReject}}
-            {{>approve-reject status=status id=_id}}
-          {{/if}}
-        </div>
-      </a>
+          <img class="card-img-top" src="{{returnFirst images}}" onerror="this.src='/public/images/no_preview.jpg'"
+            alt={{name}}>
+        </a>
+        {{#if ../showApproveReject}}
+          {{>approve-reject status=status id=_id}}
+        {{/if}}
+        {{#if ../showAddRemove}}
+          {{>add_remove quantity=quantity items= ../items id=_id in_stock=in_stock}}
+        {{/if}}
+      </div>
     </div>
   {{/each}}
 {{else}}

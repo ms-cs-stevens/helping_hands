@@ -2,18 +2,20 @@
   <p> <a href="/">Helping Hands</a></p>
 </div>
 <ul class="list-unstyled components">
+  <p>{{userRole}}</p>
   <li><a href="/users/{{loggedInUser._id}}/edit"><i class="fa fa-address-card mr-2" aria-hidden="true"></i>
-        Profile</a></li>
+      Profile</a></li>
   <li><a href="/donations"><i class="fa fa-boxes mr-2" aria-hidden="true"></i> View Donations</a></li>
   {{#if (equal userRole 'admin')}}
     <li><a href="/users/{{loggedInUser._id}}/donations"><i class="fa fa-plus-square mr-2" aria-hidden="true"></i>
-      My Donations</a></li>
-    <li><a href="/users/{{loggedInUser._id}}/review_donations"><i class="fa fa-clipboard-check mr-2" aria-hidden="true"></i>
-      Review Donations</a></li>
+        My Donations</a></li>
+    <li><a href="/users/{{loggedInUser._id}}/review_donations"><i class="fa fa-clipboard-check mr-2"
+          aria-hidden="true"></i>
+        Review Donations</a></li>
     <li><a href="/users/{{loggedInUser._id}}/review_donations"><i class="fa fa-dolly mr-2" aria-hidden="true"></i>
-      Review Orders</a></li>
+        Review Orders</a></li>
     <li><a href="/users"><i class="fa fa-user mr-2" aria-hidden="true"></i>
-      View Users</a></li>
+        View Users</a></li>
   {{else}}
     {{#if (equal userRole 'donor')}}
       <li><a href="/users/{{loggedInUser._id}}/donations"><i class="fa fa-plus-square mr-2" aria-hidden="true"></i>
@@ -27,7 +29,6 @@
   <li><a href="/aboutUs"><i class="fa fa-briefcase mr-2" aria-hidden="true"></i> About</a></li>
   <li><a href="/auth/logout"><i class="fa fa-arrow-alt-circle-left mr-2" aria-hidden="true"></i> Logout</a></li>
 </ul>
-
 {{#if (or (equal userRole 'admin') (equal userRole 'donor'))}}
   <ul class="list-unstyled CTAs">
     <li>
