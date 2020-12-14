@@ -1,5 +1,6 @@
 const express = require('express');
 const donationData = require('../data/donations');
+const { update } = require('../data/users');
 const userData = require('../data/users');
 const router = express.Router();
 const authMiddleWare = require('../middlewares/auth');
@@ -17,6 +18,63 @@ router.get('/:id/donations', authMiddleWare.donorRequired, async (req, res) => {
     title: 'User Donations',
     message: req.flash(),
   });
+});
+
+router.get('/:id/edit', authMiddleWare.loginRequired, async (req, res) => {
+  try {
+    let userOldData = await userData.getUserById(req.params.id);
+    if (!userOldData) throw 'User Does Not Exist!';
+
+    res.render('users/edit', {
+      title: 'Profile Page',
+      pageName: 'Edit User Info',
+      loggedInUser: userOldData,
+    });
+  } catch (e) {
+    res.status(404).render('customError', {
+      title: 'Not found',
+      errorReason: e,
+      pageName: 'Error',
+    });
+  }
+});
+
+router.patch('/:id/update', authMiddleWare.loginRequired, async (req, res) => {
+  let id = req.params.id;
+  let updateData = req.body;
+  let updatedUserProfile = {};
+  let user;
+  try {
+    user = await userData.getUserById(id);
+    if (updateData.firstname && updateData.firstname !== user.firstname)
+      updatedUserProfile.firstname = updateData.firstname;
+    if (updateData.lastname && updateData.lastname !== user.lastname)
+      updatedUserProfile.lastname = updateData.lastname;
+    if (updateData.email && updateData.email !== user.email)
+      updatedUserProfile.email = updateData.email;
+    if (updateData.password.length > 0)
+      updatedUserProfile.password = updateData.password;
+  } catch (e) {
+    res.status(404).json({ error: 'User Does Not Exist!' });
+    return;
+  }
+  if (Object.keys(updatedUserProfile).length) {
+    try {
+      const updated = await userData.update(id, updatedUserProfile);
+      if (updated) {
+        req.flash('success', 'User profile updated successfully');
+        res.redirect('/donations');
+      }
+    } catch (e) {
+      res.status(500).json({ error: e });
+    }
+  } else {
+    req.flash(
+      'error',
+      'No fields have been changed from their inital values, so no update has occurred'
+    );
+    res.status(400).redirect('/donations');
+  }
 });
 
 router.get(
