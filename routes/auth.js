@@ -78,7 +78,7 @@ router.post('/register', authMiddlewares.isLoggedIn, async (req, res) => {
     }
   } catch (error) {
     req.flash('error', error);
-    res.status(400).render('customError', {
+    res.status(422).render('customError', {
       title: 'Invalid Parameter',
       pageName: 'Sign Up',
       errorReason: error,
