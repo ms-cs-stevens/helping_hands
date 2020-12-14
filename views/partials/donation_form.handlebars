@@ -1,4 +1,11 @@
 <form id="donation_form" action={{action}} method={{method}}>
+  {{#if errors}}
+    <div class="errors">
+      {{#each errors as |error|}}
+        {{error}}
+      {{/each}}
+    </div>
+  {{/if}}
   <div class="form-row">
     <div class="form-group col-md-12">
       <label for="name">Donation Name</label>

@@ -2,8 +2,19 @@ const express = require('express');
 const donationData = require('../data/donations');
 const { update } = require('../data/users');
 const userData = require('../data/users');
+const { users } = require('../dump');
 const router = express.Router();
 const authMiddleWare = require('../middlewares/auth');
+
+router.get('/', authMiddleWare.adminRequired, async (req, res) => {
+  let users = await userData.allUsers();
+  res.status(200).render('users/index', {
+    pageName: 'Users',
+    users: users,
+    title: 'User Donations',
+    message: req.flash(),
+  });
+});
 
 router.get('/:id/donations', authMiddleWare.donorRequired, async (req, res) => {
   let allDonations = await donationData.allDonations();

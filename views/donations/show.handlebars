@@ -1,20 +1,24 @@
 <div id="donation">
-  <div class="container text-center">
+  <div class="container">
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-8">
+        <br>
         <h1>{{donation.name}}</h1>
+        <br>
         <div class="donation-details">
-          <p>Quantity Available: {{donation.quantity}} </p>
+          <p>Available Quantity: {{donation.quantity}} </p>
           <p>Description: {{donation.description}}</p>
           <p>Region: {{donation.region}}</p>
           <p>Zipcode: {{donation.zipcode}}</p>
           <p>Donated On: {{dateToString donation.createdAt}}</p>
-          <a class="btn btn-success" href="/donations/{{donation._id}}/edit">Edit</a>
-          <a class="btn btn-danger" href="/donations/{{donation._id}}/delete">Delete</a>
+          {{#if allowActions }}
+            <a class="btn btn-success" href="/donations/{{donation._id}}/edit">Edit</a>
+            <a class="btn btn-danger" href="/donations/{{donation._id}}/delete">Delete</a>
+          {{/if}}
         </div>
       </div>
-      <div class="col-md-6">
-        <img src="https://qvc.scene7.com/is/image/QVC/e/86/e353286.001?$aempdzoom$" width="70%" alt="">
+      <div class="col-md-4">
+        <img src="https://qvc.scene7.com/is/image/QVC/e/86/e353286.001?$aempdzoom$" width="100%" alt="{{donation.name}}">
       </div>
     </div>
   </div>

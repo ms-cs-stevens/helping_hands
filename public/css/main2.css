@@ -158,3 +158,19 @@ a.article:hover {
     display: none;
   }
 }
+
+.users {
+  padding: 1em;
+}
+
+#flash-message {
+  position: fixed;
+  top: 15%;
+  right: 0;
+  z-index: 100;
+  width: 50%;
+}
+
+.toggle-handle {
+  background: white;
+}

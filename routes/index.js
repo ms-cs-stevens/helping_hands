@@ -12,7 +12,7 @@ module.exports = (app) => {
   app.get('/', authMiddlewares.isLoggedIn, async (req, res) => {
     res.status(200).render('static/home', {
       title: 'Home',
-      message: req.flash('success'),
+      message: req.flash(),
       pageName: 'Home',
       sessionMessage: res.locals.sessionFlash,
       layout: 'main',

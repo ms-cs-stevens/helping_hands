@@ -15,6 +15,11 @@ userObject = (user) => {
 };
 
 let exportedMethods = {
+  async allUsers() {
+    let users = await User.find().sort({ firstname: 'asc' });
+    return users;
+  },
+
   async getUserById(id) {
     if (!id) throw 'You must provide an id';
     if (typeof id != 'string' || id.trim().length === 0)
