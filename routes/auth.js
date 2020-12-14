@@ -77,7 +77,13 @@ router.post('/register', authMiddlewares.isLoggedIn, async (req, res) => {
       res.redirect(`/donations`);
     }
   } catch (error) {
-    res.status(400).json({ error: error });
+    req.flash('error', error);
+    res.status(400).render('customError', {
+      title: 'Invalid Parameter',
+      pageName: 'Sign Up',
+      errorReason: error,
+      layout: 'main.handlebars',
+    });
   }
 });
 
