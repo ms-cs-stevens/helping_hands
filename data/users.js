@@ -93,7 +93,9 @@ let exportedMethods = {
     // TODO: Add more validations here for data checking
   },
 
-  checkName(input) {
+  // TODO: Resolve validation function errors
+
+  /* checkName(input) {
     if (typeof input !== 'string') throw `Name needs to be a string`;
     const nameFormat = new RegExp('[A-Za-z]');
 
@@ -119,7 +121,7 @@ let exportedMethods = {
       if (!passwordFormat.test(input))
         throw `Password needs to be a valid string of 6-16 characters with at least 1 digit and 1 special character`;
       else throw `Password needs to be between 6 and 16 characters in length`;
-  },
+  }, */
 
   async validateUpdateInfo(user) {
     /* if (!user) throw 'Error! User does not exist';
