@@ -57,11 +57,12 @@ let exportedMethods = {
 
   //update user
   async update(id, updateData) {
-    //find the specified donation and all his/her information
+    //find the specified user and all his/her information
     const old = await this.getUserById(id);
     if (!old) throw 'User does not Exist';
 
-    console.log('here');
+    this.validateUpdateInfo(updateData);
+
     const updateInfo = await User.findOneAndUpdate(
       { _id: id },
       { $set: updateData },
@@ -69,7 +70,7 @@ let exportedMethods = {
     );
 
     if (updateInfo.errors)
-      throw 'Error ecountered while updating the specified user.';
+      throw `Error ecountered while updating the specified user: ${updateInfo.errors}`;
 
     return await this.getUserById(id);
   },
@@ -83,30 +84,37 @@ let exportedMethods = {
     if (!user.password) throw 'Provide password';
     if (user.password !== user.password2) throw 'Password does not match';
     if (user.password < 6) throw 'Password is less than 6 characters';
-
+    /*
     this.checkName(user.firstname);
     this.checkName(user.lastname);
     this.checkEmail(user.email);
-    this.checkPassword(user.password);
+    this.checkPassword(user.password); */
 
     // TODO: Add more validations here for data checking
   },
 
   checkName(input) {
     if (typeof input !== 'string') throw `Name needs to be a string`;
-    const nameFormat = /^[a-zA-Z]+$/;
-    if (nameFormat.test(input)) throw `Name can only contain alphabets`;
+    const nameFormat = new RegExp('[A-Za-z]');
+
+    if (nameFormat.test(input)) {
+    }
+    throw `Name can only contain alphabets`;
   },
 
   checkEmail(input) {
     if (typeof input !== 'string') throw `E-Mail Address has to be a string.`;
-    const emailformat = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const emailformat = new RegExp(
+      '(([^<>()[]\\.,;:s@"]+(.[^<>()[]\\.,;:s@"]+)*)|(".+"))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))'
+    );
     if (!emailformat.test(input.toLowerCase()))
       throw `${input} is not a valid E-Mail Address.`;
   },
 
   checkPassword(input) {
-    const passwordFormat = /^(?=.*\d)(?=.*[a-zA-Z])[a-zA-Z0-9].{6,16}$/;
+    const passwordFormat = new RegExp(
+      '(?=.*d)(?=.*[a-zA-Z])[a-zA-Z0-9].{6,16}'
+    );
     if (input.length >= 6 && input.length <= 16)
       if (!passwordFormat.test(input))
         throw `Password needs to be a valid string of 6-16 characters with at least 1 digit and 1 special character`;
@@ -114,7 +122,7 @@ let exportedMethods = {
   },
 
   async validateUpdateInfo(user) {
-    if (!user) throw 'Error! User does not exist';
+    /* if (!user) throw 'Error! User does not exist';
     if (user.firstname) this.checkName(user.firstname);
     if (user.lastname) this.checkName(user.lastname);
     if (user.email) this.checkEmail(user.email);
@@ -122,7 +130,7 @@ let exportedMethods = {
     if (user.password) {
       if (user.password !== user.password2) throw 'Password does not match';
       this.checkPassword(user.password);
-    }
+    } */
   },
 
   async isAuthorizedUser(email, password) {

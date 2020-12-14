@@ -69,11 +69,11 @@ router.patch('/:id/update', authMiddleWare.loginRequired, async (req, res) => {
       res.status(500).json({ error: e });
     }
   } else {
-    res.status(400).json({
-      pageName: 'Edit User Profile',
-      error:
-        'No fields have been changed from their inital values, so no update has occurred',
-    });
+    req.flash(
+      'error',
+      'No fields have been changed from their inital values, so no update has occurred'
+    );
+    res.status(400).redirect('/donations');
   }
 });
 
