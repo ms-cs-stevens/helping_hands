@@ -26,6 +26,7 @@ const app = express();
       quantity,
       region,
       zipcode,
+      myImage,
       donor_id,
       status = 'submitted'
     ) {
@@ -35,6 +36,7 @@ const app = express();
         quantity,
         region,
         zipcode,
+        myImage,
         donor_id,
         status,
       };

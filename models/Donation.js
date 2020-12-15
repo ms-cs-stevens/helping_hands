@@ -40,7 +40,7 @@ const donationSchema = new mongoose.Schema(
         message: 'Invalid Zipcode!',
       },
     },
-    images: {
+    myImage: {
       type: Array,
       required: 'You must select an image',
     },

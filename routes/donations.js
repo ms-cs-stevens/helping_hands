@@ -63,34 +63,35 @@ router.post('/new', multer1.upload, async (req, res) => {
     msg: 'Images uploaded successfully',
   });
 
-  // //creating the new data into mongodb
-  // const donation = new Donation();
-  // donation.name = req.body.name;
-  // //
-  // //this follows other schema data lile image url, date and color of item
-  // await donation.save();
-  // res.send({
-  //   message: 'blog is created',
-  // });
+  //creating the new data into mongodb
+  const donation = new Donation();
+  donation.name = req.body.name;
+  //
+  //this follows other schema data lile image url, date and color of item
+  await donation.save();
+  res.send({
+    message: 'blog is created',
+  });
 
-  // try {
-  //   let { name, description, quantity, region, zipcode } = req.body;
-  //   let newDonation = await donationData.create(
-  //     name,
-  //     description,
-  //     quantity,
-  //     region,
-  //     zipcode,
-  //     req.session.user._id
-  //   );
+  try {
+    let { name, description, quantity, region, zipcode, myImage } = req.body;
+    let newDonation = await donationData.create(
+      name,
+      description,
+      quantity,
+      region,
+      zipcode,
+      myImage,
+      req.session.user._id
+    );
 
-  //   req.flash('success', 'Donation Created Successfully!!');
+    req.flash('success', 'Donation Created Successfully!!');
 
-  //   res.redirect(`/donations/${newDonation._id}`);
-  // } catch (e) {
-  //   req.flash('danger', e.message);
-  //   res.redirect(`/donations/new`, { donation: newDonation });
-  // }
+    res.redirect(`/donations/${newDonation._id}`);
+  } catch (e) {
+    req.flash('danger', e.message);
+    res.redirect(`/donations/new`, { donation: newDonation });
+  }
 });
 
 // gets donation by id
