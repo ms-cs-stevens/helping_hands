@@ -1,1 +1,43 @@
-{{>edit_user_form}}
+<div id="profile-page">
+  <div class="container col-md-8 my-5">
+    <h2 class="page_title">{{loggedInUser.firstname}}'s Profile</h2>
+    <form id="profile" action="/users/{{loggedInUser._id}}/update" method="POST"
+      oninput='password2.setCustomValidity(password2.value != password.value ? "Passwords do not match." : "")'>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="firstname">First Name</label>
+          <input type="text" class="form-control" id="firstname" name="firstname" value="{{loggedInUser.firstname}}" autofocus>
+        </div>
+        <div class="form-group col-md-6">
+          <label for="lastname">Last Name</label>
+          <input type="text" class="form-control" id="lastname" name="lastname" value="{{loggedInUser.lastname}}" >
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputEmail">Email</label>
+        <input type="email" class="form-control" id="inputEmail" name="email" value="{{loggedInUser.email}}" disabled>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="inputGender">Gender ({{loggedInUser.gender}})</label>
+          <select id="inputGender" class="form-control" name="gender">
+            {{#each genders}}
+              <option {{#if (equal this ../loggedInUser.gender)}}selected=selected{{/if}} value={{this}}>{{this}}</option>
+            {{/each}}
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputPassword">Password Update</label>
+        <input type="password" class="form-control" id="inputPassword" name="password" autocomplete="false" placeholder="********">
+      </div>
+      <div class="form-group">
+        <label for="inputPassword2">Confirm Updated Password</label>
+        <input type="password" class="form-control" id="inputPassword2" name="password2" autocomplete="false" placeholder="********" >
+      </div>
+      <input type="text" hidden name="method" value="patch">
+      <button type="submit" class="btn btn-primary">Update</button>
+      <a href=".">Update</a>
+    </form>
+  </div>
+</div>

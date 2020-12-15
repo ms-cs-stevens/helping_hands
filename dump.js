@@ -2,12 +2,15 @@
 module.exports = {
   roles: [
     {
+      _id: 1,
       name: 'Admin',
     },
     {
+      _id: 2,
       name: 'Donor',
     },
     {
+      _id: 3,
       name: 'Recipient',
     },
   ],

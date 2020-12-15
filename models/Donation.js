@@ -37,7 +37,7 @@ const donationSchema = new mongoose.Schema(
         validator: function (v) {
           return v.length == 5;
         },
-        message: 'Invalid Zipcode!',
+        message: 'Invalid Zipcode. Zipcode must be atleast 5 digits!',
       },
     },
     images: {

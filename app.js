@@ -82,6 +82,13 @@ app.use('/donations/:id/update', (req, res, next) => {
   next();
 });
 
+app.use('/users/:id/update', (req, res, next) => {
+  if (req.body.method == 'patch') {
+    req.method = 'PATCH';
+  }
+  next();
+});
+
 app.use('/donations/:id/approve', (req, res, next) => {
   req.method = 'PATCH';
   next();

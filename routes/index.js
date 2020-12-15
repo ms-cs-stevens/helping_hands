@@ -12,23 +12,34 @@ module.exports = (app) => {
   app.get('/', authMiddlewares.isLoggedIn, async (req, res) => {
     res.status(200).render('static/home', {
       title: 'Home',
-      message: req.flash('success'),
+      messages: req.flash(),
+      pageName: 'Home',
       sessionMessage: res.locals.sessionFlash,
-      layout: 'main.handlebars',
+      layout: 'main',
     });
   });
 
-  app.get('/about', async (req, res) => {
-    res
-      .status(200)
-      .render('static/about', { title: 'About', layout: 'main.handlebars' });
+  app.get('/aboutUs', async (req, res) => {
+    res.status(200).render('static/aboutUs', {
+      title: 'About Helping Hands',
+      layout: req.session.user ? 'main2' : 'main',
+      pageName: 'About Us',
+    });
   });
 
+  app.get('/terms&conditions', async (req, res) => {
+    res.status(200).render('static/terms&conditions', {
+      title: 'Helping Hands: Terms of Service',
+      layout: req.session.user ? 'main2' : 'main',
+      pageName: 'Terms and Conditions',
+    });
+  });
   // unknown paths
   app.use('*', (req, res) => {
     res.status(404).render('customError', {
       errorReason: '404 Not Found!!!',
-      message: "Page you're looking for is not found. Please check your URL",
+      pageName: 'Error!!',
+      messages: "Page you're looking for is not found. Please check your URL",
     });
   });
 };

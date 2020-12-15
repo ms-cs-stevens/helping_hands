@@ -6,29 +6,28 @@ function loginRequired(req, res, next) {
 function isLoggedIn(req, res, next) {
   let user = req.session.user;
   if (user) {
-    req.flash('success', 'Already logged in!');
-    return res.redirect(`/users/${user._id}/dashboard`);
+    return res.redirect(`/donations`);
   }
   return next();
 }
 
 function donorRequired(req, res, next) {
-  authorizeUser(req, res, 'donor');
+  authorizeUser(req, res, 'donor', next);
 }
 
 function recipientRequired(req, res, next) {
-  authorizeUser(req, res, 'recipient');
+  authorizeUser(req, res, 'recipient', next);
 }
 
 function adminRequired(req, res, next) {
-  authorizeUser(req, res, 'admin');
+  authorizeUser(req, res, 'admin', next);
 }
 
-function authorizeUser(req, res, role_name) {
+function authorizeUser(req, res, role_name, next) {
   try {
     let user = req.session.user;
     if (!user) return res.redirect('/auth/login');
-    if (user.role_name !== role_name)
+    if (![role_name, 'admin'].includes(user.role_name))
       return res.status(401).render('customError', {
         title: 'Unauthorized Access',
         errorReason: 'You do not have access to this page.',
@@ -36,6 +35,7 @@ function authorizeUser(req, res, role_name) {
 
     return next();
   } catch (error) {
+    console.log(error);
     res.status(500).render('customError', {
       title: 'Server error',
       errorReason: 'Something bad happened',

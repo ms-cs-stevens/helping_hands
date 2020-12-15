@@ -3,12 +3,19 @@ const mongoose = require('mongoose');
 require('dotenv').config({ path: 'variables.env' });
 
 // Connect to our Database and handle any bad connections // move to another file later
-mongoose.connect(process.env.DATABASE, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false,
-  useCreateIndex: true,
-});
+mongoose.connect(
+  process.env.DATABASE,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+  },
+  () => {
+    // drop old db if already present
+    mongoose.connection.db.dropDatabase();
+  }
+);
 mongoose.Promise = global.Promise; // Tell Mongoose to use ES6 promises
 mongoose.connection.on('error', (err) => {
   console.error(`🙅 🚫 🙅 🚫 🙅 🚫 🙅 🚫 → ${err.message}`);
@@ -24,19 +31,8 @@ async function createRoles() {
 }
 
 async function createUsers() {
-  let user,
-    createdUsers = 0;
-  const roles = await Role.find(
-    { name: { $in: ['Admin', 'Donor', 'Recipient'] } },
-    '_id'
-  );
-  for (let i = 0; i < 3; i++) {
-    user = users[i];
-    user.role_id = roles[i]._id;
-    await User.create(user);
-    createdUsers++;
-  }
-  console.log(`${createdUsers} users created !!`);
+  let createdUsers = await User.create(users);
+  console.log(`${createdUsers.length} users created !!`);
 }
 
 async function createDonations() {
@@ -45,6 +41,7 @@ async function createDonations() {
 }
 
 async function dumpDatabase() {
+  // create new db and new collections with data
   await createRoles();
   await createUsers();
   await createDonations();

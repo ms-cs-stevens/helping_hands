@@ -1,10 +1,24 @@
+@import './donation.css';
 /* ---------------------------------------------------
     SIDEBAR STYLE
 ----------------------------------------------------- */
-
 .wrapper {
   display: flex;
   width: 100%;
+}
+
+.body-container {
+  margin-top: 15px;
+}
+
+.nav-bar-row {
+  width: 100%;
+}
+
+.page-name {
+  text-align: center;
+  font-size: 1.3em;
+  font-weight: 500;
 }
 
 #sidebar {
@@ -26,6 +40,7 @@
 #sidebar .sidebar-header {
   padding: 20px;
   background: #2d4054;
+  font-size: 2em;
 }
 
 #sidebar ul.components {
@@ -142,4 +157,19 @@ a.article:hover {
   #sidebarCollapse span {
     display: none;
   }
+}
+
+.users {
+  padding: 1em;
+}
+
+#flash-message {
+  position: fixed;
+  top: 12%;
+  z-index: 100;
+  width: 70%;
+}
+
+.toggle-handle {
+  background: white;
 }

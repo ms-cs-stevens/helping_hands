@@ -22,17 +22,11 @@ const handlebarsInstance = exphbs.create({
       };
       return date.toLocaleDateString(undefined, options);
     },
-    asJSON: (obj, spacing) => {
-      if (typeof spacing === 'number')
-        return new Handlebars.SafeString(JSON.stringify(obj, null, spacing));
-
-      return new Handlebars.SafeString(JSON.stringify(obj));
-    },
-    userType: (name, uType) => {
-      return name === uType ? 'selected' : '';
-    },
     equal: (a, b) => {
       return a == b;
+    },
+    or: (exp1, exp2) => {
+      return exp1 || exp2;
     },
   },
   partialsDir: ['views/partials/'],
