@@ -18,7 +18,9 @@
         </div>
       </div>
       <div class="col-md-4">
-        <img src="https://qvc.scene7.com/is/image/QVC/e/86/e353286.001?$aempdzoom$" width="100%" alt="{{donation.name}}">
+        {{#each donation.images as |image|}}
+          <img src={{image}} width="100%" alt="{{donation.name}}">
+        {{/each}}
       </div>
     </div>
   </div>

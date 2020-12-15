@@ -45,5 +45,5 @@ module.exports = {
     fileFilter: function (req, file, cb) {
       checkFileType(file, cb);
     },
-  }).array('myImage'),
+  }).array('images'),
 };

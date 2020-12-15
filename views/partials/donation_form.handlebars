@@ -10,6 +10,7 @@
       </ul>
     </div>
   {{/if}}
+
   <div class="form-row">
     <div class="form-group col-md-12">
       <label for="name">Donation Name*</label>
@@ -34,9 +35,17 @@
     <input type="number" name="zipcode" class="form-control" id="zipcode" required value="{{donation.zipcode}}" placeholder="Input number of items">
   </div>
   <div class="file-field input-field">
+    {{#if file}}
+      <img class="img-responsive" src={{file}} width="400" height="400" />
+    {{else}}
+      {{#each donation.images as |image|}}
+        <img src={{image}} width="30%" alt="{{donation.name}}">
+      {{/each}}
+    {{/if}}
+
     <div class="btn">
-      <span>Select Images</span>
-      <input type="file" name="myImage" multiple>
+      <label for="images">Select Images</lable>
+      <input type="file" id="images" name="images" multiple>
     </div>
   </div>
 
@@ -53,8 +62,3 @@
     {{/if}}
   </button>
 </form>
-{{#if file}}
-  <img class="img-responsive" src={{file}} width="400" height="400" />
-{{else}}
-  {{mul}}
-{{/if}}
