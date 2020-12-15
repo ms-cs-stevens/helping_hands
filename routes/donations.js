@@ -5,12 +5,9 @@ const donationMiddleware = require('../middlewares/donation');
 const router = express.Router();
 const multerHelper = require('../helpers/multer');
 const cloudinaryHelper = require('../helpers/cloudinary');
-// const path = require('path');
-// const bodyParser = require('body-parser');
+
 //file system
 const fs = require('fs');
-// const { url } = require('inspector');
-// const static = express.static(__dirname + '/public');
 
 // gets all approved donations for display
 router.get('/', async (req, res) => {
