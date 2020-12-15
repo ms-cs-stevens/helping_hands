@@ -13,131 +13,18 @@ const static = express.static(__dirname + '/public');
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo')(session);
 
-require('./models/Donation'); //calling the model to update data from cloudinary into mongo
+// require('./models/Donation'); //calling the model to update data from cloudinary into mongo
 
 //making sure mongo is working
 mongoose.connection.once('open', () => {
   console.log('Mongo is running');
 });
+
 const configRoutes = require('./routes');
 const { handlebarsInstance } = require('./helpers/handlebar');
-const cloudinary = require('./cloudinary');
-
-//file system
-const fs = require('fs');
-
-//set storage Engine
-const storage = multer.diskStorage({
-  destination: './public/uploads/',
-  //cb means call back
-  //this randomly generates a name for the image everytime its uplopaded
-  filename: function (req, file, cb) {
-    cb(
-      null,
-      file.fieldname + '-' + Date.now() + path.extname(file.originalname)
-    );
-  },
-});
-
 const Donation = mongoose.model('Donation');
 
-//init upload
-const upload = multer({
-  storage: storage,
-  limits: { fileSize: 1000000 },
-  fileFilter: function (req, file, cb) {
-    checkFileType(file, cb);
-  },
-}).array('myImage');
-
-//check file type
-function checkFileType(file, cb) {
-  //allowed extension
-  const filetypes = /jpeg|jpg|png|gif/;
-  //check ext
-  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-  //check mime type
-  const mimetype = filetypes.test(file.mimetype);
-  if (mimetype && extname) {
-    return cb(null, true);
-  } else {
-    cb('Error: Images Only!');
-  }
-}
-
 require('dotenv').config({ path: 'variables.env' });
-
-// //waiting for the posted image to filter
-// app.post('/donations/new', (req, res) => {
-//   upload(req, res, (err) => {
-//     if (err) {
-//       res.render('donations/new', { msg: err });
-//       return;
-//     }
-//     console.log(req.file)
-//     // else
-//     // {
-//     //   if (req.file == undefined) {
-//     //     res.render('donations/new', { msg: 'Error: No file selected 22' });
-//     //     return;
-//     //   } else {
-//     //     res.render('donations/new', {
-//     //       msg: 'File Uploaded!',
-//     //       file: `/${req.file.path}`,
-//     //       mul: 'No file Selected',
-//     //     });
-
-//     //     //`uploads/${req.file.filename}`
-//     //   }
-
-//     //   console.log(req.file)
-//     //   res.send("test")
-//     // }
-//   });
-// });
-
-// app.use('/donations/upload', upload, async (req, res) => {
-app.use('/donations/new', upload, async (req, res) => {
-  const uploader = async (path) => await cloudinary.uploads(path, 'Images');
-
-  if (req.method === 'POST') {
-    const urls = [];
-    const files = req.files;
-    for (const file of files) {
-      const { path } = file;
-      const newPath = await uploader(path);
-      urls.push(newPath);
-
-      //deleting file from server after upload
-      // fs.unlinkSync(path);
-    }
-    res.status(200).json({
-      message: 'Images uploaded successfully',
-      data: urls,
-    });
-
-    //creating the new data into mongodb
-    const donation = new Donation();
-    donation.name = req.body.name;
-    //
-    //this follows other schema data lile image url, date and color of item
-    await donation.save();
-    res.send({
-      message: 'blog is created',
-    });
-  } else if (req.method === 'GET') {
-    res.status(200).render('donations/new', {
-      title: 'upload',
-      layout: 'main.handlebars',
-    });
-  } else {
-    res.status(405).render('donations/new', {
-      title: 'error',
-      layout: 'main.handlebars',
-      err: 'Images not uploaded successfully',
-    });
-  }
-});
 
 app.use('/public', static);
 app.use(express.static('public/images'));
