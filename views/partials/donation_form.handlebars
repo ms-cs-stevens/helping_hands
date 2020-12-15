@@ -1,41 +1,44 @@
 <form id="donation_form" action={{action}} method={{method}}>
   {{#if errors}}
-    <div class="errors">
-      {{#each errors as |error|}}
-        {{error}}
-      {{/each}}
+    <div class="validation-errors">
+      <ul class='error-list'>
+        <p class="error-header">Your submission has {{errors.length}} error(s)!</p>
+        {{#each errors as |error|}}
+          <li>{{error}}</li>
+        {{/each}}
+      </ul>
     </div>
   {{/if}}
   <div class="form-row">
     <div class="form-group col-md-12">
-      <label for="name">Donation Name</label>
-      <input type="text" name="name" class="form-control" id="name" required placeholder="Enter Name" value="{{donation.name}}">
+      <label for="name">Donation Name*</label>
+      <input type="text" name="name" class="form-control" required id="name" placeholder="Enter Name" value="{{donation.name}}">
     </div>
     <div class="form-group col-md-12">
-      <label for="description">Description</label>
-      <textarea type="description" name="description" class="form-control" id="description"
-      placeholder="Enter donation description" required>{{donation.description}}</textarea>
+      <label for="description">Description*</label>
+      <textarea type="description" name="description" required class="form-control" id="description"
+      placeholder="Enter donation description">{{donation.description}}</textarea>
     </div>
   </div>
   <div class="form-group">
-    <label for="quantity">Quantity</label>
-    <input type="number" name="quantity" class="form-control" id="quantity" value="{{donation.quantity}}" placeholder="Input number of items">
+    <label for="quantity">Quantity*</label>
+    <input type="number" name="quantity" class="form-control" id="quantity" required value="{{donation.quantity}}" placeholder="Input number of items">
   </div>
   <div class="form-group">
-    <label for="region">Region</label>
-    <input type="text" name="region" class="form-control" id="region" value="{{donation.region}}" placeholder="Enter Region">
+    <label for="region">Region*</label>
+    <input type="text" name="region" class="form-control" id="region" required value="{{donation.region}}" placeholder="Enter Region">
   </div>
   <div class="form-group">
-    <label for="zipcode">Zipcode</label>
-    <input type="number" name="zipcode" class="form-control" id="zipcode" value="{{donation.zipcode}}" placeholder="Input number of items">
+    <label for="zipcode">Zipcode*</label>
+    <input type="number" name="zipcode" class="form-control" id="zipcode" required value="{{donation.zipcode}}" placeholder="Input number of items">
   </div>
-  {{#if donation}}
+  {{#if edit}}
     <div class="form-group">
       <input type="text" name="method" id="method" value="patch" hidden>
     </div>
   {{/if}}
   <button type="submit" class="btn btn-outline-success form-control">
-    {{#if donation }}
+    {{#if edit }}
       Edit Donation
     {{else}}
       Create Donation

@@ -117,6 +117,7 @@ router.get(
         reviewedDonations,
         submittedDonations,
         title: 'Review Donations',
+        message: req.flash(),
       };
 
       res.render('users/review_donations', options);
@@ -135,5 +136,25 @@ router.get(
 router.get('/:id/settings', async (req, res) => {
   res.json({ message: 'Implement Settings page here' });
 });
+
+router.patch(
+  '/:id/toggle_active',
+  authMiddleWare.adminRequired,
+  async (req, res) => {
+    let id = req.params.id;
+    let updatedObject = { active: !req.user.active };
+    try {
+      let user = await userData.getById(id);
+      if (!user) throw 'User Not found';
+      let updatedUser = await userData.update(id, updatedObject);
+      if (updatedUser) {
+        req.flash('info', 'Status updated for the user.');
+        res.redirect(`/users`);
+      }
+    } catch (error) {
+      res.json({ error: error });
+    }
+  }
+);
 
 module.exports = router;

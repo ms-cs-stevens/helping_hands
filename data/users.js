@@ -8,6 +8,7 @@ userObject = (user) => {
     firstname: user.firstname,
     lastname: user.lastname,
     email: user.email,
+    active: user.active,
     gender: user.gender,
     phone: user.phone,
     role_id: user.role_id,

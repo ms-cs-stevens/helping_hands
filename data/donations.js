@@ -1,5 +1,48 @@
 const { Donation } = require('../models');
 
+function checkString(string, name) {
+  if (!string) throw `You need to supply a ${name}!`;
+}
+
+function checkQuantity(quantity) {
+  if (!quantity) throw `Quantity must be greater than 0!`;
+}
+
+function checkZipcode(zipcode) {
+  if (!zipcode || !zipcode.length == 5) throw `Zipcode must be of 5 digits!`;
+}
+
+function checkForInvalidCredentials(donationInfo, donation) {
+  let updatedObject = {};
+  checkString(donationInfo.name, 'name');
+  checkString(donationInfo.description, 'description');
+  checkString(donationInfo.region, 'region');
+  checkQuantity(donationInfo.quantity);
+  checkZipcode(donationInfo.zipcode);
+
+  if (donationInfo.name != donation.name) {
+    updatedObject.name = donationInfo.name;
+  }
+  if (donationInfo.description != donation.description) {
+    updatedObject.description = donationInfo.description;
+  }
+
+  if (donationInfo.quantity != donation.quantity) {
+    updatedObject.quantity = donationInfo.quantity;
+  }
+
+  if (donationInfo.region != donation.region) {
+    updatedObject.region = donationInfo.region;
+  }
+
+  if (donationInfo.zipcode != donation.zipcode) {
+    updatedObject.zipcode = donationInfo.zipcode;
+  }
+
+  if (Object.keys(updatedObject).length <= 0)
+    throw `No information has been specified to update the specified donation`;
+}
+
 module.exports = {
   async allDonations() {
     // sort all the donations by created_on date
@@ -34,7 +77,6 @@ module.exports = {
       donor_id,
       status,
     };
-
     const newDonation = await Donation.create(donationObj);
     return newDonation;
   },
@@ -45,13 +87,17 @@ module.exports = {
   },
 
   //update donation info
-  async updateDonation(id, donationUpdateInfo) {
+  async updateDonation(id, donationUpdateInfo, rejectApprove = false) {
     //find the specified donation and all his/her information
     const donation = await this.getById(id);
+
     if (!donation) throw 'Donation not found';
     //handle no information being provided for a specified donation
-    if (!Object.keys(donationUpdateInfo))
-      throw `No information has been specified to update the specified donation`;
+    if (!rejectApprove) {
+      checkForInvalidCredentials(donationUpdateInfo, donation);
+      // change the state back to submitted if updated the donation so that admin reviews it again
+      donationUpdateInfo.status = 'submitted';
+    }
 
     const updateInfo = await Donation.findOneAndUpdate(
       { _id: id },

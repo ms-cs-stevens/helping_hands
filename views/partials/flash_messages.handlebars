@@ -13,16 +13,18 @@
   {{/if}}
   {{#if message}}
     <div class="row">
-      {{#each message}}
-        <div class="col-10 offset-md-1">
-          <div class="alert alert-{{@key}} alert-dismissible fade show" role="alert">
-            {{this}}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
+      <ul>
+        {{#each message}}
+          <div class="col-10 offset-md-1">
+            <div class="alert alert-{{@key}} alert-dismissible fade show" role="alert">
+              {{this}}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
           </div>
-        </div>
-      {{/each}}
+        {{/each}}
+      </ul>
     </div>
   {{/if}}
 </div>

@@ -39,7 +39,7 @@ router.get('/new', authMiddleware.donorRequired, async (req, res) => {
 router.post('/', authMiddleware.donorRequired, async (req, res) => {
   try {
     let { name, description, quantity, region, zipcode } = req.body;
-    let newDonation = await donationData.create(
+    createdDonation = await donationData.create(
       name,
       description,
       quantity,
@@ -49,11 +49,26 @@ router.post('/', authMiddleware.donorRequired, async (req, res) => {
     );
 
     req.flash('success', 'Donation Created Successfully!!');
-
-    res.redirect(`/donations/${newDonation._id}`);
-  } catch (e) {
-    req.flash('danger', e.message);
-    res.redirect(`/donations/new`, { donation: newDonation });
+    res.redirect(`/donations/${createdDonation._id}`);
+  } catch (err) {
+    if (err.errors) {
+      let errorKeys = Object.keys(err.errors);
+      let errors = [];
+      errorKeys.forEach((key) => errors.push(err.errors[key].message));
+      res.status(422).render(`donations/new`, {
+        title: 'Donate Goods',
+        pageName: 'New Donation',
+        donation: req.body,
+        errors,
+      });
+    } else {
+      res.status(422).render(`donations/new`, {
+        title: 'Donate Goods',
+        pageName: 'New Donation',
+        donation: req.body,
+        errors: [err],
+      });
+    }
   }
 });
 
@@ -62,13 +77,17 @@ router.get('/:id', async (req, res) => {
   let user = req.session.user;
   try {
     let donation = await donationData.getById(req.params.id);
+
+    let allowActions =
+      ['submitted', 'rejected'].includes(donation.status) &&
+      (user._id == donation.donor_id || user.role_name == 'admin');
+
     if (donation) {
       res.status(200).render('donations/show', {
         donation: donation,
         title: 'Donation',
         pageName: 'Donation Details',
-        allowActions:
-          user._id == donation.donor_id || user.role_name == 'admin',
+        allowActions,
         message: req.flash(),
       });
     } else {
@@ -118,56 +137,36 @@ router.patch(
   async (req, res) => {
     let id = req.params.id;
     let donationInfo = req.body;
-    let updatedObject = {};
+    let donation;
     try {
-      let donation = await donationData.getById(id);
-      if (donationInfo.name && donationInfo.name !== donation.name) {
-        updatedObject.name = donationInfo.name;
+      donation = await donationData.getById(id);
+      const updatedDonation = await donationData.updateDonation(
+        id,
+        donationInfo
+      );
+      if (updatedDonation) {
+        req.flash('success', 'Donation updated successfully');
+        res.redirect(`/donations/${id}`);
       }
-      if (
-        donationInfo.description &&
-        donationInfo.description !== donation.description
-      ) {
-        updatedObject.description = donationInfo.description;
+    } catch (err) {
+      if (err.errors) {
+        let errorKeys = Object.keys(err.errors);
+        let errors = [];
+        errorKeys.forEach((key) => errors.push(err.errors[key].message));
+        res.status(422).render(`donations/edit`, {
+          title: 'Donate Goods',
+          pageName: 'Edit Donation',
+          donation: donation,
+          errors,
+        });
+      } else {
+        res.status(422).render(`donations/edit`, {
+          title: 'Donate Goods',
+          pageName: 'Edit Donation',
+          donation: donation,
+          errors: [err],
+        });
       }
-
-      if (
-        donationInfo.quantity &&
-        donationInfo.quantity !== donation.quantity
-      ) {
-        updatedObject.quantity = donationInfo.quantity;
-      }
-
-      if (donationInfo.region && donationInfo.region !== donation.region) {
-        updatedObject.region = donationInfo.region;
-      }
-
-      if (donationInfo.zipcode && donationInfo.zipcode !== donation.zipcode) {
-        updatedObject.zipcode = donationInfo.zipcode;
-      }
-    } catch (e) {
-      res.status(404).json({ error: 'Donation not found' });
-      return;
-    }
-    if (Object.keys(updatedObject).length > 0) {
-      try {
-        const updatedDonation = await donationData.updateDonation(
-          id,
-          updatedObject
-        );
-        if (updatedDonation) {
-          req.flash('success', 'Donation updated successfully');
-          res.redirect(`/donations/${id}`);
-        }
-      } catch (e) {
-        res.status(500).json({ error: e });
-      }
-    } else {
-      res.status(400).json({
-        pageName: 'Edit Donation',
-        error:
-          'No fields have been changed from their inital values, so no update has occurred',
-      });
     }
   }
 );
@@ -198,7 +197,8 @@ router.patch('/:id/approve', authMiddleware.adminRequired, async (req, res) => {
     if (!donation) throw 'Donation Not found';
     const updatedDonation = await donationData.updateDonation(
       id,
-      updatedObject
+      updatedObject,
+      true
     );
     if (updatedDonation) {
       req.flash('success', 'Donation approved!');
@@ -215,7 +215,11 @@ router.patch('/:id/reject', authMiddleware.adminRequired, async (req, res) => {
   try {
     let donation = await donationData.getById(id);
     if (!donation) throw 'Donation Not found';
-    let updatedDonation = await donationData.updateDonation(id, updatedObject);
+    let updatedDonation = await donationData.updateDonation(
+      id,
+      updatedObject,
+      true
+    );
     if (updatedDonation) {
       req.flash('info', 'Donation Rejected!');
       res.redirect(`/users/${req.session.user._id}/review_donations`);

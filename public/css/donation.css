@@ -1,3 +1,14 @@
 #donation {
   margin-top: 2em;
 }
+
+.validation-errors {
+  background-color: #ffcbc8;
+  border: 1px solid #ff4136;
+  padding: 10px 5px;
+  color: red;
+}
+
+.error-header {
+  font-size: larger;
+}
