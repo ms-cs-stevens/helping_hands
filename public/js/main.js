@@ -11,6 +11,10 @@ window.setTimeout(function () {
   });
 }, 3000);
 
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip();
+});
+
 $(document).ready(function () {
   $('#sidebar').mCustomScrollbar({
     theme: 'minimal',

@@ -3,6 +3,12 @@ const donationData = require('../data/donations');
 const authMiddleware = require('../middlewares/auth');
 const donationMiddleware = require('../middlewares/donation');
 const router = express.Router();
+const multerHelper = require('../helpers/multer');
+const cloudinaryHelper = require('../helpers/cloudinary');
+
+//file system
+const fs = require('fs');
+const multer = require('multer');
 
 // gets all approved donations for display
 router.get('/', async (req, res) => {
@@ -36,41 +42,69 @@ router.get('/new', authMiddleware.donorRequired, async (req, res) => {
 });
 
 // creates a new donation
-router.post('/', authMiddleware.donorRequired, async (req, res) => {
-  try {
-    let { name, description, quantity, region, zipcode } = req.body;
-    createdDonation = await donationData.create(
-      name,
-      description,
-      quantity,
-      region,
-      zipcode,
-      req.session.user._id
-    );
+router.post(
+  '/',
+  authMiddleware.donorRequired,
+  multerHelper.upload,
+  async (req, res) => {
+    try {
+      const uploader = async (path) =>
+        await cloudinaryHelper.uploads(path, 'Images');
+      const urls = [];
+      const files = req.files;
 
-    req.flash('success', 'Donation Created Successfully!!');
-    res.redirect(`/donations/${createdDonation._id}`);
-  } catch (err) {
-    if (err.errors) {
-      let errorKeys = Object.keys(err.errors);
-      let errors = [];
-      errorKeys.forEach((key) => errors.push(err.errors[key].message));
-      res.status(422).render(`donations/new`, {
-        title: 'Donate Goods',
-        pageName: 'New Donation',
-        donation: req.body,
-        errors,
+      if (files.length == 0) throw 'Please select atleast one image';
+
+      for (const file of files) {
+        const { path } = file;
+        const newPath = await uploader(path);
+        urls.push(newPath);
+
+        //deleting file from server after upload
+        fs.unlinkSync(path);
+      }
+
+      let images = [];
+
+      urls.forEach((u) => {
+        images.push(u.url);
       });
-    } else {
-      res.status(422).render(`donations/new`, {
-        title: 'Donate Goods',
-        pageName: 'New Donation',
-        donation: req.body,
-        errors: [err],
-      });
+
+      let { name, description, quantity, region, zipcode } = req.body;
+      createdDonation = await donationData.create(
+        name,
+        description,
+        quantity,
+        region,
+        zipcode,
+        images,
+        req.session.user._id
+      );
+
+      req.flash('success', 'Donation Created Successfully!!');
+      res.redirect(`/donations/${createdDonation._id}`);
+    } catch (err) {
+      if (err.errors) {
+        let errorKeys = Object.keys(err.errors);
+        let errors = [];
+        errorKeys.forEach((key) => errors.push(err.errors[key].message));
+        res.status(422).render(`donations/new`, {
+          title: 'Donate Goods',
+          pageName: 'New Donation',
+          donation: req.body,
+          errors,
+        });
+      } else {
+        res.status(422).render(`donations/new`, {
+          title: 'Donate Goods',
+          pageName: 'New Donation',
+          donation: req.body,
+          errors: [err],
+        });
+      }
     }
   }
-});
+);
 
 // gets donation by id
 router.get('/:id', async (req, res) => {
@@ -118,6 +152,7 @@ router.get(
         title: 'Edit Donation',
         pageName: 'Edit Donation',
         donation: donation,
+        edit: true,
       });
     } catch (error) {
       res.status(404).render('customError', {
@@ -133,10 +168,35 @@ router.get(
 router.patch(
   '/:id/update',
   authMiddleware.donorRequired,
+  multerHelper.upload,
   donationMiddleware.canPerformActions,
   async (req, res) => {
     let id = req.params.id;
     let donationInfo = req.body;
+    const uploader = async (path) =>
+      await cloudinaryHelper.uploads(path, 'Images');
+    const urls = [];
+    const files = req.files;
+
+    if (files.length == 0) throw 'Please select atleast one image';
+
+    for (const file of files) {
+      const { path } = file;
+      const newPath = await uploader(path);
+      urls.push(newPath);
+
+      //deleting file from server after upload
+      fs.unlinkSync(path);
+    }
+
+    let images = [];
+
+    urls.forEach((u) => {
+      images.push(u.url);
+    });
+
+    donationInfo.images = images;
+
     let donation;
     try {
       donation = await donationData.getById(id);

@@ -1,4 +1,4 @@
-<form id="donation_form" action={{action}} method={{method}}>
+<form id="donation_form" action={{action}} method={{method}} enctype="multipart/form-data">
   {{#if errors}}
     <div class="validation-errors">
       <ul class='error-list'>
@@ -9,6 +9,7 @@
       </ul>
     </div>
   {{/if}}
+
   <div class="form-row">
     <div class="form-group col-md-12">
       <label for="name">Donation Name*</label>
@@ -22,7 +23,7 @@
   </div>
   <div class="form-group">
     <label for="quantity">Quantity*</label>
-    <input type="number" name="quantity" class="form-control" id="quantity" required value="{{donation.quantity}}" placeholder="Input number of items">
+    <input type="number" name="quantity" min="1" class="form-control" id="quantity" required value="{{donation.quantity}}" placeholder="Input number of items">
   </div>
   <div class="form-group">
     <label for="region">Region*</label>
@@ -30,13 +31,27 @@
   </div>
   <div class="form-group">
     <label for="zipcode">Zipcode*</label>
-    <input type="number" name="zipcode" class="form-control" id="zipcode" required value="{{donation.zipcode}}" placeholder="Input number of items">
+    <input type="number" name="zipcode" class="form-control" id="zipcode" required value="{{donation.zipcode}}" placeholder="Input Zipcode" min="1">
   </div>
+  <label for="formFile" class="form-label">Upload Images*
+    <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" title="Upload atleast 1 image"></i>
+  </label>
+  <div class="mb-3 images-block border-lightgray" data-toggle="tooltip" title="Upload atleast 1 image">
+    {{#each donation.images as |image|}}
+      <img src={{image}} width="30%" alt="{{donation.name}}">
+    {{else}}
+      No Images Selected
+    {{/each}}
+    <br>
+    <input class="form-control-file" type="file" id="formFile" name="images" multiple>
+  </div>
+
   {{#if edit}}
     <div class="form-group">
       <input type="text" name="method" id="method" value="patch" hidden>
     </div>
   {{/if}}
+
   <button type="submit" class="btn btn-outline-success form-control">
     {{#if edit }}
       Edit Donation

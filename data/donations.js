@@ -12,6 +12,10 @@ function checkZipcode(zipcode) {
   if (!zipcode || !zipcode.length == 5) throw `Zipcode must be of 5 digits!`;
 }
 
+function checkImage(images) {
+  if (!images) throw `Please provide alteast 1 image!`;
+}
+
 function checkForInvalidCredentials(donationInfo, donation) {
   let updatedObject = {};
   checkString(donationInfo.name, 'name');
@@ -19,12 +23,17 @@ function checkForInvalidCredentials(donationInfo, donation) {
   checkString(donationInfo.region, 'region');
   checkQuantity(donationInfo.quantity);
   checkZipcode(donationInfo.zipcode);
+  checkImage(donationInfo.images);
 
   if (donationInfo.name != donation.name) {
     updatedObject.name = donationInfo.name;
   }
   if (donationInfo.description != donation.description) {
     updatedObject.description = donationInfo.description;
+  }
+
+  if (donationInfo.images != donation.images) {
+    updatedObject.images = donationInfo.images;
   }
 
   if (donationInfo.quantity != donation.quantity) {
@@ -65,6 +74,7 @@ module.exports = {
     quantity,
     region,
     zipcode,
+    images,
     donor_id,
     status = 'submitted'
   ) {
@@ -74,6 +84,7 @@ module.exports = {
       quantity,
       region,
       zipcode,
+      images,
       donor_id,
       status,
     };

@@ -9,6 +9,12 @@ mongoose.connect(process.env.DATABASE, {
   useFindAndModify: false,
   useCreateIndex: true,
 });
+
+//making sure mongo is working
+mongoose.connection.once('open', () => {
+  console.log('Mongo is running');
+});
+
 mongoose.Promise = global.Promise; // Tell Mongoose to use ES6 promises
 mongoose.connection.on('error', (err) => {
   console.error(`🙅 🚫 🙅 🚫 🙅 🚫 🙅 🚫 → ${err.message}`);

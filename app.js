@@ -1,15 +1,21 @@
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const flash = require('express-flash');
 const static = express.static(__dirname + '/public');
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo')(session);
+
 const configRoutes = require('./routes');
 const { handlebarsInstance } = require('./helpers/handlebar');
 
 require('dotenv').config({ path: 'variables.env' });
+
 app.use('/public', static);
 app.use(express.static('public/images'));
 app.use(express.json());
@@ -60,16 +66,12 @@ app.use((req, res, next) => {
 });
 
 app.use('/donations/:id/update', (req, res, next) => {
-  if (req.body.method == 'patch') {
-    req.method = 'PATCH';
-  }
+  req.method = 'PATCH';
   next();
 });
 
 app.use('/users/:id/update', (req, res, next) => {
-  if (req.body.method == 'patch') {
-    req.method = 'PATCH';
-  }
+  req.method = 'PATCH';
   next();
 });
 
