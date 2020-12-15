@@ -1,6 +1,5 @@
 //setting up our cloudinary account linking with multer upload files
 const cloudinary = require('cloudinary');
-
 const dotenv = require('dotenv');
 dotenv.config();
 cloudinary.config({
@@ -9,20 +8,10 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-exports.uploads = (file, folder) => {
-  return new Promise((resolve) => {
-    cloudinary.uploader.upload(
-      file,
-      (result) => {
-        resolve({
-          url: result.url,
-          id: result.public_id,
-        });
-      },
-      {
-        resource_type: 'auto',
-        folder: folder,
-      }
-    );
+exports.uploads = async (file, folder) => {
+  let uploadedImage = await cloudinary.uploader.upload(file, {
+    resource_type: 'auto',
+    folder: folder,
   });
+  return { url: uploadedImage.url, id: uploadedImage.public_id };
 };

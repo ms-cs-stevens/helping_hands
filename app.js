@@ -1,7 +1,5 @@
 const express = require('express');
 const app = express();
-const multer = require('multer');
-const path = require('path');
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -22,7 +20,6 @@ mongoose.connection.once('open', () => {
 
 const configRoutes = require('./routes');
 const { handlebarsInstance } = require('./helpers/handlebar');
-const Donation = mongoose.model('Donation');
 
 require('dotenv').config({ path: 'variables.env' });
 
@@ -76,16 +73,12 @@ app.use((req, res, next) => {
 });
 
 app.use('/donations/:id/update', (req, res, next) => {
-  if (req.body.method == 'patch') {
-    req.method = 'PATCH';
-  }
+  req.method = 'PATCH';
   next();
 });
 
 app.use('/users/:id/update', (req, res, next) => {
-  if (req.body.method == 'patch') {
-    req.method = 'PATCH';
-  }
+  req.method = 'PATCH';
   next();
 });
 

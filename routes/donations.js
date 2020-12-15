@@ -8,6 +8,7 @@ const cloudinaryHelper = require('../helpers/cloudinary');
 
 //file system
 const fs = require('fs');
+const multer = require('multer');
 
 // gets all approved donations for display
 router.get('/', async (req, res) => {
@@ -52,6 +53,8 @@ router.post(
       const urls = [];
       const files = req.files;
 
+      if (files.length == 0) throw 'Please select atleast one image';
+
       for (const file of files) {
         const { path } = file;
         const newPath = await uploader(path);
@@ -60,9 +63,6 @@ router.post(
         //deleting file from server after upload
         fs.unlinkSync(path);
       }
-
-      if (files.length == 0)
-        throw 'Images not uploaded successfully, Please Select an Image';
 
       let images = [];
 
@@ -152,6 +152,7 @@ router.get(
         title: 'Edit Donation',
         pageName: 'Edit Donation',
         donation: donation,
+        edit: true,
       });
     } catch (error) {
       res.status(404).render('customError', {
@@ -167,10 +168,35 @@ router.get(
 router.patch(
   '/:id/update',
   authMiddleware.donorRequired,
+  multerHelper.upload,
   donationMiddleware.canPerformActions,
   async (req, res) => {
     let id = req.params.id;
     let donationInfo = req.body;
+    const uploader = async (path) =>
+      await cloudinaryHelper.uploads(path, 'Images');
+    const urls = [];
+    const files = req.files;
+
+    if (files.length == 0) throw 'Please select atleast one image';
+
+    for (const file of files) {
+      const { path } = file;
+      const newPath = await uploader(path);
+      urls.push(newPath);
+
+      //deleting file from server after upload
+      fs.unlinkSync(path);
+    }
+
+    let images = [];
+
+    urls.forEach((u) => {
+      images.push(u.url);
+    });
+
+    donationInfo.images = images;
+
     let donation;
     try {
       donation = await donationData.getById(id);

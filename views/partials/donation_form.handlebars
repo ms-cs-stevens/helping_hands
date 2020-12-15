@@ -1,5 +1,4 @@
-<form id="donation_form" enctype="{{enctype}}" action={{action}} method={{method}}>
-  {{{msg}}}
+<form id="donation_form" action={{action}} method={{method}} enctype="multipart/form-data">
   {{#if errors}}
     <div class="validation-errors">
       <ul class='error-list'>
@@ -54,6 +53,7 @@
       <input type="text" name="method" id="method" value="patch" hidden>
     </div>
   {{/if}}
+
   <button type="submit" class="btn btn-outline-success form-control">
     {{#if edit }}
       Edit Donation
