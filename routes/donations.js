@@ -1,7 +1,14 @@
 const express = require('express');
 const donationData = require('../data/donations');
-
 const router = express.Router();
+const multer1 = require('../multer');
+const cloudinary = require('../cloudinary');
+const path = require('path');
+const bodyParser = require('body-parser');
+//file system
+const fs = require('fs');
+const { url } = require('inspector');
+const static = express.static(__dirname + '/public');
 
 // gets all approved donations for display
 router.get('/', async (req, res) => {
@@ -30,25 +37,60 @@ router.get('/new', async (req, res) => {
 });
 
 // creates a new donation
-router.post('/', async (req, res) => {
-  try {
-    let { name, description, quantity, region, zipcode } = req.body;
-    let newDonation = await donationData.create(
-      name,
-      description,
-      quantity,
-      region,
-      zipcode,
-      req.session.user._id
-    );
+router.post('/new', multer1.upload, async (req, res) => {
+  const uploader = async (path) => await cloudinary.uploads(path, 'Images');
+  const urls = [];
+  const files = req.files;
+  for (const file of files) {
+    const { path } = file;
+    const newPath = await uploader(path);
+    urls.push(newPath);
 
-    req.flash('success', 'Donation Created Successfully!!');
-
-    res.redirect(`/donations/${newDonation._id}`);
-  } catch (e) {
-    req.flash('danger', e.message);
-    res.redirect(`/donations/new`, { donation: newDonation });
+    //deleting file from server after upload
+    fs.unlinkSync(path);
   }
+  if (files.length == 0) {
+    res.status(405).render('donations/new', {
+      title: 'error',
+
+      msg: 'Images not uploaded successfully, Please Select an Image',
+    });
+    return;
+  }
+  res.status(200).render('donations/new', {
+    title: 'uploaded',
+
+    msg: 'Images uploaded successfully',
+  });
+
+  // //creating the new data into mongodb
+  // const donation = new Donation();
+  // donation.name = req.body.name;
+  // //
+  // //this follows other schema data lile image url, date and color of item
+  // await donation.save();
+  // res.send({
+  //   message: 'blog is created',
+  // });
+
+  // try {
+  //   let { name, description, quantity, region, zipcode } = req.body;
+  //   let newDonation = await donationData.create(
+  //     name,
+  //     description,
+  //     quantity,
+  //     region,
+  //     zipcode,
+  //     req.session.user._id
+  //   );
+
+  //   req.flash('success', 'Donation Created Successfully!!');
+
+  //   res.redirect(`/donations/${newDonation._id}`);
+  // } catch (e) {
+  //   req.flash('danger', e.message);
+  //   res.redirect(`/donations/new`, { donation: newDonation });
+  // }
 });
 
 // gets donation by id

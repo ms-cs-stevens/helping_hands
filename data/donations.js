@@ -2,56 +2,6 @@ const { Donation } = require('../models');
 const express = require('express');
 const router = express.Router();
 const app = express();
-const multer1 = require('../multer');
-const cloudinary = require('../cloudinary');
-const path = require('path');
-const bodyParser = require('body-parser');
-//file system
-const fs = require('fs');
-const static = express.static(__dirname + '/public');
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-app.use('/public', static);
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.use('/donations/new', multer1.upload, async (req, res) => {
-  console.log('getting here.');
-  const uploader = async (path) => await cloudinary.uploads(path, 'Images');
-
-  if (req.method === 'POST') {
-    const urls = [];
-    const files = req.files;
-    for (const file of files) {
-      const { path } = file;
-      const newPath = await uploader(path);
-      urls.push(newPath);
-
-      //deleting file from server after upload
-      // fs.unlinkSync(path);
-    }
-    res.status(200).json({
-      message: 'Images uploaded successfully',
-      data: urls,
-    });
-
-    //creating the new data into mongodb
-    const donation = new Donation();
-    donation.name = req.body.name;
-    //
-    //this follows other schema data lile image url, date and color of item
-    await donation.save();
-    res.send({
-      message: 'blog is created',
-    });
-  } else {
-    res.status(405).render('donations/new', {
-      title: 'error',
-      layout: 'main.handlebars',
-      err: 'Images not uploaded successfully',
-    });
-  }
-});
 
 (module.exports = app),
   {
