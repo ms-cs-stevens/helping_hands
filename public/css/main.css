@@ -13,8 +13,12 @@ body {
   text-align: center;
 }
 
-.flash-message {
-  margin-top: 10px;
+#flash-message {
+  position: fixed;
+  top: 15%;
+  right: 0;
+  z-index: 100;
+  width: 50%;
 }
 
 #wrapper {

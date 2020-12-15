@@ -5,6 +5,7 @@
 
 .donation-details {
   margin-top: 2em;
+  text-align: left !important;
 }
 
 #browse .donation-card-link,

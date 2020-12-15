@@ -2,8 +2,19 @@ const express = require('express');
 const donationData = require('../data/donations');
 const { update } = require('../data/users');
 const userData = require('../data/users');
+const { users } = require('../dump');
 const router = express.Router();
 const authMiddleWare = require('../middlewares/auth');
+
+router.get('/', authMiddleWare.adminRequired, async (req, res) => {
+  let users = await userData.allUsers();
+  res.status(200).render('users/index', {
+    pageName: 'Users',
+    users: users,
+    title: 'User Donations',
+    messages: req.flash(),
+  });
+});
 
 router.get('/:id/donations', authMiddleWare.donorRequired, async (req, res) => {
   let allDonations = await donationData.allDonations();
@@ -16,7 +27,7 @@ router.get('/:id/donations', authMiddleWare.donorRequired, async (req, res) => {
   res.status(200).render('users/my_donations', {
     ...options,
     title: 'User Donations',
-    message: req.flash(),
+    messages: req.flash(),
   });
 });
 
@@ -29,12 +40,15 @@ router.get('/:id/edit', authMiddleWare.loginRequired, async (req, res) => {
       title: 'Profile Page',
       pageName: 'Edit User Info',
       loggedInUser: userOldData,
+      genders: ['Male', 'Female', 'Others'],
+      messages: req.flash(),
     });
   } catch (e) {
     res.status(404).render('customError', {
       title: 'Not found',
       errorReason: e,
       pageName: 'Error',
+      messages: req.flash(),
     });
   }
 });
@@ -52,28 +66,37 @@ router.patch('/:id/update', authMiddleWare.loginRequired, async (req, res) => {
       updatedUserProfile.lastname = updateData.lastname;
     if (updateData.email && updateData.email !== user.email)
       updatedUserProfile.email = updateData.email;
+    if (updateData.gender && updateData.gender !== user.gender)
+      updatedUserProfile.gender = updateData.gender;
     if (updateData.password.length > 0)
       updatedUserProfile.password = updateData.password;
   } catch (e) {
-    res.status(404).json({ error: 'User Does Not Exist!' });
-    return;
+    res.status(404).render('customError', {
+      title: 'Not found',
+      errorReason: e,
+      pageName: 'Error',
+    });
   }
   if (Object.keys(updatedUserProfile).length) {
     try {
       const updated = await userData.update(id, updatedUserProfile);
       if (updated) {
         req.flash('success', 'User profile updated successfully');
-        res.redirect('/donations');
+        res.redirect(`/users/${id}/edit`);
       }
     } catch (e) {
-      res.status(500).json({ error: e });
+      res.status(500).render('customError', {
+        title: 'Internal Server Error',
+        errorReason: 'Something went wrong',
+        pageName: 'Internal Server Error',
+      });
     }
   } else {
     req.flash(
       'error',
       'No fields have been changed from their inital values, so no update has occurred'
     );
-    res.status(400).redirect('/donations');
+    res.status(422).redirect('/donations');
   }
 });
 
@@ -106,6 +129,7 @@ router.get(
         reviewedDonations,
         submittedDonations,
         title: 'Review Donations',
+        messages: req.flash(),
       };
 
       res.render('users/review_donations', options);
@@ -117,12 +141,32 @@ router.get(
   '/:id/orders',
   authMiddleWare.recipientRequired,
   async (req, res) => {
-    res.json({ message: 'Implement my orders page here' });
+    res.json({ messages: 'Implement my orders page here' });
   }
 );
 
 router.get('/:id/settings', async (req, res) => {
-  res.json({ message: 'Implement Settings page here' });
+  res.json({ messages: 'Implement Settings page here' });
 });
+
+router.patch(
+  '/:id/toggle_active',
+  authMiddleWare.adminRequired,
+  async (req, res) => {
+    let id = req.params.id;
+    let updatedObject = { active: !req.user.active };
+    try {
+      let user = await userData.getById(id);
+      if (!user) throw 'User Not found';
+      let updatedUser = await userData.update(id, updatedObject);
+      if (updatedUser) {
+        req.flash('info', 'Status updated for the user.');
+        res.redirect(`/users`);
+      }
+    } catch (error) {
+      res.json({ error: error });
+    }
+  }
+);
 
 module.exports = router;

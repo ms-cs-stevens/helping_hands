@@ -24,6 +24,7 @@ const userSchema = new Schema(
       required: [true, "can't be blank"],
     },
     phone: String,
+    active: { type: Boolean, default: true },
     email: {
       type: String,
       lowercase: true,

@@ -12,7 +12,7 @@ module.exports = (app) => {
   app.get('/', authMiddlewares.isLoggedIn, async (req, res) => {
     res.status(200).render('static/home', {
       title: 'Home',
-      message: req.flash('success'),
+      messages: req.flash(),
       pageName: 'Home',
       sessionMessage: res.locals.sessionFlash,
       layout: 'main',
@@ -39,7 +39,7 @@ module.exports = (app) => {
     res.status(404).render('customError', {
       errorReason: '404 Not Found!!!',
       pageName: 'Error!!',
-      message: "Page you're looking for is not found. Please check your URL",
+      messages: "Page you're looking for is not found. Please check your URL",
     });
   });
 };

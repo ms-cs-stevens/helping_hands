@@ -1,4 +1,4 @@
-<div class="flash-message">
+<div id="flash-message">
   {{#if sessionMessage}}
     <div class="row">
       <div class="col-10 offset-md-1">
@@ -11,9 +11,9 @@
       </div>
     </div>
   {{/if}}
-  {{#if message}}
+  {{#if messages}}
     <div class="row">
-      {{#each message}}
+      {{#each messages}}
         <div class="col-10 offset-md-1">
           <div class="alert alert-{{@key}} alert-dismissible fade show" role="alert">
             {{this}}
