@@ -13,13 +13,6 @@ router.get('/', async (req, res) => {
   });
 });
 
-//come back to this later
-// router.get('/upload', async (req, res) => {
-//   res
-//     .status(200)
-//     .render('donations/upload', { title: 'upload', layout: 'main.handlebars' });
-// });
-
 // gets most-recent 8 new donation creation form
 router.get('/recent', async (req, res) => {
   let approvedDonations = await donationData.getApprovedDonations();
