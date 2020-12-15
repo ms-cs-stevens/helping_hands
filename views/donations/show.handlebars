@@ -21,6 +21,8 @@
         {{#each donation.images as |image|}}
           <img src={{image}} width="100%" alt="{{donation.name}}">
         {{/each}}
+        <a class="btn" href="/donations/{{donation._id}}/reject">Reject</a>
+        <a class="btn" href="/donations/{{donation._id}}/approve">Approve</a>
       </div>
     </div>
   </div>
