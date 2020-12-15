@@ -25,7 +25,7 @@ const donationSchema = new mongoose.Schema(
     donor_id: {
       type: String,
       ref: 'User',
-      required: 'You must supply a donor!',
+      // required: 'You must supply a donor!',
     },
     status: {
       type: String,
@@ -40,7 +40,7 @@ const donationSchema = new mongoose.Schema(
         message: 'Invalid Zipcode!',
       },
     },
-    myImage: {
+    images: {
       type: Array,
       required: 'You must select an image',
     },

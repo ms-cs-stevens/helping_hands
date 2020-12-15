@@ -38,59 +38,60 @@ router.get('/new', async (req, res) => {
 
 // creates a new donation
 router.post('/new', multer1.upload, async (req, res) => {
-  const uploader = async (path) => await cloudinary.uploads(path, 'Images');
-  const urls = [];
-  const files = req.files;
-  for (const file of files) {
-    const { path } = file;
-    const newPath = await uploader(path);
-    urls.push(newPath);
-
-    //deleting file from server after upload
-    fs.unlinkSync(path);
-  }
-  if (files.length == 0) {
-    res.status(405).render('donations/new', {
-      title: 'error',
-
-      msg: 'Images not uploaded successfully, Please Select an Image',
-    });
-    return;
-  }
-  res.status(200).render('donations/new', {
-    title: 'uploaded',
-
-    msg: 'Images uploaded successfully',
-  });
-
-  //creating the new data into mongodb
-  const donation = new Donation();
-  donation.name = req.body.name;
-  //
-  //this follows other schema data lile image url, date and color of item
-  await donation.save();
-  res.send({
-    message: 'blog is created',
-  });
-
   try {
-    let { name, description, quantity, region, zipcode, myImage } = req.body;
+    const uploader = async (path) => await cloudinary.uploads(path, 'Images');
+    const urls = [];
+    const files = req.files;
+
+    for (const file of files) {
+      const { path } = file;
+      const newPath = await uploader(path);
+      urls.push(newPath);
+
+      //deleting file from server after upload
+      fs.unlinkSync(path);
+    }
+
+    if (files.length == 0) {
+      res.status(405).render('donations/new', {
+        title: 'error',
+
+        msg: 'Images not uploaded successfully, Please Select an Image',
+      });
+      return;
+    }
+    // res.status(200).render('donations/new', {
+    //   title: 'uploaded',
+
+    //   msg: 'Images uploaded successfully',
+    // });
+
+    let images = [];
+
+    for (let i = 0; i < urls.length; i++) {
+      images.push(urls[i].url);
+    }
+
+    console.log('inside post route');
+
+    let { name, description, quantity, region, zipcode } = req.body;
     let newDonation = await donationData.create(
       name,
       description,
       quantity,
       region,
       zipcode,
-      myImage,
-      req.session.user._id
+      images
+      // req.session.user._id
     );
 
     req.flash('success', 'Donation Created Successfully!!');
 
     res.redirect(`/donations/${newDonation._id}`);
   } catch (e) {
+    console.log(e);
     req.flash('danger', e.message);
-    res.redirect(`/donations/new`, { donation: newDonation });
+    res.redirect(`/donations/new`, { donation: '' });
   }
 });
 
