@@ -23,7 +23,7 @@
   </div>
   <div class="form-group">
     <label for="quantity">Quantity*</label>
-    <input type="number" name="quantity" class="form-control" id="quantity" required value="{{donation.quantity}}" placeholder="Input number of items">
+    <input type="number" name="quantity" min="1" class="form-control" id="quantity" required value="{{donation.quantity}}" placeholder="Input number of items">
   </div>
   <div class="form-group">
     <label for="region">Region*</label>
@@ -31,21 +31,19 @@
   </div>
   <div class="form-group">
     <label for="zipcode">Zipcode*</label>
-    <input type="number" name="zipcode" class="form-control" id="zipcode" required value="{{donation.zipcode}}" placeholder="Input number of items">
+    <input type="number" name="zipcode" class="form-control" id="zipcode" required value="{{donation.zipcode}}" placeholder="Input Zipcode" min="1">
   </div>
-  <div class="file-field input-field">
-    {{#if file}}
-      <img class="img-responsive" src={{file}} width="400" height="400" />
+  <label for="formFile" class="form-label">Upload Images*
+    <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" title="Upload atleast 1 image"></i>
+  </label>
+  <div class="mb-3 images-block border-lightgray" data-toggle="tooltip" title="Upload atleast 1 image">
+    {{#each donation.images as |image|}}
+      <img src={{image}} width="30%" alt="{{donation.name}}">
     {{else}}
-      {{#each donation.images as |image|}}
-        <img src={{image}} width="30%" alt="{{donation.name}}">
-      {{/each}}
-    {{/if}}
-
-    <div class="btn">
-      <label for="images">Select Images</lable>
-      <input type="file" id="images" name="images" multiple>
-    </div>
+      No Images Selected
+    {{/each}}
+    <br>
+    <input class="form-control-file" type="file" id="formFile" name="images" multiple>
   </div>
 
   {{#if edit}}

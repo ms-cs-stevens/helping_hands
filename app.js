@@ -11,13 +11,6 @@ const static = express.static(__dirname + '/public');
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo')(session);
 
-// require('./models/Donation'); //calling the model to update data from cloudinary into mongo
-
-//making sure mongo is working
-mongoose.connection.once('open', () => {
-  console.log('Mongo is running');
-});
-
 const configRoutes = require('./routes');
 const { handlebarsInstance } = require('./helpers/handlebar');
 

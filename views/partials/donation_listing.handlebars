@@ -7,7 +7,7 @@
             {{name}}({{quantity}})
           </p>
         </div>
-        <img class="card-img-top" src="https://www.staples-3p.com/s7/is/image/Staples/sp82712270_sc7?wid=400&hei=450" alt={{name}}>
+        <img class="card-img-top" src="{{returnFirst images}}" alt={{name}}>
         {{#if ../showApproveReject}}
           {{>approve-reject status=status id=_id}}
         {{/if}}
