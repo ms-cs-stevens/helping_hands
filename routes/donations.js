@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
     title: 'Donated Goods',
     donations: donations,
     pageName: 'Donated Goods',
-    message: req.flash(),
+    messages: req.flash(),
     layout: req.session.user ? 'main2' : 'main',
   });
 });
@@ -88,7 +88,7 @@ router.get('/:id', async (req, res) => {
         title: 'Donation',
         pageName: 'Donation Details',
         allowActions,
-        message: req.flash(),
+        messages: req.flash(),
       });
     } else {
       res.status(404).render('customError', {

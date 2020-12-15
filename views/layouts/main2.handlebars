@@ -22,7 +22,6 @@
 
 <body>
   <div class="wrapper">
-    {{>flash_messages message=message sessionMessage=sessionMessage}}
     <!-- Sidebar  -->
     <nav id="sidebar">
       {{>sidebar-content}}
@@ -58,6 +57,7 @@
           </div>
         </div>
       </nav>
+      {{>flash_messages message=message sessionMessage=sessionMessage}}
       <main>
         <div class="error">
           {{error}}

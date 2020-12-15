@@ -165,10 +165,9 @@ a.article:hover {
 
 #flash-message {
   position: fixed;
-  top: 15%;
-  right: 0;
+  top: 12%;
   z-index: 100;
-  width: 50%;
+  width: 70%;
 }
 
 .toggle-handle {

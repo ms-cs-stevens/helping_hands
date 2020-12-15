@@ -21,9 +21,9 @@
         <div class="form-group col-md-6">
           <label for="inputGender">Gender ({{loggedInUser.gender}})</label>
           <select id="inputGender" class="form-control" name="gender">
-            <option>Male</option>
-            <option>Female</option>
-            <option>Other</option>
+            {{#each genders}}
+              <option {{#if (equal this ../loggedInUser.gender)}}selected=selected{{/if}} value={{this}}>{{this}}</option>
+            {{/each}}
           </select>
         </div>
       </div>
