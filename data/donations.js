@@ -68,6 +68,21 @@ module.exports = {
     return donation;
   },
 
+  async search(searchTerm) {
+    let searchResults = [];
+
+    searchResults.push("All search results are organized by quality of match with your search term")
+    //basic search ()case sensitive
+    for await (const doc of User.find()) {
+      //check each document
+      if ([doc.name, doc.description, doc.region, doc.zipcode].includes(searchTerm))
+        searchResults.push(doc);
+    };
+
+    if (searchResults.length) return searchResults;
+    else throw `No results found for : "${searchTerm}".`
+  },
+
   async create(
     name,
     description,
