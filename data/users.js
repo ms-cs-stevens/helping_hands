@@ -159,6 +159,8 @@ let exportedMethods = {
 
   async isAuthorizedUser(email, password) {
     const user = await this.getUserByEmail(email);
+    if (!user.active)
+      throw 'Your account has been disabled by the administrator. Please contact admin to unlock your account.';
     let match = await bcrypt.compare(password, user.hashedPassword);
     if (!match) throw 'Provide a valid username and/or password.';
     return userObject(user);

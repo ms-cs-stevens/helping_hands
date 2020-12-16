@@ -29,7 +29,7 @@ router.post('/login', authMiddlewares.isLoggedIn, async (req, res) => {
     res.status(401).render('auth/login', {
       title: 'Signin',
       pageName: 'Login',
-      error: 'Provide a valid username and/or password.',
+      error: e,
       layout: 'main.handlebars',
     });
   }
