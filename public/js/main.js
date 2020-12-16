@@ -20,6 +20,18 @@ $(document).ready(function () {
     theme: 'minimal',
   });
 
+  $('.images-carousel').slick({
+    infinite: true,
+    autoplay: true,
+    dots: true,
+    autoplaySpeed: 1500,
+  });
+
+  $('.images-carousel-listing').slick({
+    infinite: true,
+    dots: true,
+  });
+
   $('#sidebarCollapse').on('click', function () {
     $('#sidebar, #content').toggleClass('active');
     $('.collapse.in').toggleClass('in');

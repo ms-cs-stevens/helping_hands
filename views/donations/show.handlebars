@@ -3,7 +3,22 @@
     <div class="row">
       <div class="col-md-8">
         <br>
-        <h1>{{donation.name}}</h1>
+        <h1>{{donation.name}}
+          {{#if allowActions}}
+            <span class="action-link">
+              <a href="/donations/{{donation._id}}/edit">
+                Edit
+                <i class="fas fa-pencil-alt"></i>
+              </a>
+            </span>
+            <span class="action-link">
+              <a href="/donations/{{donation._id}}/delete">
+                Delete
+                <i class="fas fa-trash-alt"></i>
+              </a>
+            </span>
+          {{/if}}
+        </h1>
         <br>
         <div class="donation-details">
           <p>Available Quantity: {{donation.quantity}} </p>
@@ -11,18 +26,20 @@
           <p>Region: {{donation.region}}</p>
           <p>Zipcode: {{donation.zipcode}}</p>
           <p>Donated On: {{dateToString donation.createdAt}}</p>
-          {{#if allowActions }}
-            <a class="btn btn-success" href="/donations/{{donation._id}}/edit">Edit</a>
-            <a class="btn btn-danger" href="/donations/{{donation._id}}/delete">Delete</a>
-          {{/if}}
         </div>
+        {{#if (equal userRole 'admin')}}
+          <a class="btn btn-outline-danger" href="/donations/{{donation._id}}/reject">Reject</a>
+          <a class="btn btn-outline-success" href="/donations/{{donation._id}}/approve">Approve</a>
+        {{/if}}
       </div>
-      <div class="col-md-4">
-        {{#each donation.images as |image|}}
-          <img src={{image}} width="100%" alt="{{donation.name}}">
-        {{/each}}
-        <a class="btn" href="/donations/{{donation._id}}/reject">Reject</a>
-        <a class="btn" href="/donations/{{donation._id}}/approve">Approve</a>
+      <div class="col-4">
+        <div class="images-carousel" data-slick='{"slidesToShow": 1, "slidesToScroll": 1}'>
+          {{#each donation.images as |image|}}
+            <img src={{image}} height="50" onerror="this.src='https://res.cloudinary.com/helpinghands101/image/upload/v1608081700/Images/no_preview_bw93bc.jpg'" alt="{{../donation.name}}">
+          {{else}}
+            <img src='https://res.cloudinary.com/helpinghands101/image/upload/v1608081700/Images/no_preview_bw93bc.jpg' height="50" onerror="this.src='/public/images/no_preview.jpg'" alt="{{../donation.name}}">
+          {{/each}}
+        </div>
       </div>
     </div>
   </div>
