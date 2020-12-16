@@ -26,7 +26,7 @@ router.get('/', async (req, res) => {
         req.session.user.order = order;
       }
       if (order.quantity > 0) items = await itemData.getByOrder(order._id);
-      showAddRemove = true;
+      showAddRemove = ['admin', 'recipient'].includes(sessionUser.role_name);
     }
 
     let options = {
@@ -202,6 +202,11 @@ router.get('/:id', async (req, res) => {
     });
   }
 
+  let item;
+  try {
+    item = await itemData.getItem(user._id, user.order._id, donation._id);
+  } catch (error) {}
+
   try {
     let allowActions =
       ['submitted', 'rejected'].includes(donation.status) &&
@@ -209,9 +214,11 @@ router.get('/:id', async (req, res) => {
 
     res.status(200).render('donations/show', {
       donation: donation,
+      item: item,
       title: 'Donation',
       pageName: 'Donation Details',
       allowActions,
+      showAddRemove: user && ['admin', 'recipient'].includes(user.role_name),
       layout: req.session.user ? 'main2' : 'main',
       messages: req.flash(),
     });

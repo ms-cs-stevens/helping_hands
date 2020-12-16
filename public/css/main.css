@@ -68,6 +68,10 @@ body {
 .jumbotron {
   padding-top: -300px;
 }
+
+.hide {
+  display: none !important;
+}
 /* .add_dona1{
   margin-top: 50px;
 }

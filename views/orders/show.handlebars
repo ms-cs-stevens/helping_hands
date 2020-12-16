@@ -1,15 +1,31 @@
 <div class="container-sm">
   <div class="row">
-    {{order}}
-    {{#if showPlaceOrderBtn}}
-      <a href="/orders/{{order._id}}/checkout" class="btn btn-success" id="place-order">Place Order</a>
-    {{/if}}
+    <div class="col text-right">
+      {{#if showPlaceOrderBtn}}
+        <a href="/orders/{{order._id}}/checkout" class="btn btn-outline-success" id="place-order">Place Order</a>
+      {{/if}}
+    </div>
+  </div>
+</div>
+<div class="container-sm">
+  <div class="row justify-content-between text-muted">
+    <div class="col-5">
+      {{#if (placed order)}}
+        <span>
+          <span class="small"> ORDER PLACED</span>
+          {{dateToString order.updatedAt}}
+        </span>
+      {{/if}}
+    </div>
+    <div class="col-3 text-right">
+      <span>
+        <span class="small"> ORDER# {{order._id}} </span>
+      </span>
+    </div>
   </div>
 </div>
 <div class="listings">
   <div class="container-sm">
-    <div class="row row-cols-4">
-      {{> item_listing items=items}}
-    </div>
+    {{> item_listing items=items order_status=(placed order)}}
   </div>
 </div>

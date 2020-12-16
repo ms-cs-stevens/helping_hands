@@ -59,19 +59,9 @@ const donationSchema = new mongoose.Schema(
 
 donationSchema.index({ '$**': 'text' });
 
-// function autopopulate(next) {
-//   this.populate('donor');
-//   next();
-// }
-
-// donationSchema.pre('find', autopopulate);
-// donationSchema.pre('findOne', autopopulate);
-
 donationSchema.pre('save', function (next) {
   if (this.isNew || this.status === 'submitted' || this.status === 'rejected')
     this.in_stock = this.get('quantity'); // considering quantity is input by client
-
-  if (this.in_stock === 0) this.status = 'ordered';
   next();
 });
 

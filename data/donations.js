@@ -117,16 +117,24 @@ module.exports = {
   },
 
   //update donation info
-  async updateDonation(id, donationUpdateInfo, rejectApprove = false) {
+  async updateDonation(id, donationUpdateInfo, skipValidations = false) {
     //find the specified donation and all his/her information
     const donation = await this.getById(id);
 
     if (!donation) throw 'Donation not found';
     //handle no information being provided for a specified donation
-    if (!rejectApprove) {
+    if (!skipValidations) {
       checkForInvalidCredentials(donationUpdateInfo, donation);
       // change the state back to submitted if updated the donation so that admin reviews it again
       donationUpdateInfo.status = 'submitted';
+    }
+
+    if (
+      donationUpdateInfo &&
+      Object.keys(donationUpdateInfo).includes('in_stock') &&
+      donationUpdateInfo.in_stock < 1
+    ) {
+      donationUpdateInfo.status = 'ordered';
     }
 
     const updateInfo = await Donation.findOneAndUpdate(

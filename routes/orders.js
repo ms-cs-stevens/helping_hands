@@ -43,11 +43,21 @@ router.get('/:id', async (req, res) => {
   }
 
   try {
-    let items = order.quantity > 0 ? await itemData.getByOrder(order._id) : [];
+    let items = [];
+
+    if (order.quantity > 0) {
+      items = await itemData.getByOrder(order._id);
+
+      // populate donations with items
+      for (let i = 0; i < items.length; i++) {
+        items[i].donation = await donationData.getById(items[i].donation_id);
+      }
+    }
     res.status(200).render('orders/show', {
       title: 'My Orders',
       items: items,
       order: order,
+      pageName: 'Order Details',
       showPlaceOrderBtn: order.status === 'draft' && order.quantity > 0,
     });
   } catch (error) {
@@ -89,19 +99,22 @@ router.get('/:id/checkout', async (req, res) => {
     for (let i = 0; i < items.length; i++) {
       item = await itemData.getById(items[i]);
       let donation = await donationData.getById(item.donation_id);
-      if (!donation) throw 'Donation Not found';
 
       // if in-stock is not sufficient, it only adds available quantity in the order
       let in_stock_items =
-        donation.in_stock >= item.quantity ? in_stock_items : donation.in_stock;
-      await donationData.updateDonation(id, { in_stock: in_stock_items });
+        donation.in_stock >= item.quantity
+          ? donation.in_stock - item.quantity
+          : donation.in_stock;
+      await donationData.updateDonation(
+        item.donation_id,
+        { in_stock: in_stock_items },
+        true
+      );
     }
 
     if (updatedOrder) {
-      req.flash(
-        'info',
-        `Congratulations! Your order with id ${order._id} is placed.`
-      );
+      req.session.user.order = {}; // Remove placed order from session
+      req.flash('info', `Congratulations! Your order is placed successfully.`);
       res.redirect(`/orders/${order._id}`);
     }
   } catch (error) {
