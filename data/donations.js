@@ -70,15 +70,6 @@ module.exports = {
 
   async search(searchTerm) {
     let searchResults;
-    /* = [];
-    searchResults.push("All search results are organized by quality of match with your search term")
-    //basic search ()case sensitive
-    for await (const doc of User.find()) {
-      //check each document
-      if ([doc.name, doc.description, doc.region, doc.zipcode].includes(searchTerm))
-        searchResults.push(doc);
-    };*/
-
     try {
       searchResults = await Donation.find({
         $text: { $search: searchTerm.trim() },

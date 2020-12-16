@@ -164,7 +164,11 @@ router.patch(
         res.redirect(`/users`);
       }
     } catch (error) {
-      res.json({ error: error });
+      res.status(401).render('customError', {
+        title: 'Unauthorized Access',
+        pageName: 'Unauthorized Access!',
+        error: error,
+      });
     }
   }
 );

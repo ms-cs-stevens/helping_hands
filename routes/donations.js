@@ -22,8 +22,8 @@ router.get('/', async (req, res) => {
       layout: req.session.user ? 'main2' : 'main',
     });
   } catch (e) {
-    res.status(500).render('customError', {
-      title: 'Internal Server Error',
+    res.status(404).render('customError', {
+      title: 'Page Not Found',
       pageName: 'Error',
       errorReason: e,
     });
@@ -61,12 +61,10 @@ router.post('/search', async (req, res) => {
         searchTerm: searchTerm,
       };
     }
-    res
-      .status(200)
-      .render('donations/index', {
-        ...options,
-        layout: req.session.user ? 'main2' : 'main',
-      });
+    res.status(200).render('donations/index', {
+      ...options,
+      layout: req.session.user ? 'main2' : 'main',
+    });
   } catch (e) {
     res.status(404).render('customError', {
       title: 'Error',
