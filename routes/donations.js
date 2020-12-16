@@ -262,98 +262,63 @@ router.patch(
   multerHelper.upload,
   donationMiddleware.canPerformActions,
   async (req, res) => {
-    // todo: should be updated only if donation is submitted or rejected
+    let donation;
     let id = req.params.id;
     let donationInfo = req.body;
-    const uploader = async (path) =>
-      await cloudinaryHelper.uploads(path, 'Images');
-    const urls = [];
-    const files = req.files;
-
-    if (files.length == 0) throw 'Please select atleast one image';
-
-    for (const file of files) {
-      const { path } = file;
-      const newPath = await uploader(path);
-      urls.push(newPath);
-
-      //deleting file from server after upload
-      fs.unlinkSync(path);
-    }
-
-    let images = [];
-
-    urls.forEach((u) => {
-      images.push(u.url);
-    });
-
-    donationInfo.images = images;
-
-    let donation;
     try {
       donation = await donationData.getById(id);
-      if (donationInfo.name && donationInfo.name !== donation.name) {
-        updatedObject.name = donationInfo.name;
-      }
-      if (
-        donationInfo.description &&
-        donationInfo.description !== donation.description
-      ) {
-        updatedObject.description = donationInfo.description;
+      if (!donation) throw `Donation not found`;
+      const uploader = async (path) =>
+        await cloudinaryHelper.uploads(path, 'Images');
+      const urls = [];
+      const files = req.files;
+
+      if (!files)
+        throw "There was a problem uploading your image. Please upload images with 'jpeg | jpg | png | gif' format only";
+
+      for (const file of files) {
+        const { path } = file;
+        const newPath = await uploader(path);
+        urls.push(newPath);
+
+        //deleting file from server after upload
+        fs.unlinkSync(path);
       }
 
-      if (
-        donationInfo.quantity &&
-        donationInfo.quantity !== donation.quantity
-      ) {
-        updatedObject.quantity = donationInfo.quantity;
-      }
+      let images = [];
 
-      if (donationInfo.region && donationInfo.region !== donation.region) {
-        updatedObject.region = donationInfo.region;
-      }
-
-      if (donationInfo.zipcode && donationInfo.zipcode !== donation.zipcode) {
-        updatedObject.zipcode = donationInfo.zipcode;
-      }
-    } catch (e) {
-      res.status(404).render('customError', {
-        title: 'Not found',
-        errorReason: error,
-        pageName: 'Error',
+      urls.forEach((u) => {
+        images.push(u.url);
       });
-      return;
-    }
-    if (Object.keys(updatedObject).length > 0) {
-      try {
-        updatedObject.status = 'submitted';
-        const updatedDonation = await donationData.updateDonation(
-          id,
-          donationInfo
-        );
-        if (updatedDonation) {
-          req.flash('success', 'Donation updated successfully');
-          res.redirect(`/donations/${id}`);
-        }
-      } catch (err) {
-        if (err.errors) {
-          let errorKeys = Object.keys(err.errors);
-          let errors = [];
-          errorKeys.forEach((key) => errors.push(err.errors[key].message));
-          res.status(422).render(`donations/edit`, {
-            title: 'Donate Goods',
-            pageName: 'Edit Donation',
-            donation: donation,
-            errors,
-          });
-        } else {
-          res.status(422).render(`donations/edit`, {
-            title: 'Donate Goods',
-            pageName: 'Edit Donation',
-            donation: donation,
-            errors: [err],
-          });
-        }
+
+      donationInfo.images = images;
+      const updatedDonation = await donationData.updateDonation(
+        id,
+        donationInfo
+      );
+      if (updatedDonation) {
+        req.flash('success', 'Donation updated successfully');
+        res.redirect(`/donations/${id}`);
+      }
+    } catch (err) {
+      if (err.errors) {
+        let errorKeys = Object.keys(err.errors);
+        let errors = [];
+        errorKeys.forEach((key) => errors.push(err.errors[key].message));
+        res.status(422).render(`donations/edit`, {
+          title: 'Donate Goods',
+          pageName: 'Edit Donation',
+          donation: donation,
+          errors,
+        });
+      } else {
+        let error = err || err.message;
+        res.status(422).render(`donations/edit`, {
+          title: 'Donate Goods',
+          pageName: 'Edit Donation',
+          donation: donation,
+          errors: [error],
+        });
       }
     }
   }
