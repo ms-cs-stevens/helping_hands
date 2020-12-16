@@ -8,7 +8,7 @@
               {{name}}({{quantity}})
             </p>
           </div>
-          <img class="card-img-top" src="{{returnFirst images}}" alt={{name}}>
+          <img class="card-img-top" src="{{returnFirst images}}" onerror="this.src='/public/images/no_preview.jpg'" alt={{name}}>
           {{#if ../showApproveReject}}
             {{>approve-reject status=status id=_id}}
           {{/if}}

@@ -165,6 +165,7 @@ router.get('/:id', async (req, res) => {
         title: 'Donation',
         pageName: 'Donation Details',
         allowActions,
+        layout: req.session.user ? 'main2' : 'main',
         messages: req.flash(),
       });
     } else {

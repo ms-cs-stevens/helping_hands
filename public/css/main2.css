@@ -182,3 +182,12 @@ a.article:hover {
 .border-lightgray {
   padding: 10px;
 }
+
+.images-carousel {
+  background-color: #d0d7dc;
+}
+
+.action-link {
+  margin-left: 20px;
+  font-size: 0.5em;
+}
