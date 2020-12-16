@@ -1,17 +1,21 @@
-{{#each donations}}
-  <div class="col">
-    <a class="donation-card-link" href="/donations/{{_id}}">
-      <div class="card bg-light mb-5 box-shadow">
-        <div class="card-body">
-          <p class="card-title">
-            {{name}}({{quantity}})
-          </p>
+{{#if donations}}
+  {{#each donations}}
+    <div class="col">
+      <a class="donation-card-link" href="/donations/{{_id}}">
+        <div class="card bg-light mb-5 box-shadow">
+          <div class="card-body">
+            <p class="card-title">
+              {{name}}({{quantity}})
+            </p>
+          </div>
+          <img class="card-img-top" src="{{returnFirst images}}" onerror="this.src='/public/images/no_preview.jpg'" alt={{name}}>
+          {{#if ../showApproveReject}}
+            {{>approve-reject status=status id=_id}}
+          {{/if}}
         </div>
-        <img class="card-img-top" src="{{returnFirst images}}" onerror="this.src='/public/images/no_preview.jpg'" alt={{name}}>
-        {{#if ../showApproveReject}}
-          {{>approve-reject status=status id=_id}}
-        {{/if}}
-      </div>
-    </a>
-  </div>
-{{/each}}
+      </a>
+    </div>
+  {{/each}}
+{{else}}
+  <p>NO DONATIONS FOUND!</p>
+{{/if}}

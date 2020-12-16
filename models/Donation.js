@@ -48,6 +48,8 @@ const donationSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+donationSchema.index({ '$**': 'text' });
+
 // function autopopulate(next) {
 //   this.populate('donor');
 //   next();

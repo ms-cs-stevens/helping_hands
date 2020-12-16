@@ -9,6 +9,9 @@ const cookieParser = require('cookie-parser');
 const flash = require('express-flash');
 const static = express.static(__dirname + '/public');
 const mongoose = require('mongoose');
+
+mongoose.set('useCreateIndex', true); // required to index the Donation schema for the search-filter feature
+
 const MongoStore = require('connect-mongo')(session);
 
 const configRoutes = require('./routes');

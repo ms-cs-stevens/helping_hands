@@ -68,6 +68,18 @@ module.exports = {
     return donation;
   },
 
+  async search(searchTerm) {
+    let searchResults;
+    try {
+      searchResults = await Donation.find({
+        $text: { $search: searchTerm.trim() },
+      });
+    } catch (e) {
+      throw e;
+    }
+    if (searchResults.length) return searchResults;
+  },
+
   async create(
     name,
     description,

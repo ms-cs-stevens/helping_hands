@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const e = require('express');
 const { User } = require('../models');
 const saltRounds = 10; // TODO: Update later to some higher value
 
@@ -67,7 +68,12 @@ let exportedMethods = {
     const old = await this.getUserById(id);
     if (!old) throw 'User does not Exist';
 
-    this.validateUpdateInfo(updateData);
+    try {
+      this.validateUpdateInfo(updateData);
+    } catch (e) {
+      throw e;
+      return;
+    }
 
     const updateInfo = await User.findOneAndUpdate(
       { _id: id },
@@ -101,15 +107,24 @@ let exportedMethods = {
 
   // TODO: Resolve validation function errors
 
-  /* checkName(input) {
-    if (typeof input !== 'string') throw `Name needs to be a string`;
-    const nameFormat = new RegExp('[A-Za-z]');
+  checkName(input) {
+    if (typeof input !== 'string')
+      throw `Name can only be a String of letters, ${input} is not a String.`;
 
-    if (nameFormat.test(input)) {
+    if (input.trim().length < 2 || input.trim().length > 30)
+      throw `Name can only be between 2 and 30 characters, ${input} is not a valid name.`;
+
+    let alphabet = 'qwertyuiopasdfghjklzxcvbnm QWERTYUIOPASDFGHJKLZXCVBNM';
+    for (let i = 0; i < input.length; i++) {
+      let ch = input[i];
+      if (alphabet.indexOf(ch) == -1)
+        throw `Name can only be a String of letters, ${input} is not a valid Name`;
     }
-    throw `Name can only contain alphabets`;
+
+    return true;
   },
 
+  /*
   checkEmail(input) {
     if (typeof input !== 'string') throw `E-Mail Address has to be a string.`;
     const emailformat = new RegExp(
@@ -130,9 +145,10 @@ let exportedMethods = {
   }, */
 
   async validateUpdateInfo(user) {
-    /* if (!user) throw 'Error! User does not exist';
     if (user.firstname) this.checkName(user.firstname);
     if (user.lastname) this.checkName(user.lastname);
+
+    /* if (!user) throw 'Error! User does not exist';
     if (user.email) this.checkEmail(user.email);
 
     if (user.password) {

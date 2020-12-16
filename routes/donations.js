@@ -12,14 +12,22 @@ const multer = require('multer');
 
 // gets all approved donations for display
 router.get('/', async (req, res) => {
-  let donations = await donationData.getApprovedDonations();
-  res.status(200).render('donations/index', {
-    title: 'Donated Goods',
-    donations: donations,
-    pageName: 'Donated Goods',
-    messages: req.flash(),
-    layout: req.session.user ? 'main2' : 'main',
-  });
+  try {
+    let donations = await donationData.getApprovedDonations();
+    res.status(200).render('donations/index', {
+      title: 'Donated Goods',
+      donations: donations,
+      pageName: 'Donated Goods',
+      messages: req.flash(),
+      layout: req.session.user ? 'main2' : 'main',
+    });
+  } catch (e) {
+    res.status(404).render('customError', {
+      title: 'Page Not Found',
+      pageName: 'Error',
+      errorReason: e,
+    });
+  }
 });
 
 // gets most-recent 8 new donation creation form
@@ -31,6 +39,39 @@ router.get('/recent', async (req, res) => {
     donations: recentDonations,
     showViewButton: true,
   });
+});
+
+router.post('/search', async (req, res) => {
+  let searchTerm = req.body.searchTerm;
+  try {
+    if (!searchTerm.trim()) throw 'Please enter search term';
+    let results = await donationData.search(searchTerm);
+    let options;
+    if (results && results.length) {
+      options = {
+        title: 'Search Results',
+        donations: results,
+        pageName: 'Searched Donations',
+        searchTerm: searchTerm,
+      };
+    } else {
+      options = {
+        title: 'Search Results',
+        pageName: 'Searched Donations',
+        searchTerm: searchTerm,
+      };
+    }
+    res.status(200).render('donations/index', {
+      ...options,
+      layout: req.session.user ? 'main2' : 'main',
+    });
+  } catch (e) {
+    res.status(404).render('customError', {
+      title: 'Error',
+      pageName: 'Not Found',
+      errorReason: e,
+    });
+  }
 });
 
 // renders new donation creation form
@@ -266,7 +307,11 @@ router.patch('/:id/approve', authMiddleware.adminRequired, async (req, res) => {
       res.redirect(`/users/${req.session.user._id}/review_donations`);
     }
   } catch (error) {
-    res.json({ error: error });
+    res.status(422).render('customError', {
+      title: 'Invalid Data Entered',
+      pageName: 'Error',
+      errorReason: e,
+    });
   }
 });
 
@@ -286,7 +331,11 @@ router.patch('/:id/reject', authMiddleware.adminRequired, async (req, res) => {
       res.redirect(`/users/${req.session.user._id}/review_donations`);
     }
   } catch (error) {
-    res.json({ error: error });
+    res.status(500).render('customError', {
+      title: 'Internal Server Error',
+      pageName: 'Error',
+      errorReason: e,
+    });
   }
 });
 
