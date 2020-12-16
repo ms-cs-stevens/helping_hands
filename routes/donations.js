@@ -3,12 +3,12 @@ const donationData = require('../data/donations');
 const authMiddleware = require('../middlewares/auth');
 const donationMiddleware = require('../middlewares/donation');
 const router = express.Router();
+const multer = require('multer');
 const multerHelper = require('../helpers/multer');
 const cloudinaryHelper = require('../helpers/cloudinary');
 
 //file system
 const fs = require('fs');
-const multer = require('multer');
 
 // gets all approved donations for display
 router.get('/', async (req, res) => {
@@ -44,27 +44,37 @@ router.get('/recent', async (req, res) => {
 router.post('/search', async (req, res) => {
   let searchTerm = req.body.searchTerm;
   try {
-    if (!searchTerm.trim()) throw 'Please enter search term';
-    let results = await donationData.search(searchTerm);
-    let options;
-    if (results && results.length) {
-      options = {
+    if (!searchTerm.trim().length) {
+      req.flash('danger', 'Please enter search term.');
+      res.status(200).render('donations/index', {
         title: 'Search Results',
-        donations: results,
-        pageName: 'Searched Donations',
+        pageName: 'Donations',
         searchTerm: searchTerm,
-      };
+        messages: req.flash(),
+        layout: req.session.user ? 'main2' : 'main',
+      });
     } else {
-      options = {
-        title: 'Search Results',
-        pageName: 'Searched Donations',
-        searchTerm: searchTerm,
-      };
+      let results = await donationData.search(searchTerm);
+      let options;
+      if (results && results.length) {
+        options = {
+          title: 'Search Results',
+          donations: results,
+          pageName: 'Donations',
+          searchTerm: searchTerm,
+        };
+      } else {
+        options = {
+          title: 'Search Results',
+          pageName: 'Donations',
+          searchTerm: searchTerm,
+        };
+      }
+      res.status(200).render('donations/index', {
+        ...options,
+        layout: req.session.user ? 'main2' : 'main',
+      });
     }
-    res.status(200).render('donations/index', {
-      ...options,
-      layout: req.session.user ? 'main2' : 'main',
-    });
   } catch (e) {
     res.status(404).render('customError', {
       title: 'Error',
