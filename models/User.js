@@ -13,28 +13,32 @@ const userSchema = new Schema(
     },
     firstname: {
       type: String,
-      required: [true, "can't be blank"],
+      required: [true, 'You must provide a firstname'],
     },
     lastname: {
       type: String,
-      required: [true, "can't be blank"],
+      required: [true, 'You must provide a lastname'],
     },
     hashedPassword: {
       type: String,
-      required: [true, "can't be blank"],
+      required: [true, 'You must provide a password'],
     },
     phone: String,
-    active: { type: Boolean, default: true },
+    active: {
+      type: Boolean,
+      default: true,
+    },
     email: {
       type: String,
       lowercase: true,
-      required: [true, "can't be blank"],
+      required: [true, 'You must provide an email'],
       match: [
         /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         'is invalid',
       ],
       index: true,
       unique: true,
+      trim: true,
       // uniqueCaseInsensitive: true
     },
     gender: {

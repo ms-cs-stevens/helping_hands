@@ -1,9 +1,13 @@
-const userData = require('./users');
-const donationData = require('./donations');
 const addressData = require('./addresses');
+const donationData = require('./donations');
+const itemData = require('./items');
+const orderData = require('./orders');
+const userData = require('./users');
 
 module.exports = {
-  users: userData,
-  donations: donationData,
   addresses: addressData,
+  donations: donationData,
+  items: itemData,
+  orders: orderData,
+  users: userData,
 };

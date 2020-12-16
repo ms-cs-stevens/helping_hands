@@ -1,5 +1,8 @@
 const express = require('express');
-const donationData = require('../data/donations');
+const data = require('../data');
+const donationData = data.donations;
+const itemData = data.items;
+const orderData = data.orders;
 const authMiddleware = require('../middlewares/auth');
 const donationMiddleware = require('../middlewares/donation');
 const router = express.Router();
@@ -14,31 +17,57 @@ const fs = require('fs');
 router.get('/', async (req, res) => {
   try {
     let donations = await donationData.getApprovedDonations();
-    res.status(200).render('donations/index', {
+    let sessionUser = req.session.user;
+    let items = [];
+    let showAddRemove = false;
+    if (sessionUser) {
+      let order = await orderData.findOrCreateDraftOrder(sessionUser._id);
+      if (order._id != req.session.user.order._id) {
+        req.session.user.order = order;
+      }
+      if (order.quantity > 0) items = await itemData.getByOrder(order._id);
+      showAddRemove = ['admin', 'recipient'].includes(sessionUser.role_name);
+    }
+
+    let options = {
       title: 'Donated Goods',
       donations: donations,
+      items: items,
       pageName: 'Donated Goods',
       messages: req.flash(),
+      showAddRemove: showAddRemove,
       layout: req.session.user ? 'main2' : 'main',
-    });
-  } catch (e) {
-    res.status(404).render('customError', {
-      title: 'Page Not Found',
+    };
+
+    res.status(200).render('donations/index', options);
+  } catch (error) {
+    console.log(`Error occurred: ${error}`);
+    res.status(500).render('customError', {
+      title: 'Internal Server Error',
       pageName: 'Error',
-      errorReason: e,
+      errorReason: 'Please contact administrator of the site for more details.',
     });
   }
 });
 
 // gets most-recent 8 new donation creation form
 router.get('/recent', async (req, res) => {
-  let approvedDonations = await donationData.getApprovedDonations();
-  let recentDonations = approvedDonations && approvedDonations.slice(0, 4);
-  res.render('partials/donation_listing', {
-    layout: null,
-    donations: recentDonations,
-    showViewButton: true,
-  });
+  try {
+    let approvedDonations = await donationData.getApprovedDonations();
+    let recentDonations = approvedDonations && approvedDonations.slice(0, 4);
+    res.render('partials/donation_listing', {
+      layout: null,
+      donations: recentDonations,
+      showViewButton: true,
+    });
+  } catch (error) {
+    console.log(`Error occurred: ${error}`);
+    res.status(500).render('customError', {
+      title: 'Internal Server Error',
+      pageName: 'Error',
+      errorReason: 'Please contact administrator of the site for more details.',
+    });
+  }
 });
 
 router.post('/search', async (req, res) => {
@@ -159,30 +188,40 @@ router.post(
 
 // gets donation by id
 router.get('/:id', async (req, res) => {
-  let user = req.session.user;
+  let donation,
+    user = req.session.user;
   try {
-    let donation = await donationData.getById(req.params.id);
+    donation = await donationData.getById(req.params.id);
+  } catch (error) {
+    // TODO: Investigate the issue
+    // Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+    res.status(404).render('customError', {
+      title: 'Not found',
+      errorReason: error,
+      pageName: 'Error',
+    });
+  }
 
+  let item;
+  try {
+    item = await itemData.getItem(user._id, user.order._id, donation._id);
+  } catch (error) {}
+
+  try {
     let allowActions =
       ['submitted', 'rejected'].includes(donation.status) &&
       (user._id == donation.donor_id || user.role_name == 'admin');
 
-    if (donation) {
-      res.status(200).render('donations/show', {
-        donation: donation,
-        title: 'Donation',
-        pageName: 'Donation Details',
-        allowActions,
-        layout: req.session.user ? 'main2' : 'main',
-        messages: req.flash(),
-      });
-    } else {
-      res.status(404).render('customError', {
-        title: 'Not found',
-        pageName: 'Error',
-        errorReason: 'Donation not found!',
-      });
-    }
+    res.status(200).render('donations/show', {
+      donation: donation,
+      item: item,
+      title: 'Donation',
+      pageName: 'Donation Details',
+      allowActions,
+      showAddRemove: user && ['admin', 'recipient'].includes(user.role_name),
+      layout: req.session.user ? 'main2' : 'main',
+      messages: req.flash(),
+    });
   } catch (e) {
     res.status(500).render('customError', {
       title: 'Internal Server Error',
@@ -198,8 +237,8 @@ router.get(
   authMiddleware.donorRequired,
   donationMiddleware.canPerformActions,
   async (req, res) => {
-    let donation = await donationData.getById(req.params.id);
     try {
+      let donation = await donationData.getById(req.params.id);
       res.render('donations/edit', {
         title: 'Edit Donation',
         pageName: 'Edit Donation',
@@ -223,6 +262,7 @@ router.patch(
   multerHelper.upload,
   donationMiddleware.canPerformActions,
   async (req, res) => {
+    // todo: should be updated only if donation is submitted or rejected
     let id = req.params.id;
     let donationInfo = req.body;
     const uploader = async (path) =>
@@ -252,32 +292,68 @@ router.patch(
     let donation;
     try {
       donation = await donationData.getById(id);
-      const updatedDonation = await donationData.updateDonation(
-        id,
-        donationInfo
-      );
-      if (updatedDonation) {
-        req.flash('success', 'Donation updated successfully');
-        res.redirect(`/donations/${id}`);
+      if (donationInfo.name && donationInfo.name !== donation.name) {
+        updatedObject.name = donationInfo.name;
       }
-    } catch (err) {
-      if (err.errors) {
-        let errorKeys = Object.keys(err.errors);
-        let errors = [];
-        errorKeys.forEach((key) => errors.push(err.errors[key].message));
-        res.status(422).render(`donations/edit`, {
-          title: 'Donate Goods',
-          pageName: 'Edit Donation',
-          donation: donation,
-          errors,
-        });
-      } else {
-        res.status(422).render(`donations/edit`, {
-          title: 'Donate Goods',
-          pageName: 'Edit Donation',
-          donation: donation,
-          errors: [err],
-        });
+      if (
+        donationInfo.description &&
+        donationInfo.description !== donation.description
+      ) {
+        updatedObject.description = donationInfo.description;
+      }
+
+      if (
+        donationInfo.quantity &&
+        donationInfo.quantity !== donation.quantity
+      ) {
+        updatedObject.quantity = donationInfo.quantity;
+      }
+
+      if (donationInfo.region && donationInfo.region !== donation.region) {
+        updatedObject.region = donationInfo.region;
+      }
+
+      if (donationInfo.zipcode && donationInfo.zipcode !== donation.zipcode) {
+        updatedObject.zipcode = donationInfo.zipcode;
+      }
+    } catch (e) {
+      res.status(404).render('customError', {
+        title: 'Not found',
+        errorReason: error,
+        pageName: 'Error',
+      });
+      return;
+    }
+    if (Object.keys(updatedObject).length > 0) {
+      try {
+        updatedObject.status = 'submitted';
+        const updatedDonation = await donationData.updateDonation(
+          id,
+          donationInfo
+        );
+        if (updatedDonation) {
+          req.flash('success', 'Donation updated successfully');
+          res.redirect(`/donations/${id}`);
+        }
+      } catch (err) {
+        if (err.errors) {
+          let errorKeys = Object.keys(err.errors);
+          let errors = [];
+          errorKeys.forEach((key) => errors.push(err.errors[key].message));
+          res.status(422).render(`donations/edit`, {
+            title: 'Donate Goods',
+            pageName: 'Edit Donation',
+            donation: donation,
+            errors,
+          });
+        } else {
+          res.status(422).render(`donations/edit`, {
+            title: 'Donate Goods',
+            pageName: 'Edit Donation',
+            donation: donation,
+            errors: [err],
+          });
+        }
       }
     }
   }
@@ -289,14 +365,34 @@ router.delete(
   authMiddleware.donorRequired,
   donationMiddleware.canPerformActions,
   async (req, res) => {
-    let deleted = await donationData.delete(req.params.id);
-    if (deleted) {
-      let deletedDonationName = deleted.name;
-      req.flash(
-        'danger',
-        `Donation '${deletedDonationName}' was deleted successfully.`
-      );
-      res.redirect('/donations');
+    try {
+      await donationData.getById(req.params.id);
+    } catch (error) {
+      res.status(404).render('customError', {
+        title: 'Not found',
+        errorReason: error,
+        pageName: 'Error',
+      });
+    }
+
+    try {
+      let deleted = await donationData.delete(req.params.id);
+      if (deleted) {
+        let deletedDonationName = deleted.name;
+        req.flash(
+          'danger',
+          `Donation '${deletedDonationName}' was deleted successfully.`
+        );
+        res.redirect('/donations');
+      }
+    } catch (error) {
+      console.log(`Error occurred: ${error}`);
+      res.status(500).render('customError', {
+        title: 'Internal Server Error',
+        pageName: 'Error',
+        errorReason:
+          'Please contact administrator of the site for more details.',
+      });
     }
   }
 );
@@ -304,10 +400,20 @@ router.delete(
 router.patch('/:id/approve', authMiddleware.adminRequired, async (req, res) => {
   let id = req.params.id;
   let updatedObject = { status: 'approved' };
+
+  let donation;
   try {
-    let donation = await donationData.getById(id);
-    if (!donation) throw 'Donation Not found';
-    const updatedDonation = await donationData.updateDonation(
+    donation = await donationData.getById(id);
+  } catch (error) {
+    res.status(404).render('customError', {
+      title: 'Not found',
+      errorReason: error,
+      pageName: 'Error',
+    });
+  }
+
+  try {
+    let updatedDonation = await donationData.updateDonation(
       id,
       updatedObject,
       true
@@ -328,9 +434,19 @@ router.patch('/:id/approve', authMiddleware.adminRequired, async (req, res) => {
 router.patch('/:id/reject', authMiddleware.adminRequired, async (req, res) => {
   let id = req.params.id;
   let updatedObject = { status: 'rejected' };
+
+  let donation;
   try {
-    let donation = await donationData.getById(id);
-    if (!donation) throw 'Donation Not found';
+    donation = await donationData.getById(id);
+  } catch (error) {
+    res.status(404).render('customError', {
+      title: 'Not found',
+      errorReason: error,
+      pageName: 'Error',
+    });
+  }
+
+  try {
     let updatedDonation = await donationData.updateDonation(
       id,
       updatedObject,
@@ -348,5 +464,108 @@ router.patch('/:id/reject', authMiddleware.adminRequired, async (req, res) => {
     });
   }
 });
+
+router.patch(
+  '/:id/donate',
+  authMiddleware.recipientRequired,
+  async (req, res) => {
+    let id = req.params.id;
+    let sessionUser = req.session.user;
+    let item, order, donation, updatedItem;
+    try {
+      order = await orderData.findOrCreateDraftOrder(sessionUser._id);
+      donation = await donationData.getById(id);
+    } catch (error) {
+      res.status(404).json({
+        message: error,
+        status: '404',
+      });
+    }
+
+    if (order._id != sessionUser.order._id) {
+      sessionUser.order = order;
+    }
+
+    // check if donation is approved and has suffiecient in stock quantity
+
+    try {
+      item = await itemData.getItem(sessionUser._id, order._id, id);
+    } catch (error) {
+      updatedItem = await itemData.create({
+        quantity: 1,
+        recipient_id: sessionUser._id,
+        order_id: order._id,
+        donation_id: id,
+      });
+    }
+
+    try {
+      if (item) updatedItem = await itemData.updateQuantity(item._id, 1);
+
+      if (updatedItem) {
+        order = await orderData.getById(order._id);
+        req.session.user.order = order;
+        res.status(200).json({
+          message: 'Item added into cart',
+          status: '200',
+          cart: order.quantity,
+        });
+      }
+    } catch (error) {
+      console.log(`Error occurred: ${error}`);
+      res.status(500).json({
+        message: 'Please contact administrator of the site for more details.',
+        status: '500',
+      });
+    }
+  }
+);
+
+router.patch(
+  '/:id/withdraw',
+  authMiddleware.recipientRequired,
+  async (req, res) => {
+    let id = req.params.id;
+    let sessionUser = req.session.user;
+    let order, item, donation;
+
+    try {
+      order = await orderData.getDraftOrderByUser(sessionUser._id);
+      donation = await donationData.getById(id);
+      item = await itemData.getItem(sessionUser._id, order._id, id);
+    } catch (error) {
+      res.status(404).render('customError', {
+        title: 'Not found',
+        errorReason: error,
+        pageName: 'Error',
+      });
+    }
+
+    try {
+      if (order._id != sessionUser.order._id) {
+        sessionUser.order = order;
+      }
+
+      let updatedItem = await itemData.updateQuantity(item._id, -1);
+      if (updatedItem) {
+        order = await orderData.getById(order._id); // fetch updated order to replace in session
+        req.session.user.order = order;
+        res.json({
+          message: 'Item deleted from cart',
+          status: '200',
+          cart: order.quantity,
+        });
+      }
+    } catch (error) {
+      console.log(`Error occurred: ${error}`);
+      res.status(500).render('customError', {
+        title: 'Internal Server Error',
+        pageName: 'Error',
+        errorReason:
+          'Please contact administrator of the site for more details.',
+      });
+    }
+  }
+);
 
 module.exports = router;

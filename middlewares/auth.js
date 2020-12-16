@@ -3,6 +3,17 @@ function loginRequired(req, res, next) {
   return next();
 }
 
+function authorizedUserRequired(req, res, next) {
+  let user = req.session.user;
+  if (!user || (user.role_name !== 'admin' && req.params.id !== user._id))
+    return res.status(401).render('customError', {
+      title: 'Unauthorized Access',
+      errorReason: 'You do not have access to this page.',
+      layout: user ? 'main2' : 'main',
+    });
+  return next();
+}
+
 function isLoggedIn(req, res, next) {
   let user = req.session.user;
   if (user) {
@@ -27,7 +38,12 @@ function authorizeUser(req, res, role_name, next) {
   try {
     let user = req.session.user;
     if (!user) return res.redirect('/auth/login');
-    if (![role_name, 'admin'].includes(user.role_name))
+    if (
+      ![role_name, 'admin'].includes(user.role_name) &&
+      role_name !== 'admin' &&
+      req.params.id !== user._id
+    )
+      // Validate donor/recipient is checking his own info
       return res.status(401).render('customError', {
         title: 'Unauthorized Access',
         errorReason: 'You do not have access to this page.',
@@ -49,4 +65,5 @@ module.exports = {
   donorRequired,
   recipientRequired,
   isLoggedIn,
+  authorizedUserRequired,
 };

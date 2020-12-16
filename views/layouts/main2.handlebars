@@ -53,7 +53,11 @@
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="nav navbar-nav ml-auto">
                   <li class="nav-item active">
-                    <a class="nav-link" href="#"><i class="fas fa-cart-plus fa-1x mr-2"></i>Cart</a>
+                    <a class="nav-link" href="/orders/{{loggedInUser.order._id}}">
+                      <i class="fas fa-cart-plus fa-1x"></i>
+                      Cart
+                      <span class="badge badge-info badge-pill" id="cart">{{cartCount loggedInUser.order}}</span>
+                    </a>
                   </li>
                 </ul>
               </div>
