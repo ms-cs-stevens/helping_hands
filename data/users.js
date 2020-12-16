@@ -65,16 +65,30 @@ let exportedMethods = {
   //update user
   async update(id, updateData) {
     //find the specified user and all his/her information
-    const old = await this.getUserById(id);
-    if (!old) throw 'User does not Exist';
-
     try {
+      const old = await this.getUserById(id);
+      if (!old) throw 'User does not Exist';
+
       this.validateUpdateInfo(updateData);
+
+      // if(
+      //   )
+      // await this.updateOperation;
+      await User.findOneAndUpdate(
+        { _id: id },
+        { $set: updateData },
+        { runValidators: true }
+      );
+
+      if (updateInfo.errors)
+        throw `Error ecountered while updating the specified user: ${updateInfo.errors}`;
+      return await this.getUserById(id);
     } catch (e) {
       throw e;
-      return;
     }
+  },
 
+  async updateOperation(user) {
     const updateInfo = await User.findOneAndUpdate(
       { _id: id },
       { $set: updateData },
@@ -83,8 +97,6 @@ let exportedMethods = {
 
     if (updateInfo.errors)
       throw `Error ecountered while updating the specified user: ${updateInfo.errors}`;
-
-    return await this.getUserById(id);
   },
 
   validateUserInfo(user) {
@@ -108,20 +120,17 @@ let exportedMethods = {
   // TODO: Resolve validation function errors
 
   checkName(input) {
-    if (typeof input !== 'string')
-      throw `Name can only be a String of letters, ${input} is not a String.`;
-
+    //return false;
+    if (typeof input !== 'string') return false;
     if (input.trim().length < 2 || input.trim().length > 30)
-      throw `Name can only be between 2 and 30 characters, ${input} is not a valid name.`;
+      throw 'Name should be between 2 and 30 characters';
 
     let alphabet = 'qwertyuiopasdfghjklzxcvbnm QWERTYUIOPASDFGHJKLZXCVBNM';
-    for (let i = 0; i < input.length; i++) {
-      let ch = input[i];
-      if (alphabet.indexOf(ch) == -1)
-        throw `Name can only be a String of letters, ${input} is not a valid Name`;
-    }
 
-    return true;
+    for (let i = 0; i < input.length; i++)
+      if (alphabet.indexOf(input[i]) === -1)
+        throw 'Invalid Character added in name';
+    //check if name only has letters
   },
 
   /*
@@ -144,7 +153,7 @@ let exportedMethods = {
       else throw `Password needs to be between 6 and 16 characters in length`;
   }, */
 
-  async validateUpdateInfo(user) {
+  validateUpdateInfo(user) {
     if (user.firstname) this.checkName(user.firstname);
     if (user.lastname) this.checkName(user.lastname);
 

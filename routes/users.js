@@ -85,6 +85,15 @@ router.patch('/:id/update', authMiddleWare.loginRequired, async (req, res) => {
         res.redirect(`/users/${id}/edit`);
       }
     } catch (e) {
+      res.status(422).render('users/edit', {
+        title: 'Profile Page',
+        pageName: 'Edit User Info',
+        errors: [e],
+        loggedInUser: updateData,
+        genders: ['Male', 'Female', 'Others'],
+        messages: req.flash(),
+      });
+
       res.status(500).render('customError', {
         title: 'Internal Server Error',
         errorReason: 'Something went wrong',
