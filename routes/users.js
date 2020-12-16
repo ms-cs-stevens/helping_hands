@@ -235,6 +235,22 @@ router.get('/:id/address', async (req, res) => {
   res.render('users/addressData', options);
 });
 
+// //addressroutr
+// router.post('/address', async (req, res) => {
+//     try {
+
+//       res.json({ messages: 'Implement my orders page here' });
+//     }
+//     catch (err) {
+//       res.json({ messages: 'Implement my orders page here' });
+
+//     }
+//     else{
+//       res.json({ messages: 'Implement my orders page here' });
+
+//     }
+// })
+
 router.patch(
   '/:id/toggle_active',
   authMiddleWare.adminRequired,
