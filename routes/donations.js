@@ -44,16 +44,33 @@ router.get('/recent', async (req, res) => {
 router.post('/search', async (req, res) => {
   let searchTerm = req.body.searchTerm;
   try {
+    if (!searchTerm.trim()) throw 'Please enter search term';
     let results = await donationData.search(searchTerm);
-    res.status(200).render('donations/index', {
-      title: 'Search Results',
-      donations: results,
-      pageName: `Search for : "${searchTerm}"`,
-    });
+    let options;
+    if (results && results.length) {
+      options = {
+        title: 'Search Results',
+        donations: results,
+        pageName: 'Searched Donations',
+        searchTerm: searchTerm,
+      };
+    } else {
+      options = {
+        title: 'Search Results',
+        pageName: 'Searched Donations',
+        searchTerm: searchTerm,
+      };
+    }
+    res
+      .status(200)
+      .render('donations/index', {
+        ...options,
+        layout: req.session.user ? 'main2' : 'main',
+      });
   } catch (e) {
     res.status(404).render('customError', {
       title: 'Error',
-      pageName: 'No Results found for: ${searchTerm}',
+      pageName: 'Not Found',
       errorReason: e,
     });
   }
