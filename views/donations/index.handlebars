@@ -5,7 +5,8 @@
         <p>You've searched for : '{{searchTerm}}'</p>
       {{/if}}
       <form id="search-donation" action="/donations/search" method="post">
-        <input class="searchForm" name="searchTerm" type="text">
+        <input class="searchForm" name="searchTerm" type="text" placeholder="Enter here"
+          aria-placeholder="Search for any donation by name, region, etc.">
         <button type="submit" class="btn btn-success">Search</button>
       </form>
     </div>

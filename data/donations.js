@@ -71,8 +71,11 @@ module.exports = {
   async search(searchTerm) {
     let searchResults;
     try {
-      searchResults = await Donation.find({
-        $text: { $search: searchTerm.trim() },
+      searchResults = await Donation.find(
+        { $text: { $search: searchTerm.trim() } },
+        { score: { $meta: 'textScore' } }
+      ).sort({
+        score: { $meta: 'textScore' },
       });
     } catch (e) {
       throw e;
