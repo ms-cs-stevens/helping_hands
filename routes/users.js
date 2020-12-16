@@ -226,12 +226,13 @@ router.get(
   }
 );
 
-router.get('/:id/settings', async (req, res) => {
-  res.status(404).render('customError', {
-    title: 'Not found',
-    errorReason: 'Page is not implemented',
-    pageName: 'Error',
-  });
+router.get('/:id/address', async (req, res) => {
+  options = {
+    pageName: 'Add Address',
+    title: 'Update Address',
+  };
+
+  res.render('users/addressData', options);
 });
 
 router.patch(
