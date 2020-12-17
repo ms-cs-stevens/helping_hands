@@ -71,6 +71,11 @@ let exportedMethods = {
 
       this.validateUpdateInfo(updateData);
 
+      updateData.hashedPassword = await bcrypt.hash(
+        updateData.password,
+        saltRounds
+      );
+
       // if(
       //   )
       // await this.updateOperation;
@@ -152,15 +157,15 @@ let exportedMethods = {
     if (user.firstname) this.checkName(user.firstname);
     if (user.lastname) this.checkName(user.lastname);
     if (user.email) this.checkEmail(user.email);
-    if (user.password) this.checkPassword(user.password);
+
+    /* if (user.password)
+      if (user.password !== user.password2) throw 'Password does not match'; */
+    //this.checkPassword(user.password);
+
+    //if (user.password) this.checkPassword(user.password);
 
     /* if (!user) throw 'Error! User does not exist';
-    if (user.email) this.checkEmail(user.email);
-
-    if (user.password) {
-      if (user.password !== user.password2) throw 'Password does not match';
-      this.checkPassword(user.password);
-    } */
+    if (user.email) this.checkEmail(user.email); */
   },
 
   async isAuthorizedUser(email, password) {
