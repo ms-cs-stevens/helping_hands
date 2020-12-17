@@ -3,16 +3,19 @@
     <div class="col">
       <div class="card bg-light mb-5 box-shadow">
         <div class="images-carousel-listing" data-slick='{"slidesToShow": 1, "slidesToScroll": 1}'>
-          {{#each images as |image|}}
-            <a class="donation-card-link" href="/donations/{{../_id}}">
-              <img src="{{image}}" class="card-img-top card-image" onerror="this.src='/public/images/no_preview.jpg'" alt={{../name}}>
-            </a>
+          {{#if images}}
+            {{#each images as |image|}}
+              <a class="donation-card-link" href="/donations/{{../_id}}">
+                <img src="{{image}}" class="card-img-top card-image" onerror="this.src='/public/images/no_preview.jpg'" alt={{../name}}>
+              </a>
+            {{/each}}
           {{else}}
-            <a class="donation-card-link" href="/donations/{{../_id}}">
+            <a class="donation-card-link" href="/donations/{{_id}}">
               <img src='https://res.cloudinary.com/helpinghands101/image/upload/v1608081700/Images/no_preview_bw93bc.jpg'
                 height="50" class="card-img-top card-image" onerror="this.src='/public/images/no_preview.jpg'" alt="{{../name}}">
             </a>
-          {{/each}}
+          {{/if}}
+
         </div>
         <div class="card-footer">
           <a href="/donations/{{_id}}" class="card-link">
@@ -20,7 +23,7 @@
               <span class="small text-danger card-text">In Stock {{in_stock}}</span>
             </span>
             <br>
-            <span class="card-text small text-muted">Donated 3 days ago</span>
+            <span class="card-text small text-muted">{{dateToString createdAt}}</span>
           </a>
           <span>{{#if ../showApproveReject}}
               {{>approve-reject status=status id=_id}}
