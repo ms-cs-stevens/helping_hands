@@ -85,7 +85,7 @@ let exportedMethods = {
 
       if (updateInfo.errors)
         throw `Error ecountered while updating the specified user: ${updateInfo.errors}`;
-      return await this.getUserById(id);
+      return await this.getById(id);
     } catch (e) {
       throw e;
     }

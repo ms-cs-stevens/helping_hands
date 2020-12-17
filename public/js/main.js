@@ -37,13 +37,3 @@ $(function () {
     $('a[aria-expanded=true]').attr('aria-expanded', 'false');
   });
 });
-
-$('#search-donation').submit((event) => {
-  event.preventDefault();
-  if ($('#searchForm').val().trim() == '') {
-    $('#search-error').show();
-  } else {
-    $('#search-error').hide();
-    $('#search-donation').unbind('submit').submit();
-  }
-});

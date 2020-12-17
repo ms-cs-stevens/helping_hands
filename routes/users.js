@@ -27,20 +27,9 @@ router.get('/', authMiddleWare.adminRequired, async (req, res) => {
 
 router.get('/:id/donations', authMiddleWare.donorRequired, async (req, res) => {
   let user;
+  let id = req.params.id;
   try {
-    user = await userData.getUserById(id);
-    if (updateData.firstname && updateData.firstname !== user.firstname)
-      updatedUserProfile.firstname = updateData.firstname;
-    if (updateData.lastname && updateData.lastname !== user.lastname)
-      updatedUserProfile.lastname = updateData.lastname;
-    if (updateData.email && updateData.email !== user.email)
-      updatedUserProfile.email = updateData.email;
-    if (updateData.gender && updateData.gender !== user.gender)
-      updatedUserProfile.gender = updateData.gender;
-    if (updateData.password.length > 0)
-      updatedUserProfile.password = updateData.password;
-    if (updateData.password2.length > 0)
-      updatedUserProfile.password2 = updateData.password2;
+    user = await userData.getById(id);
   } catch (error) {
     res.status(404).render('customError', {
       title: 'Not found',
@@ -273,13 +262,18 @@ router.patch(
     }
 
     try {
-      let updatedObject = { active: !req.user.active };
+      let updatedObject = { active: !user.active };
       let updatedUser = await userData.update(id, updatedObject);
       if (updatedUser) {
-        req.flash('info', 'Status updated for the user.');
-        res.redirect(`/users`);
+        let message = updatedObject.active
+          ? `User ${updatedUser.email} is activated`
+          : `User ${updatedUser.email} is disabled`;
+        res.status(200).json({
+          message,
+        });
       }
     } catch (error) {
+      console.log(error);
       res.status(401).render('customError', {
         title: 'Unauthorized Access',
         pageName: 'Unauthorized Access!',
