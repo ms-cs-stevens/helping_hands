@@ -90,8 +90,6 @@ let exportedMethods = {
       throw e;
     }
   },
-   return await this.getById(id);
-  },
 
   validateUserInfo(user) {
     if (!user) throw 'Provide user details';
@@ -132,11 +130,11 @@ let exportedMethods = {
       '(?=.*d)(?=.*[a-zA-Z])[a-zA-Z0-9].{6,16}'
     );
 
-    
     if (input.length >= 6 && input.length <= 16) {
       if (passwordFormat.test(input))
         throw `Password needs to be a valid string of 6-16 characters with at least 1 digit and 1 special character`;
-    } else throw `Invalid length of password, password needs to be a minimum of 6 characters and a maximum of 16 characters`;
+    } else
+      throw `Invalid length of password, password needs to be a minimum of 6 characters and a maximum of 16 characters`;
   },
 
   validateUpdateInfo(user) {
