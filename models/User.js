@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
-const uniqueValidator = require('mongoose-unique-validator');
 const { Schema } = mongoose;
 const { nanoid } = require('nanoid');
+const uniqueValidator = require('mongoose-unique-validator');
 
-// TODO: Need to check what happend if we get id value in api request
 const userSchema = new Schema(
   {
     _id: {
@@ -38,7 +37,6 @@ const userSchema = new Schema(
       index: true,
       unique: true,
       trim: true,
-      // uniqueCaseInsensitive: true
     },
     gender: {
       type: String,

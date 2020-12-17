@@ -10,7 +10,7 @@ const orderSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ['draft', 'placed', 'confirmed', 'Rejected'],
+      enum: ['draft', 'placed', 'confirmed', 'rejected'],
       lowercase: true,
       required: [true, 'You must provide status of the order'],
     },

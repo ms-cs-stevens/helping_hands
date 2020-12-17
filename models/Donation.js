@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 const { nanoid } = require('nanoid');
-mongoose.Promise = global.Promise;
 
-const donationSchema = new mongoose.Schema(
+const donationSchema = new Schema(
   {
     _id: {
       type: String,
