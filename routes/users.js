@@ -1,8 +1,10 @@
 const express = require('express');
 const data = require('../data');
 const donationData = data.donations;
+const addressData = data.addresses;
 const orderData = data.orders;
 const userData = data.users;
+
 const router = express.Router();
 const authMiddleWare = require('../middlewares/auth');
 
@@ -235,21 +237,27 @@ router.get('/:id/address', async (req, res) => {
   res.render('users/addressData', options);
 });
 
-// //addressroutr
-// router.post('/address', async (req, res) => {
-//     try {
+// //Address Route
+router.post('/:id/address', async (req, res) => {
+  try {
+    let { street, apartment, state, city, zipcode } = req.body;
+    createAddress = await addressData.create(
+      street,
+      apartment,
+      state,
+      city,
+      zipcode
+    );
 
-//       res.json({ messages: 'Implement my orders page here' });
-//     }
-//     catch (err) {
-//       res.json({ messages: 'Implement my orders page here' });
+    res.render('users/addressData', { msg: 'Address added' });
+  } catch (err) {
+    res.render('users/addressData', { error: 'Address not created' });
+  }
+  // else{
+  //   res.json({ messages: 'Implement my orders page here' });
 
-//     }
-//     else{
-//       res.json({ messages: 'Implement my orders page here' });
-
-//     }
-// })
+  // }
+});
 
 router.patch(
   '/:id/toggle_active',

@@ -1,16 +1,36 @@
 const mongoose = require('mongoose');
-const { Schema } = mongoose;
+const { nanoid } = require('nanoid');
+mongoose.Promise = global.Promise;
 
-const addressSchema = new Schema(
+const addressSchema = new mongoose.Schema(
   {
-    street: String,
-    apartment: String,
-    state: String,
-    city: String,
-    zipcode: String,
-    user_id: { type: String, ref: 'User', required: true },
+    _id: { type: String, default: () => nanoid() },
+    street: {
+      type: String,
+    },
+
+    apartment: {
+      type: String,
+    },
+    state: {
+      type: String,
+    },
+    city: {
+      type: String,
+    },
+    zipcode: {
+      type: String,
+      validate: {
+        validator: function (v) {
+          return v.length == 5;
+        },
+        message: 'Invalid Zipcode. Zipcode must be atleast 5 digits!',
+      },
+    },
   },
   { timestamps: true }
 );
+
+// addressSchema.index({ '$**': 'text' });
 
 module.exports = mongoose.model('Address', addressSchema);

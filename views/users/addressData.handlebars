@@ -1,4 +1,7 @@
-<form id="donation_form" action="/address/" method="POST">
+{{msg}}
+{{error}}
+
+<form id="donation_form" action="/users/{{loggedInUser._id}}/address" method="POST">
   <div class="form-group">
     <label for="inputAddress">Address</label>
     <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St" name="address[street]" required>
