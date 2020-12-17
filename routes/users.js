@@ -244,7 +244,7 @@ router.get('/:id/address', async (req, res) => {
         pageName: 'Add Address',
         title: 'Update Address',
       },
-      loggedInUser: addressOldData,
+      userAddress: addressOldData,
     });
   }
 });

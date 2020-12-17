@@ -1,4 +1,3 @@
-const Address = require('./Address');
 const Donation = require('./Donation');
 const Item = require('./Item');
 const Order = require('./Order');

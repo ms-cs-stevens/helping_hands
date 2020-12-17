@@ -29,8 +29,8 @@ const Address = require('../models/Address');
 // module.exports = exportedMethods;
 
 module.exports = {
-  async getById(id) {
-    let address = await Address.findById(id).exec();
+  async getById(donnor_id) {
+    let address = await Address.findOne({ donor_id: donnor_id });
     return address;
   },
 
