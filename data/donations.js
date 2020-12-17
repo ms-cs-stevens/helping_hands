@@ -77,6 +77,7 @@ module.exports = {
     let searchResults;
     try {
       searchResults = await Donation.find({
+        status: 'approved',
         $text: { $search: searchTerm.trim() },
       });
     } catch (e) {
