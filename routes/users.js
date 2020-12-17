@@ -267,13 +267,18 @@ router.patch(
     }
 
     try {
-      let updatedObject = { active: !req.user.active };
+      let updatedObject = { active: !user.active };
       let updatedUser = await userData.update(id, updatedObject);
       if (updatedUser) {
-        req.flash('info', 'Status updated for the user.');
-        res.redirect(`/users`);
+        let message = updatedObject.active
+          ? `User ${updatedUser.email} is activated`
+          : `User ${updatedUser.email} is disabled`;
+        res.status(200).json({
+          message,
+        });
       }
     } catch (error) {
+      console.log(error);
       res.status(401).render('customError', {
         title: 'Unauthorized Access',
         pageName: 'Unauthorized Access!',

@@ -26,7 +26,7 @@
       </div>
       <div class="form-group">
         <label for="inputEmail">Email</label>
-        <input type="email" class="form-control" id="inputEmail" name="email" value="{{currentUser.email}}" disabled>
+        <input type="email" class="form-control" id="inputEmail" name="email" value="{{currentUser.email}}" readonly>
       </div>
       <div class="form-row">
         <div class="form-group col-md-6">
@@ -50,7 +50,7 @@
           placeholder="********">
       </div>
       <input type="text" hidden name="method" value="patch">
-      <button type="submit" class="btn btn-primary">Update</button>
+      <button type="submit" class="form-control btn btn-outline-success">Update</button>
     </form>
   </div>
 </div>

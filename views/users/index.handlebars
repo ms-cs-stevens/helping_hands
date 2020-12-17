@@ -13,7 +13,7 @@
           <td>{{user.firstname}} {{user.lastname}}</td>
           <td><a href="/" >{{user.email}}</a></td>
           <td>
-            <input id="status-toggle" type="checkbox" data-toggle="toggle" data-on="Active" data-off="Inactive" {{#if user.active}} checked {{/if}}data-onstyle="success" data-offstyle="danger" data-size="mini">
+            <input id="status-toggle" type="checkbox" data-user-id={{user._id}} data-toggle="toggle" data-on="Active" data-off="Inactive" {{#if user.active}} checked {{/if}}data-onstyle="success" data-offstyle="danger" data-size="mini">
           </td>
         </tr>
       {{/each}}

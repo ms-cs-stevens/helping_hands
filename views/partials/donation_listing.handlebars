@@ -6,8 +6,14 @@
           <div class="card-header text-center">
             {{name}}({{in_stock}})
           </div>
-          <img class="card-img-top" src="{{returnFirst images}}" onerror="this.src='/public/images/no_preview.jpg'"
-            alt={{name}}>
+          <div class="images-carousel-listing" data-slick='{"slidesToShow": 1, "slidesToScroll": 1}'>
+            {{#each images}}
+              <img src="{{this}}" class="card-img-top card-image" onerror="this.src='/public/images/no_preview.jpg'" alt={{../name}}>
+            {{else}}
+              <img src='https://res.cloudinary.com/helpinghands101/image/upload/v1608081700/Images/no_preview_bw93bc.jpg'
+                height="50" class="card-img-top card-image" onerror="this.src='/public/images/no_preview.jpg'" alt="{{../name}}">
+            {{/each}}
+          </div>
         </a>
         {{#if ../showApproveReject}}
           {{>approve-reject status=status id=_id}}

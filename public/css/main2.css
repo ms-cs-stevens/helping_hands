@@ -195,3 +195,11 @@ a.article:hover {
 .hide {
   display: none !important;
 }
+
+.card-image {
+  min-height: 16rem !important;
+}
+
+.sidebar-user-role {
+  text-transform: capitalize;
+}
