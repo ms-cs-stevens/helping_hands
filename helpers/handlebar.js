@@ -28,6 +28,9 @@ const handlebarsInstance = exphbs.create({
     or: (exp1, exp2) => {
       return exp1 || exp2;
     },
+    and: (exp1, exp2) => {
+      return exp1 && exp2;
+    },
     returnFirst: (array) => {
       return array[0];
     },

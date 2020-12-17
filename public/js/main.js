@@ -37,3 +37,24 @@ $(function () {
     $('a[aria-expanded=true]').attr('aria-expanded', 'false');
   });
 });
+
+$('#donationStateFilter').change((event) => {
+  let state = $('#donationStateFilter').val();
+  if (state) {
+    let requestParams = {
+      method: 'GET',
+      url: `/donations/filter?state=${state.toLocaleLowerCase()}`,
+    };
+    $.ajax({
+      ...requestParams,
+      success: function (result) {
+        let element = $('.donation-listing');
+        if (result.length) {
+          element.html(result);
+        } else {
+          element.html(`<p>No donations found</p>`);
+        }
+      },
+    });
+  }
+});

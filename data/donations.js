@@ -58,9 +58,9 @@ module.exports = {
     return await Donation.find().sort({ createdAt: 'desc' });
   },
 
-  async getApprovedDonations() {
+  async filterByState(state) {
     let donations = await this.allDonations();
-    return donations && donations.filter((d) => d.status == 'approved');
+    return donations && donations.filter((d) => d.status == state);
   },
 
   async getById(id) {
