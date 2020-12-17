@@ -28,7 +28,19 @@ router.get('/', authMiddleWare.adminRequired, async (req, res) => {
 router.get('/:id/donations', authMiddleWare.donorRequired, async (req, res) => {
   let user;
   try {
-    user = await userData.getById(req.params.id);
+    user = await userData.getUserById(id);
+    if (updateData.firstname && updateData.firstname !== user.firstname)
+      updatedUserProfile.firstname = updateData.firstname;
+    if (updateData.lastname && updateData.lastname !== user.lastname)
+      updatedUserProfile.lastname = updateData.lastname;
+    if (updateData.email && updateData.email !== user.email)
+      updatedUserProfile.email = updateData.email;
+    if (updateData.gender && updateData.gender !== user.gender)
+      updatedUserProfile.gender = updateData.gender;
+    if (updateData.password.length > 0)
+      updatedUserProfile.password = updateData.password;
+    if (updateData.password2.length > 0)
+      updatedUserProfile.password2 = updateData.password2;
   } catch (error) {
     res.status(404).render('customError', {
       title: 'Not found',
@@ -75,10 +87,12 @@ router.get(
         messages: req.flash(),
       });
     } catch (e) {
-      res.status(404).render('customError', {
-        title: 'Not found',
-        errorReason: e,
-        pageName: 'Error',
+      res.status(422).render('users/edit', {
+        title: 'Profile Page',
+        pageName: 'Edit User Info',
+        errors: [e],
+        currentUser: user,
+        genders: ['Male', 'Female', 'Others'],
         messages: req.flash(),
       });
     }
