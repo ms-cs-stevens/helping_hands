@@ -50,7 +50,13 @@ $('#donationStateFilter').change((event) => {
       success: function (result) {
         let element = $('.donation-listing');
         if (result.length) {
+          $('#clear-filters').removeClass('hide');
           element.html(result);
+          $('.images-carousel-listing').slick({
+            infinite: true,
+            autoplay: false,
+            dots: true,
+          });
         } else {
           element.html(`<p>No donations found</p>`);
         }

@@ -3,9 +3,9 @@
     <div class="col">
       <div class="card bg-light mb-5 box-shadow">
         <div class="images-carousel-listing" data-slick='{"slidesToShow": 1, "slidesToScroll": 1}'>
-          {{#each images}}
+          {{#each images as |image|}}
             <a class="donation-card-link" href="/donations/{{../_id}}">
-              <img src="{{this}}" class="card-img-top card-image" onerror="this.src='/public/images/no_preview.jpg'" alt={{../name}}>
+              <img src="{{image}}" class="card-img-top card-image" onerror="this.src='/public/images/no_preview.jpg'" alt={{../name}}>
             </a>
           {{else}}
             <a class="donation-card-link" href="/donations/{{../_id}}">
