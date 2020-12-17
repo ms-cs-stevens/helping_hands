@@ -72,7 +72,7 @@ module.exports = {
     let searchResults;
     try {
       searchResults = await Donation.find(
-        { $text: { $search: searchTerm.trim() } },
+        { $text: { $search: searchTerm } },
         { score: { $meta: 'textScore' } }
       ).sort({
         score: { $meta: 'textScore' },
@@ -110,6 +110,11 @@ module.exports = {
   async delete(id) {
     let deletedDonation = await Donation.findOneAndDelete({ _id: id });
     return deletedDonation;
+  },
+
+  async filter() {
+    let donations = await this.allDonations();
+    let filtered = donations && donations.filter((d) => d.status == 'approved');
   },
 
   //update donation info

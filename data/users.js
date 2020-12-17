@@ -88,7 +88,7 @@ let exportedMethods = {
     }
   },
 
-  async updateOperation(user) {
+  /* async updateOperation(user) {
     const updateInfo = await User.findOneAndUpdate(
       { _id: id },
       { $set: updateData },
@@ -97,7 +97,7 @@ let exportedMethods = {
 
     if (updateInfo.errors)
       throw `Error ecountered while updating the specified user: ${updateInfo.errors}`;
-  },
+  }, */
 
   validateUserInfo(user) {
     if (!user) throw 'Provide user details';
@@ -108,16 +108,11 @@ let exportedMethods = {
     if (!user.password) throw 'Provide password';
     if (user.password !== user.password2) throw 'Password does not match';
     if (user.password < 6) throw 'Password is less than 6 characters';
-    /*
-    this.checkName(user.firstname);
+    /*this.checkName(user.firstname);
     this.checkName(user.lastname);
     this.checkEmail(user.email);
     this.checkPassword(user.password); */
-
-    // TODO: Add more validations here for data checking
   },
-
-  // TODO: Resolve validation function errors
 
   checkName(input) {
     //return false;
@@ -125,7 +120,8 @@ let exportedMethods = {
     if (input.trim().length < 2 || input.trim().length > 30)
       throw 'Name should be between 2 and 30 characters';
 
-    let alphabet = 'qwertyuiopasdfghjklzxcvbnm QWERTYUIOPASDFGHJKLZXCVBNM';
+    let special = " '`!";
+    let alphabet = `qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM${special}`;
 
     for (let i = 0; i < input.length; i++)
       if (alphabet.indexOf(input[i]) === -1)
@@ -133,7 +129,6 @@ let exportedMethods = {
     //check if name only has letters
   },
 
-  /*
   checkEmail(input) {
     if (typeof input !== 'string') throw `E-Mail Address has to be a string.`;
     const emailformat = new RegExp(
@@ -151,11 +146,13 @@ let exportedMethods = {
       if (!passwordFormat.test(input))
         throw `Password needs to be a valid string of 6-16 characters with at least 1 digit and 1 special character`;
       else throw `Password needs to be between 6 and 16 characters in length`;
-  }, */
+  },
 
   validateUpdateInfo(user) {
     if (user.firstname) this.checkName(user.firstname);
     if (user.lastname) this.checkName(user.lastname);
+    if (user.email) this.checkEmail(user.email);
+    if (user.password) this.checkPassword(user.password);
 
     /* if (!user) throw 'Error! User does not exist';
     if (user.email) this.checkEmail(user.email);

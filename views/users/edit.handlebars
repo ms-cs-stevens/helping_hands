@@ -1,6 +1,16 @@
 <div id="profile-page">
   <div class="container col-md-8 my-5">
     <h2 class="page_title">{{loggedInUser.firstname}}'s Profile</h2>
+    {{#if errors}}
+      <div class="validation-errors">
+        <ul class='error-list'>
+          <p class="error-header">Your submission has {{errors.length}} error(s)!</p>
+          {{#each errors as |error|}}
+            <li>{{error}}</li>
+          {{/each}}
+        </ul>
+      </div>
+    {{/if}}
     <form id="profile" action="/users/{{loggedInUser._id}}/update" method="POST"
       oninput='password2.setCustomValidity(password2.value != password.value ? "Passwords do not match." : "")'>
       <div class="form-row">
