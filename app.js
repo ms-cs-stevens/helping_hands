@@ -8,13 +8,6 @@ const xssClean = require('xss-clean');
 app.use(xssClean());
 
 const xss = require('xss');
-app.use((req, res, next) => {
-  if (req.body) req.body = xss(req.body);
-  else if (req.params) req.params = xss(req.params);
-  else if (req.query) req.query = xss(req.query);
-
-  next();
-});
 
 const session = require('express-session');
 const cookieParser = require('cookie-parser');

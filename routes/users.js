@@ -7,6 +7,7 @@ const userData = data.users;
 
 const router = express.Router();
 const authMiddleWare = require('../middlewares/auth');
+const xss = require('xss');
 
 router.get('/', authMiddleWare.adminRequired, async (req, res) => {
   try {
@@ -95,7 +96,12 @@ router.patch(
   authMiddleWare.authorizedUserRequired,
   async (req, res) => {
     let id = req.params.id;
-    let updateData = req.body;
+
+    let reqBod = req.body;
+    let keys = Object.keys(reqBod);
+
+    for (let i = 0; i < keys.length; i++) updateData[keys[i]] = reqBod[keys[i]];
+
     let updatedUserProfile = {};
     let user;
     try {

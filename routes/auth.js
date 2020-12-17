@@ -5,6 +5,7 @@ const userData = data.users;
 const orderData = data.orders;
 const { Role } = require('../models');
 const authMiddlewares = require('../middlewares/auth');
+const xss = require('xss');
 
 router.get('/login', authMiddlewares.isLoggedIn, async (req, res) => {
   res.render('auth/login', {
@@ -17,7 +18,8 @@ router.get('/login', authMiddlewares.isLoggedIn, async (req, res) => {
 router.post('/login', authMiddlewares.isLoggedIn, async (req, res) => {
   try {
     //validate login
-    const { email, password } = req.body;
+    const email = xss(req.body.email);
+    const password = xss(req.body.password);
     let user = await userData.isAuthorizedUser(email, password);
     let role = await Role.findById(user.role_id);
     let role_name = role.name.toLocaleLowerCase();
@@ -56,7 +58,9 @@ router.get('/logout', authMiddlewares.loginRequired, async (req, res) => {
 });
 
 router.get('/signup', authMiddlewares.isLoggedIn, async (req, res) => {
-  if (!req.query.uType || !['Donor', 'Recipient'].includes(req.query.uType)) {
+  let uType;
+  if (req.query.uType) uType = xss(req.query.uType);
+  if (!uType || !['Donor', 'Recipient'].includes(uType)) {
     res.status(404).render('customError', {
       title: 'Not found',
       pageName: 'Sign Up',
@@ -75,7 +79,7 @@ router.get('/signup', authMiddlewares.isLoggedIn, async (req, res) => {
       title: 'Sign Up',
       roles: roles,
       pageName: 'Sign Up',
-      uType: req.query.uType,
+      uType: uType,
       layout: 'main.handlebars',
     });
   } catch (error) {
@@ -93,6 +97,11 @@ router.post('/register', authMiddlewares.isLoggedIn, async (req, res) => {
   let role = await Role.findById(userInfo.role_id);
   let role_name = role.name.toLocaleLowerCase();
   try {
+    let reqBod = req.body;
+    let userInfo = {};
+    let keys = Object.keys(req.body);
+    for (let i = 0; i < keys.length; i++)
+      userInfo[keys[i]] = xss(reqBod[keys[i]]);
     userData.validateUserInfo(userInfo);
     let user = await userData.create(userInfo);
     if (user) {
