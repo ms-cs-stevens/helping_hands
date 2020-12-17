@@ -82,7 +82,7 @@ router.get(
       res.render('users/edit', {
         title: 'Profile Page',
         pageName: 'Edit User Info',
-        loggedInUser: userOldData,
+        currentUser: userOldData,
         genders: ['Male', 'Female', 'Others'],
         messages: req.flash(),
       });
