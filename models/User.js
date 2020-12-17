@@ -4,7 +4,6 @@ const { Schema } = mongoose;
 const { nanoid } = require('nanoid');
 
 // TODO: Need to check what happend if we get id value in api request
-// TODO: validation for phone in mongoose
 const userSchema = new Schema(
   {
     _id: {
