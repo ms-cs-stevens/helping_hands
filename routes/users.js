@@ -234,7 +234,19 @@ router.get('/:id/address', async (req, res) => {
     title: 'Update Address',
   };
 
-  res.render('users/addressData', options);
+  let addressOldData = await addressData.getById(req.params.id);
+  if (!addressOldData) {
+    res.render('users/addressData', options);
+    return;
+  } else {
+    res.render('users/addressData', {
+      options: {
+        pageName: 'Add Address',
+        title: 'Update Address',
+      },
+      loggedInUser: addressOldData,
+    });
+  }
 });
 
 // //Address Route
@@ -246,7 +258,8 @@ router.post('/:id/address', async (req, res) => {
       apartment,
       state,
       city,
-      zipcode
+      zipcode,
+      req.session.user._id
     );
 
     res.render('users/addressData', { msg: 'Address added' });

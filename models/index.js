@@ -4,6 +4,7 @@ const Item = require('./Item');
 const Order = require('./Order');
 const Role = require('./Role');
 const User = require('./User');
+const Address = require('./Address');
 
 module.exports = {
   Address,
@@ -12,4 +13,5 @@ module.exports = {
   Order,
   Role,
   User,
+  Address,
 };

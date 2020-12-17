@@ -29,8 +29,13 @@ const Address = require('../models/Address');
 // module.exports = exportedMethods;
 
 module.exports = {
-  async create(street, apartment, state, city, zipcode) {
-    let addressObj = { street, apartment, state, city, zipcode };
+  async getById(id) {
+    let address = await Address.findById(id).exec();
+    return address;
+  },
+
+  async create(street, apartment, state, city, zipcode, donor_id) {
+    let addressObj = { street, apartment, state, city, zipcode, donor_id };
 
     const newAddress = await Address.create(addressObj);
     return newAddress;

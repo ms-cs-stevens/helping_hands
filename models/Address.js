@@ -27,6 +27,11 @@ const addressSchema = new mongoose.Schema(
         message: 'Invalid Zipcode. Zipcode must be atleast 5 digits!',
       },
     },
+    donor_id: {
+      type: String,
+      ref: 'User',
+      required: 'You must supply a donor!',
+    },
   },
   { timestamps: true }
 );
