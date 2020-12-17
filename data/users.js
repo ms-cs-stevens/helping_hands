@@ -136,7 +136,7 @@ let exportedMethods = {
     if (input.length >= 6 && input.length <= 16) {
       if (passwordFormat.test(input))
         throw `Password needs to be a valid string of 6-16 characters with at least 1 digit and 1 special character`;
-    } else throw `Invalid length of password`;
+    } else throw `Invalid length of password, password needs to be a minimum of 6 characters and a maximum of 16 characters`;
   },
 
   validateUpdateInfo(user) {
