@@ -1,6 +1,12 @@
 const { Order } = require('../models');
 
 let exportedMethods = {
+  async getAllPlacedOrders() {
+    return await Order.find({ status: 'placed' }).sort({
+      createdAt: 'desc',
+    });
+  },
+
   async getById(id) {
     if (!id) throw 'You must provide an id';
     if (typeof id != 'string' || id.trim().length === 0)
