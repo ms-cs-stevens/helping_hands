@@ -29,18 +29,6 @@ router.get('/:id/donations', authMiddleWare.donorRequired, async (req, res) => {
   let user;
   try {
     user = await userData.getUserById(id);
-    if (updateData.firstname && updateData.firstname !== user.firstname)
-      updatedUserProfile.firstname = updateData.firstname;
-    if (updateData.lastname && updateData.lastname !== user.lastname)
-      updatedUserProfile.lastname = updateData.lastname;
-    if (updateData.email && updateData.email !== user.email)
-      updatedUserProfile.email = updateData.email;
-    if (updateData.gender && updateData.gender !== user.gender)
-      updatedUserProfile.gender = updateData.gender;
-    if (updateData.password.length > 0)
-      updatedUserProfile.password = updateData.password;
-    if (updateData.password2.length > 0)
-      updatedUserProfile.password2 = updateData.password2;
   } catch (error) {
     res.status(404).render('customError', {
       title: 'Not found',
@@ -119,6 +107,8 @@ router.patch(
         updatedUserProfile.gender = updateData.gender;
       if (updateData.password.length > 0)
         updatedUserProfile.password = updateData.password;
+      if (updateData.password2.length > 0)
+        updatedUserProfile.password2 = updateData.password2;
     } catch (e) {
       res.status(404).render('customError', {
         title: 'Not found',
@@ -134,18 +124,21 @@ router.patch(
           res.redirect(`/users/${id}/edit`);
         }
       } catch (e) {
-        res.status(500).render('customError', {
-          title: 'Internal Server Error',
-          errorReason: 'Something went wrong',
-          pageName: 'Internal Server Error',
-        });
+        console.log(e);
+        req.flash('danger', e);
+        res.redirect(`/users/${id}/edit`);
+        // res.status(500).render('customError', {
+        //   title: 'Internal Server Error',
+        //   errorReason: 'Something went wrong',
+        //   pageName: 'Internal Server Error',
+        // });
       }
     } else {
       req.flash(
-        'error',
+        'info',
         'No fields have been changed from their inital values, so no update has occurred'
       );
-      res.status(422).redirect('/donations');
+      res.status(422).redirect(`/users/${id}/edit`);
     }
   }
 );
