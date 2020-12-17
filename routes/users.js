@@ -27,8 +27,9 @@ router.get('/', authMiddleWare.adminRequired, async (req, res) => {
 
 router.get('/:id/donations', authMiddleWare.donorRequired, async (req, res) => {
   let user;
+  let id = req.params.id;
   try {
-    user = await userData.getById(req.params.id);
+    user = await userData.getById(id);
   } catch (error) {
     res.status(404).render('customError', {
       title: 'Not found',
@@ -70,15 +71,17 @@ router.get(
       res.render('users/edit', {
         title: 'Profile Page',
         pageName: 'Edit User Info',
-        loggedInUser: userOldData,
+        currentUser: userOldData,
         genders: ['Male', 'Female', 'Others'],
         messages: req.flash(),
       });
     } catch (e) {
-      res.status(404).render('customError', {
-        title: 'Not found',
-        errorReason: e,
-        pageName: 'Error',
+      res.status(422).render('users/edit', {
+        title: 'Profile Page',
+        pageName: 'Edit User Info',
+        errors: [e],
+        currentUser: user,
+        genders: ['Male', 'Female', 'Others'],
         messages: req.flash(),
       });
     }
@@ -105,6 +108,8 @@ router.patch(
         updatedUserProfile.gender = updateData.gender;
       if (updateData.password.length > 0)
         updatedUserProfile.password = updateData.password;
+      if (updateData.password2.length > 0)
+        updatedUserProfile.password2 = updateData.password2;
     } catch (e) {
       res.status(404).render('customError', {
         title: 'Not found',
@@ -120,18 +125,21 @@ router.patch(
           res.redirect(`/users/${id}/edit`);
         }
       } catch (e) {
-        res.status(500).render('customError', {
-          title: 'Internal Server Error',
-          errorReason: 'Something went wrong',
-          pageName: 'Internal Server Error',
-        });
+        console.log(e);
+        req.flash('danger', e);
+        res.redirect(`/users/${id}/edit`);
+        // res.status(500).render('customError', {
+        //   title: 'Internal Server Error',
+        //   errorReason: 'Something went wrong',
+        //   pageName: 'Internal Server Error',
+        // });
       }
     } else {
       req.flash(
-        'error',
+        'info',
         'No fields have been changed from their inital values, so no update has occurred'
       );
-      res.status(422).redirect('/donations');
+      res.status(422).redirect(`/users/${id}/edit`);
     }
   }
 );
@@ -259,13 +267,18 @@ router.patch(
     }
 
     try {
-      let updatedObject = { active: !req.user.active };
+      let updatedObject = { active: !user.active };
       let updatedUser = await userData.update(id, updatedObject);
       if (updatedUser) {
-        req.flash('info', 'Status updated for the user.');
-        res.redirect(`/users`);
+        let message = updatedObject.active
+          ? `User ${updatedUser.email} is activated`
+          : `User ${updatedUser.email} is disabled`;
+        res.status(200).json({
+          message,
+        });
       }
     } catch (error) {
+      console.log(error);
       res.status(401).render('customError', {
         title: 'Unauthorized Access',
         pageName: 'Unauthorized Access!',

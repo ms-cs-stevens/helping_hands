@@ -37,10 +37,7 @@
               Donation On: {{dateToString donation.createdAt}}
             </span>
           </p>
-          {{#if allowActions }}
-            <a class="btn btn-success" href="/donations/{{donation._id}}/edit">Edit</a>
-            <a class="btn btn-danger" href="/donations/{{donation._id}}/delete">Delete</a>
-          {{/if}}
+
           {{#if showAddRemove}}
             <div class="row">
               <div class="col-4">
@@ -50,7 +47,9 @@
               </div>
             </div>
           {{/if}}
+          <br>
         </div>
+        <br>
         {{#if (equal userRole 'admin')}}
           <a class="btn btn-outline-danger" href="/donations/{{donation._id}}/reject">Reject</a>
           <a class="btn btn-outline-success" href="/donations/{{donation._id}}/approve">Approve</a>

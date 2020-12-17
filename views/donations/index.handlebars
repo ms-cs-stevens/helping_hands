@@ -1,12 +1,15 @@
 <div class="container-fluid text-center">
-  <div class="row">
-    <div class="col-sm-12">
-      {{#if searchTerm}}
-        <p>You've searched for : '{{searchTerm}}'</p>
-      {{/if}}
+  <div class="row justify-content-between">
+    <div class='col-7'></div>
+    <div class="col-5">
       <form id="search-donation" action="/donations/search" method="post">
-        <input class="searchForm" name="searchTerm" type="text">
-        <button type="submit" class="btn btn-success">Search</button>
+        <div class="input-group mb-3">
+          <label for="search-donation" class="small hide">Search</label>
+          <input id="search-donation" type="text" class="form-control" name="searchTerm" placeholder="Enter search term here"
+            aria-label="Search for any donation by name, region, etc." aria-describedby="button-addon2"
+            aria-placeholder="Search for any donation by name, region, etc." value={{searchTerm}}>
+          <button class="btn btn-outline-success" type="submit">search</button>
+        </div>
       </form>
     </div>
   </div>

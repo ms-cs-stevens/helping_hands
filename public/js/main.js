@@ -27,6 +27,7 @@ $(function () {
 
   $('.images-carousel-listing').slick({
     infinite: true,
+    autoplay: false,
     dots: true,
   });
 
