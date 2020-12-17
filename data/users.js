@@ -111,10 +111,6 @@ let exportedMethods = {
     if (!user.password) throw 'Provide password';
     if (user.password !== user.password2) throw 'Password does not match';
     if (user.password < 6) throw 'Password is less than 6 characters';
-    /*this.checkName(user.firstname);
-    this.checkName(user.lastname);
-    this.checkEmail(user.email);
-    this.checkPassword(user.password); */
   },
 
   checkName(input) {
