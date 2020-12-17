@@ -74,10 +74,11 @@ let exportedMethods = {
       } catch (e) {
         throw e;
       }
-      updateData.hashedPassword = await bcrypt.hash(
-        updateData.password,
-        saltRounds
-      );
+      if (updateData.password2 && updateData.password)
+        updateData.hashedPassword = await bcrypt.hash(
+          updateData.password,
+          saltRounds
+        );
 
       let updateInfo = await User.findOneAndUpdate(
         { _id: id },
@@ -102,6 +103,8 @@ let exportedMethods = {
 
     if (updateInfo.errors)
       throw `Error ecountered while updating the specified user: ${updateInfo.errors}`;
+
+    //return await this.getById(id);
   }, */
 
   validateUserInfo(user) {
@@ -127,6 +130,7 @@ let exportedMethods = {
 
     let special = " '`!";
     let alphabet = `qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM${special}`;
+    //let alphabet = 'qwertyuiopasdfghjklzxcvbnm QWERTYUIOPASDFGHJKLZXCVBNM';
 
     for (let i = 0; i < input.length; i++)
       if (alphabet.indexOf(input[i]) === -1)
