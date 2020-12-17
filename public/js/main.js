@@ -41,7 +41,6 @@ $(function () {
 $('#donationStateFilter').change((event) => {
   let state = $('#donationStateFilter').val();
   if (state) {
-    debugger;
     let requestParams = {
       method: 'GET',
       url: `/donations/filter?state=${state.toLocaleLowerCase()}`,
