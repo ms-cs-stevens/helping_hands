@@ -145,16 +145,7 @@ let exportedMethods = {
       '(?=.*d)(?=.*[a-zA-Z])[a-zA-Z0-9].{6,16}'
     );
 
-    /*
-    let special = "~!@#$%^&*()_+=-`/|}{[]':;?/<>,.";
-    let extraspecial = `\\"`;
-    let numbers = "1234567890";
-    input.includes(numbers)||flag
-
-    let flag = input.includes(special) || input.includes(extraspecial);
-
-    old way*/
-
+    
     if (input.length >= 6 && input.length <= 16) {
       if (passwordFormat.test(input))
         throw `Password needs to be a valid string of 6-16 characters with at least 1 digit and 1 special character`;
