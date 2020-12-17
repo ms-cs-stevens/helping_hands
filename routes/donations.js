@@ -96,13 +96,7 @@ router.post('/search', async (req, res) => {
   try {
     if (!searchTerm.trim().length) {
       req.flash('danger', 'Please enter search term.');
-      res.status(200).render('donations/index', {
-        title: 'Search Results',
-        pageName: 'Donations',
-        searchTerm: searchTerm,
-        messages: req.flash(),
-        layout: req.session.user ? 'main2' : 'main',
-      });
+      res.redirect('/donations');
     } else {
       let results = await donationData.search(searchTerm);
       let options;
