@@ -46,7 +46,7 @@ const handlebarsInstance = exphbs.create({
       return orders.length !== 0;
     },
     placed: (order) => {
-      return order.status === 'placed';
+      return order.status !== 'draft';
     },
     donation_available: (inStock) => {
       return inStock > 0;

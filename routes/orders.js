@@ -5,18 +5,19 @@ const orderData = data.orders;
 const itemData = data.items;
 const donationData = data.donations;
 const { Role } = require('../models');
-const authMiddlewares = require('../middlewares/auth');
+const authMiddleware = require('../middlewares/auth');
 
 // TODO: add item by updating quantity
 // TODO: add validation to check in_stock quantity of donation before adding item into a cart - done
 // TODO: update order everytime item get added or deleted - done
 
-router.get('/', async (req, res) => {
+router.get('/review', async (req, res) => {
   try {
-    let orders = await orderData.getAllOrders();
-    res.status(200).render('orders/index', {
+    let orders = await orderData.getAllPlacedOrders();
+    res.status(200).render('orders/review', {
       title: 'My Orders',
       orders: orders,
+      pageName: 'Review Orders',
       message: req.flash(),
     });
   } catch (error) {
@@ -59,6 +60,8 @@ router.get('/:id', async (req, res) => {
       order: order,
       pageName: 'Order Details',
       showPlaceOrderBtn: order.status === 'draft' && order.quantity > 0,
+      showOrderConfirmBtn:
+        req.session.user.role_name === 'admin' && order.status === 'placed',
     });
   } catch (error) {
     console.log(`Error occurred: ${error}`);
@@ -113,8 +116,83 @@ router.get('/:id/checkout', async (req, res) => {
     }
 
     if (updatedOrder) {
-      req.session.user.order = {}; // Remove placed order from session
+      // Remove placed order from session
+      req.session.user.order = await orderData.findOrCreateDraftOrder(
+        req.session.user._id
+      );
       req.flash('info', `Congratulations! Your order is placed successfully.`);
+      res.redirect(`/orders/${order._id}`);
+    }
+  } catch (error) {
+    console.log(`Error occurred: ${error}`);
+    res.status(500).render('customError', {
+      title: 'Internal Server Error',
+      pageName: 'Error',
+      errorReason: 'Please contact administrator of the site for more details.',
+    });
+  }
+});
+
+router.get('/:id/confirm', authMiddleware.adminRequired, async (req, res) => {
+  let id = req.params.id;
+  let order;
+
+  try {
+    order = await orderData.getById(id);
+  } catch (error) {
+    res.status(404).render('customError', {
+      title: 'Not found',
+      errorReason: error,
+      pageName: 'Error',
+    });
+  }
+
+  try {
+    if (order.status !== 'placed') {
+      req.flash('danger', 'This order is not available for review yet.');
+      res.redirect(`/orders/${order._id}`);
+    }
+
+    let updatedOrder = await orderData.updateOrder(id, { status: 'confirmed' });
+
+    if (updatedOrder) {
+      req.flash('info', `The order with id ${order._id} is confirmed.`);
+      res.redirect(`/orders/${order._id}`);
+    }
+  } catch (error) {
+    console.log(`Error occurred: ${error}`);
+    res.status(500).render('customError', {
+      title: 'Internal Server Error',
+      pageName: 'Error',
+      errorReason: 'Please contact administrator of the site for more details.',
+    });
+  }
+});
+
+router.get('/:id/reject', authMiddleware.adminRequired, async (req, res) => {
+  let id = req.params.id;
+  let order;
+
+  try {
+    order = await orderData.getById(id);
+  } catch (error) {
+    res.status(404).render('customError', {
+      title: 'Not found',
+      errorReason: error,
+      pageName: 'Error',
+    });
+  }
+
+  try {
+    if (order.status !== 'placed') {
+      req.flash('danger', 'This order is not available for review yet.');
+      res.redirect(`/orders/${order._id}`);
+    }
+
+    let updatedOrder = await orderData.updateOrder(id, { status: 'rejected' });
+
+    if (updatedOrder) {
+      req.flash('info', `The order with id ${order._id} is rejected.`);
       res.redirect(`/orders/${order._id}`);
     }
   } catch (error) {

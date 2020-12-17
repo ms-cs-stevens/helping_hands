@@ -1,31 +1,47 @@
-<div class="container-sm">
-  <div class="row">
-    <div class="col text-right">
-      {{#if showPlaceOrderBtn}}
-        <a href="/orders/{{order._id}}/checkout" class="btn btn-outline-success" id="place-order">Place Order</a>
-      {{/if}}
-    </div>
-  </div>
-</div>
-<div class="container-sm">
-  <div class="row justify-content-between text-muted">
-    <div class="col-5">
-      {{#if (placed order)}}
-        <span>
-          <span class="small"> ORDER PLACED</span>
-          {{dateToString order.updatedAt}}
-        </span>
-      {{/if}}
-    </div>
-    <div class="col-3 text-right">
-      <span>
-        <span class="small"> ORDER# {{order._id}} </span>
-      </span>
-    </div>
-  </div>
-</div>
-<div class="listings">
+{{#if (cartCount order)}}
   <div class="container-sm">
-    {{> item_listing items=items order_status=(placed order)}}
+    <div class="row">
+      <div class="col text-right">
+        {{#if showPlaceOrderBtn}}
+          <a href="/orders/{{order._id}}/checkout" class="btn btn-outline-success" id="place-order">Place Order</a>
+        {{/if}}
+        {{#if showOrderConfirmBtn}}
+          <a href="/orders/{{order._id}}/confirm" class="btn btn-outline-success" id="confirm-order">Confirm Order</a>
+          <a href="/orders/{{order._id}}/reject" class="btn btn-outline-danger" id="reject-order">Reject Order</a>
+        {{/if}}
+      </div>
+    </div>
   </div>
-</div>
+  <div class="container-sm">
+    <div class="row justify-content-between text-muted">
+      <div class="col-5">
+        {{#if (placed order)}}
+          <span>
+            <span class="small"> ORDER PLACED</span>
+            {{dateToString order.updatedAt}}
+          </span>
+          <br>
+          <span class="text-info">Status: {{order.status}}</span>
+        {{/if}}
+      </div>
+      <div class="col-3 text-right">
+        <span>
+          <span class="small"> ORDER# {{order._id}} </span>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="listings">
+    <div class="container-sm">
+      {{> item_listing items=items order_status=(placed order)}}
+    </div>
+  </div>
+{{else}}
+  <div class="container-sm">
+    <div class="row">
+      <div class="col">
+        <p>You don't have any items into the cart.</p>
+      </div>
+    </div>
+  </div>
+{{/if}}
