@@ -50,7 +50,11 @@ $('#donationStateFilter').change((event) => {
       ...requestParams,
       success: function (result) {
         let element = $('.donation-listing');
-        element.html(result);
+        if (result.length) {
+          element.html(result);
+        } else {
+          element.html(`<p>No donations found</p>`);
+        }
       },
     });
   }

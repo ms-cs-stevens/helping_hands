@@ -16,7 +16,7 @@ const fs = require('fs');
 // gets all approved donations for display
 router.get('/', async (req, res) => {
   try {
-    let donations = await donationData.getApprovedDonations();
+    let donations = await donationData.filterByState('approved');
     let sessionUser = req.session.user;
     let items = [];
     let showAddRemove = false;
@@ -53,7 +53,7 @@ router.get('/', async (req, res) => {
 // gets most-recent 8 new donation creation form
 router.get('/recent', async (req, res) => {
   try {
-    let approvedDonations = await donationData.getApprovedDonations();
+    let approvedDonations = await donationData.filterByState('approved');
     let recentDonations = approvedDonations && approvedDonations.slice(0, 4);
     res.render('partials/donation_listing', {
       layout: null,
