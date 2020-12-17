@@ -9,29 +9,32 @@
       </ul>
     </div>
   {{/if}}
-
   <div class="form-row">
     <div class="form-group col-md-12">
       <label for="name">Donation Name*</label>
-      <input type="text" name="name" class="form-control" required id="name" placeholder="Enter Name" value="{{donation.name}}">
+      <input type="text" name="name" class="form-control" required id="name" placeholder="Enter Name"
+        value="{{donation.name}}">
     </div>
     <div class="form-group col-md-12">
       <label for="description">Description*</label>
       <textarea type="description" name="description" required class="form-control" id="description"
-      placeholder="Enter donation description">{{donation.description}}</textarea>
+        placeholder="Enter donation description">{{donation.description}}</textarea>
     </div>
   </div>
   <div class="form-group">
     <label for="quantity">Quantity*</label>
-    <input type="number" name="quantity" min="1" class="form-control" id="quantity" required value="{{donation.quantity}}" placeholder="Input number of items">
+    <input type="number" name="quantity" min="1" class="form-control" id="quantity" required
+      value="{{donation.quantity}}" placeholder="Input number of items">
   </div>
   <div class="form-group">
     <label for="region">Region*</label>
-    <input type="text" name="region" class="form-control" id="region" required value="{{donation.region}}" placeholder="Enter Region">
+    <input type="text" name="region" class="form-control" id="region" required value="{{donation.region}}"
+      placeholder="Enter Region">
   </div>
   <div class="form-group">
     <label for="zipcode">Zipcode*</label>
-    <input type="number" name="zipcode" class="form-control" id="zipcode" required value="{{donation.zipcode}}" placeholder="Input Zipcode" min="1">
+    <input type="number" name="zipcode" class="form-control" id="zipcode" required value="{{donation.zipcode}}"
+      placeholder="Input Zipcode" min="1">
   </div>
   <label for="formFile" class="form-label">Upload Images*
     <i class="fas fa-info-circle" data-toggle="tooltip" data-placement="top" title="Upload atleast 1 image"></i>
@@ -46,13 +49,11 @@
     <br>
     <input class="form-control-file" type="file" id="formFile" name="images" multiple>
   </div>
-
   {{#if edit}}
     <div class="form-group">
       <input type="text" name="method" id="method" value="patch" hidden>
     </div>
   {{/if}}
-
   <button type="submit" class="btn btn-outline-success form-control">
     {{#if edit }}
       Edit Donation

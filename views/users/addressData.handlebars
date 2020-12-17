@@ -1,27 +1,37 @@
 <div id="address">
   <div class="container col-lg-8 my-5">
-    {{msg}}
-    {{error}}
+    {{#if errors}}
+      <div class="validation-errors">
+        <ul class='error-list'>
+          <p class="error-header">Your submission has {{errors.length}} error(s)!</p>
+          {{#each errors as |error|}}
+            <li>{{error}}</li>
+          {{/each}}
+        </ul>
+      </div>
+    {{/if}}
     <form id="donation_form" action="/users/{{loggedInUser._id}}/address" method="POST">
       <div class="form-group">
-        <label for="inputAddress">Address</label>
-        <input type="text" class="form-control" value="{{userAddress.street}}" id="inputAddress" placeholder="1234 Main St" name="street" required>
+        <label for="inputAddress">Street</label>
+        <input type="text" class="form-control" value="{{userAddress.street}}" id="inputAddress"
+          placeholder="1234 Main St" name="street" required>
       </div>
       <div class="form-group">
-        <label for="inputAddress2">Address 2</label>
-        <input type="text" class="form-control" id="inputAddress2" value="{{userAddress.apartment}}" placeholder="Apartment, studio, or floor" name="apartment">
+        <label for="inputAddress2">Apartment</label>
+        <input type="text" class="form-control" id="inputAddress2" value="{{userAddress.apartment}}"
+          placeholder="Apartment, studio, or floor" name="apartment" required>
       </div>
       <div class="form-row">
         <div class="form-group col-md-5">
           <label for="inputState">State</label>
           <select id="inputState" class="form-control" value="{{userAddress.state}}" name="state" required>
-            <option selected>Select State</option>
+            <option>Select State</option>
           </select>
         </div>
         <div class="form-group col-md-5">
           <label for="inputCity">City</label>
           <select id="inputCity" class="form-control" value="{{userAddress.city}}" name="city" required>
-            <option selected>Choose state first</option>
+            <option>Choose state first</option>
           </select>
         </div>
         <div class="form-group col-md-2">
@@ -31,9 +41,9 @@
       </div>
       <button type="submit" class="btn btn-outline-success form-control">
         {{#if userAddress }}
-          Edit Address
+          Update Address
         {{else}}
-          Create
+          Create Address
         {{/if}}
       </button>
     </form>
