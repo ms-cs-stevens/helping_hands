@@ -70,6 +70,8 @@ router.patch('/:id/update', authMiddleWare.loginRequired, async (req, res) => {
       updatedUserProfile.gender = updateData.gender;
     if (updateData.password.length > 0)
       updatedUserProfile.password = updateData.password;
+    if (updateData.password2.length > 0)
+      updatedUserProfile.password2 == updateData.password2;
   } catch (e) {
     res.status(404).render('customError', {
       title: 'Not found',

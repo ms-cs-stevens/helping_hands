@@ -69,17 +69,17 @@ let exportedMethods = {
       const old = await this.getUserById(id);
       if (!old) throw 'User does not Exist';
 
-      this.validateUpdateInfo(updateData);
-
+      try {
+        this.validateUpdateInfo(updateData);
+      } catch (e) {
+        throw e;
+      }
       updateData.hashedPassword = await bcrypt.hash(
         updateData.password,
         saltRounds
       );
 
-      // if(
-      //   )
-      // await this.updateOperation;
-      await User.findOneAndUpdate(
+      let updateInfo = await User.findOneAndUpdate(
         { _id: id },
         { $set: updateData },
         { runValidators: true }
@@ -147,10 +147,19 @@ let exportedMethods = {
     const passwordFormat = new RegExp(
       '(?=.*d)(?=.*[a-zA-Z])[a-zA-Z0-9].{6,16}'
     );
+
+    /*
+    let special = "~!@#$%^&*()_+=-`/|}{[]':;?/<>,.";
+    let extraspecial = `\\"`;
+    let numbers = "1234567890";
+    input.includes(numbers)||flag
+
+    let flag = input.includes(special) || input.includes(extraspecial); */
+
     if (input.length >= 6 && input.length <= 16)
-      if (!passwordFormat.test(input))
+      if (passwordFormat.test(input)) return true;
+      else
         throw `Password needs to be a valid string of 6-16 characters with at least 1 digit and 1 special character`;
-      else throw `Password needs to be between 6 and 16 characters in length`;
   },
 
   validateUpdateInfo(user) {
@@ -158,13 +167,13 @@ let exportedMethods = {
     if (user.lastname) this.checkName(user.lastname);
     if (user.email) this.checkEmail(user.email);
 
-    /* if (user.password)
-      if (user.password !== user.password2) throw 'Password does not match'; */
-    //this.checkPassword(user.password);
+    if (user.password && user.password2)
+      if (user.password !== user.password2) throw 'Password does not match';
+    this.checkPassword(user.password);
 
-    //if (user.password) this.checkPassword(user.password);
+    /*if (user.password) this.checkPassword(user.password);
 
-    /* if (!user) throw 'Error! User does not exist';
+    if (!user) throw 'Error! User does not exist';
     if (user.email) this.checkEmail(user.email); */
   },
 
