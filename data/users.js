@@ -153,10 +153,12 @@ let exportedMethods = {
     let numbers = "1234567890";
     input.includes(numbers)||flag
 
-    let flag = input.includes(special) || input.includes(extraspecial); */
+    let flag = input.includes(special) || input.includes(extraspecial);
+
+    old way*/
 
     if (input.length >= 6 && input.length <= 16) {
-      if (!passwordFormat.test(input))
+      if (passwordFormat.test(input))
         throw `Password needs to be a valid string of 6-16 characters with at least 1 digit and 1 special character`;
     } else throw `Invalid length of password`;
   },
@@ -168,7 +170,11 @@ let exportedMethods = {
     if (user.password && user.password2) {
       if (user.password !== user.password2) throw 'Password does not match';
 
-      this.checkPassword(user.password);
+      try {
+        this.checkPassword(user.password);
+      } catch (e) {
+        throw e;
+      }
     }
   },
 
