@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const { nanoid } = require('nanoid');
-const Donation = require('./Donation');
 
 const itemSchema = new Schema(
   {

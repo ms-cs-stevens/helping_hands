@@ -20,40 +20,46 @@
           {{/if}}
         </h1>
         <br>
-        <div class="donation-details">
-          <p>
-            <br>
-            <span class="small text-danger"> In Stock {{donation.in_stock}}</span>
-            <br>
-            <span class="font-italic">
-              {{donation.description}}
-            </span>
-            <br>
-            <span>
-              Available At: {{donation.region}}, {{donation.zipcode}}
-            </span>
-            <br>
-            <span>
-              Donation On: {{dateToString donation.createdAt}}
-            </span>
-          </p>
-
-          {{#if showAddRemove}}
-            <div class="row">
-              <div class="col-4">
-                {{#if (donation_available donation.in_stock)}}
-                  {{>add_remove items=item id=donation._id in_stock=donation.in_stock}}
-                {{/if}}
-              </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="donation-details">
+              <p>
+                <br>
+                <span class="small text-danger"> In Stock {{donation.in_stock}}</span>
+                <br>
+                <span class="font-italic">
+                  {{donation.description}}
+                </span>
+                <br>
+                <span>
+                  Available At: {{donation.region}}, {{donation.zipcode}}
+                </span>
+                <br>
+                <span>
+                  Donation On: {{dateToString donation.createdAt}}
+                </span>
+              </p>
+              {{#if showAddRemove}}
+                <div class="row">
+                  <div class="col-4">
+                    {{#if (donation_available donation.in_stock)}}
+                      {{>add_remove items=item id=donation._id in_stock=donation.in_stock}}
+                    {{/if}}
+                  </div>
+                </div>
+              {{/if}}
             </div>
-          {{/if}}
-          <br>
+          </div>
         </div>
-        <br>
-        {{#if (equal userRole 'admin')}}
-          <a class="btn btn-outline-danger" href="/donations/{{donation._id}}/reject">Reject</a>
-          <a class="btn btn-outline-success" href="/donations/{{donation._id}}/approve">Approve</a>
-        {{/if}}
+        <div class="row">
+          <div class="col-12">
+            {{#if (equal userRole 'admin')}}
+              <br>
+              <a class="btn btn-outline-danger" href="/donations/{{donation._id}}/reject">Reject</a>
+              <a class="btn btn-outline-success" href="/donations/{{donation._id}}/approve">Approve</a>
+            {{/if}}
+          </div>
+        </div>
       </div>
       <div class="col-4">
         <div class="images-carousel" data-slick='{"slidesToShow": 1, "slidesToScroll": 1}'>
