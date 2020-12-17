@@ -1,6 +1,6 @@
 <div id="profile-page">
   <div class="container col-md-8 my-5">
-    <h2 class="page_title">{{loggedInUser.firstname}}'s Profile</h2>
+    <h2 class="page_title">{{currentUser.firstname}}'s Profile</h2>
     {{#if errors}}
       <div class="validation-errors">
         <ul class='error-list'>
@@ -11,29 +11,29 @@
         </ul>
       </div>
     {{/if}}
-    <form id="profile" action="/users/{{loggedInUser._id}}/update" method="POST"
+    <form id="profile" action="/users/{{currentUser._id}}/update" method="POST"
       oninput='password2.setCustomValidity(password2.value != password.value ? "Passwords do not match." : "")'>
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="firstname">First Name</label>
-          <input type="text" class="form-control" id="firstname" name="firstname" value="{{loggedInUser.firstname}}"
+          <input type="text" class="form-control" id="firstname" name="firstname" value="{{currentUser.firstname}}"
             autofocus>
         </div>
         <div class="form-group col-md-6">
           <label for="lastname">Last Name</label>
-          <input type="text" class="form-control" id="lastname" name="lastname" value="{{loggedInUser.lastname}}">
+          <input type="text" class="form-control" id="lastname" name="lastname" value="{{currentUser.lastname}}">
         </div>
       </div>
       <div class="form-group">
         <label for="inputEmail">Email</label>
-        <input type="email" class="form-control" id="inputEmail" name="email" value="{{loggedInUser.email}}" disabled>
+        <input type="email" class="form-control" id="inputEmail" name="email" value="{{currentUser.email}}" disabled>
       </div>
       <div class="form-row">
         <div class="form-group col-md-6">
-          <label for="inputGender">Gender ({{loggedInUser.gender}})</label>
+          <label for="inputGender">Gender ({{currentUser.gender}})</label>
           <select id="inputGender" class="form-control" name="gender">
             {{#each genders}}
-              <option {{#if (equal this ../loggedInUser.gender)}}selected=selected{{/if}} value={{this}}>{{this}}
+              <option {{#if (equal this ../currentUser.gender)}}selected=selected{{/if}} value={{this}}>{{this}}
               </option>
             {{/each}}
           </select>

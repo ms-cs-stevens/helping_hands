@@ -69,11 +69,8 @@ let exportedMethods = {
       const old = await this.getUserById(id);
       if (!old) throw 'User does not Exist';
 
-      try {
-        this.validateUpdateInfo(updateData);
-      } catch (e) {
-        throw e;
-      }
+      this.validateUpdateInfo(updateData);
+
       if (updateData.password2 && updateData.password)
         updateData.hashedPassword = await bcrypt.hash(
           updateData.password,
@@ -123,19 +120,17 @@ let exportedMethods = {
   },
 
   checkName(input) {
-    //return false;
-    if (typeof input !== 'string') return false;
+    if (typeof input !== 'string') throw 'Invalid Name';
     if (input.trim().length < 2 || input.trim().length > 30)
       throw 'Name should be between 2 and 30 characters';
 
     let special = " '`!";
     let alphabet = `qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM${special}`;
-    //let alphabet = 'qwertyuiopasdfghjklzxcvbnm QWERTYUIOPASDFGHJKLZXCVBNM';
 
+    //check if name only has letters
     for (let i = 0; i < input.length; i++)
       if (alphabet.indexOf(input[i]) === -1)
         throw 'Invalid Character added in name';
-    //check if name only has letters
   },
 
   checkEmail(input) {
@@ -160,25 +155,21 @@ let exportedMethods = {
 
     let flag = input.includes(special) || input.includes(extraspecial); */
 
-    if (input.length >= 6 && input.length <= 16)
-      if (passwordFormat.test(input)) return true;
-      else
+    if (input.length >= 6 && input.length <= 16) {
+      if (!passwordFormat.test(input))
         throw `Password needs to be a valid string of 6-16 characters with at least 1 digit and 1 special character`;
+    } else throw `Invalid length of password`;
   },
 
   validateUpdateInfo(user) {
     if (user.firstname) this.checkName(user.firstname);
     if (user.lastname) this.checkName(user.lastname);
-    if (user.email) this.checkEmail(user.email);
 
-    if (user.password && user.password2)
+    if (user.password && user.password2) {
       if (user.password !== user.password2) throw 'Password does not match';
-    this.checkPassword(user.password);
 
-    /*if (user.password) this.checkPassword(user.password);
-
-    if (!user) throw 'Error! User does not exist';
-    if (user.email) this.checkEmail(user.email); */
+      this.checkPassword(user.password);
+    }
   },
 
   async isAuthorizedUser(email, password) {

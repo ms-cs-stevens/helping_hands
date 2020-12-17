@@ -39,7 +39,7 @@ router.get('/:id/edit', authMiddleWare.loginRequired, async (req, res) => {
     res.render('users/edit', {
       title: 'Profile Page',
       pageName: 'Edit User Info',
-      loggedInUser: userOldData,
+      currentUser: userOldData,
       genders: ['Male', 'Female', 'Others'],
       messages: req.flash(),
     });
@@ -91,15 +91,9 @@ router.patch('/:id/update', authMiddleWare.loginRequired, async (req, res) => {
         title: 'Profile Page',
         pageName: 'Edit User Info',
         errors: [e],
-        loggedInUser: updateData,
+        currentUser: user,
         genders: ['Male', 'Female', 'Others'],
         messages: req.flash(),
-      });
-
-      res.status(500).render('customError', {
-        title: 'Internal Server Error',
-        errorReason: 'Something went wrong',
-        pageName: 'Internal Server Error',
       });
     }
   } else {
