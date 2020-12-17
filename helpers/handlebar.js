@@ -1,4 +1,5 @@
 const exphbs = require('express-handlebars');
+const moment = require('moment');
 const {
   allowInsecurePrototypeAccess,
 } = require('@handlebars/allow-prototype-access');
@@ -14,13 +15,7 @@ const handlebarsInstance = exphbs.create({
       return string1 + string2;
     },
     dateToString: (date) => {
-      let options = {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      };
-      return date.toLocaleDateString(undefined, options);
+      return moment(date).fromNow();
     },
     equal: (a, b) => {
       return a == b;

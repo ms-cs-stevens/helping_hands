@@ -22,7 +22,7 @@
             </a>
             <br>
             {{#if ../order_status}}
-              <span class="small text-info"> Quantity ordered: {{quantity}}</span>
+              <span class="small text-info"> Quantity ordered {{quantity}}</span>
             {{else}}
               <span class="small text-danger"> In Stock {{donation.in_stock}}</span>
             {{/if}}
@@ -32,11 +32,11 @@
             </span>
             <br>
             <span>
-              Available At: {{donation.region}}, {{donation.zipcode}}
+              Available at {{donation.region}}, {{donation.zipcode}}
             </span>
             <br>
             <span>
-              Donation On: {{dateToString donation.createdAt}}
+              Donated on {{dateToString donation.createdAt}}
             </span>
           </p>
           <div class="row">
