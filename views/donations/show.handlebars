@@ -49,6 +49,7 @@
           {{/if}}
           <br>
         </div>
+        <br>
         {{#if (equal userRole 'admin')}}
           <a class="btn btn-outline-danger" href="/donations/{{donation._id}}/reject">Reject</a>
           <a class="btn btn-outline-success" href="/donations/{{donation._id}}/approve">Approve</a>

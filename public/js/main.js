@@ -27,6 +27,7 @@ $(function () {
 
   $('.images-carousel-listing').slick({
     infinite: true,
+    autoplay: false,
     dots: true,
   });
 
@@ -35,4 +36,14 @@ $(function () {
     $('.collapse.in').toggleClass('in');
     $('a[aria-expanded=true]').attr('aria-expanded', 'false');
   });
+});
+
+$('#search-donation').submit((event) => {
+  event.preventDefault();
+  if ($('#searchForm').val().trim() == '') {
+    $('#search-error').show();
+  } else {
+    $('#search-error').hide();
+    $('#search-donation').unbind('submit').submit();
+  }
 });

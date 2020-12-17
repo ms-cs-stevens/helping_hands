@@ -72,11 +72,7 @@ body {
 .hide {
   display: none !important;
 }
-/* .add_dona1{
-  margin-top: 50px;
-}
 
-#profile_pic{
-  height: 200px;
-  width: 200px;
-} */
+.card-image {
+  min-height: 16rem !important;
+}

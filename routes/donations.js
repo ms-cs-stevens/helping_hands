@@ -280,9 +280,6 @@ router.patch(
         const { path } = file;
         const newPath = await uploader(path);
         urls.push(newPath);
-
-        //deleting file from server after upload
-        fs.unlinkSync(path);
       }
 
       let images = [];
