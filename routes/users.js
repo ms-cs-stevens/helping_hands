@@ -27,8 +27,9 @@ router.get('/', authMiddleWare.adminRequired, async (req, res) => {
 
 router.get('/:id/donations', authMiddleWare.donorRequired, async (req, res) => {
   let user;
+  let id = req.params.id;
   try {
-    user = await userData.getUserById(id);
+    user = await userData.getById(id);
   } catch (error) {
     res.status(404).render('customError', {
       title: 'Not found',
