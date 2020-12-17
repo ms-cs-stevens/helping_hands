@@ -128,11 +128,6 @@ router.patch(
         console.log(e);
         req.flash('danger', e);
         res.redirect(`/users/${id}/edit`);
-        // res.status(500).render('customError', {
-        //   title: 'Internal Server Error',
-        //   errorReason: 'Something went wrong',
-        //   pageName: 'Internal Server Error',
-        // });
       }
     } else {
       req.flash(
