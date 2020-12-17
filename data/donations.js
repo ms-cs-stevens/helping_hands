@@ -77,7 +77,7 @@ module.exports = {
     let searchResults;
     try {
       searchResults = await Donation.find(
-        { $text: { $search: searchTerm } },
+        { status: 'approved', $text: { $search: searchTerm } },
         { score: { $meta: 'textScore' } }
       ).sort({
         score: { $meta: 'textScore' },
