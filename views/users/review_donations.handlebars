@@ -1,23 +1,29 @@
 <div class="container-fluid">
   {{#if (and (equal userRole 'admin') allDonations)}}
-    <div class="form-row" id='filter-donations'>
-      <div class="form-group col-md-6">
-        <label for="donationStateFilter">Filter</label>
-        <select id="donationStateFilter" class="form-control" name="filter">
-          <option value='Approved'>
-            Approved
-          </option>
-          <option value='Submitted'>
-            Submitted
-          </option>
-          <option value='Rejected'>
-            Rejected
-          </option>
-        </select>
-      </div>
-      <div class="donation-listing row row-cols-4">
-        {{>donation_listing donations=allDonations}}
+    <div class="row">
+      <div class="col-5 offset-md-7" id='filter-donations'>
+        <div class="form-group">
+          <label for="donationStateFilter"><span class="small">Filter By Donation State:</span> </label>
+          <select id="donationStateFilter" class="form-control" name="filter">
+            <option value="none" selected disabled hidden>
+              Select an Option
+            </option>
+            <option value='Approved'>
+              Approved
+            </option>
+            <option value='Submitted'>
+              Submitted
+            </option>
+            <option value='Rejected'>
+              Rejected
+            </option>
+          </select>
+        </div>
       </div>
     </div>
-  {{/if}}
+    <div class="donation-listing row row-cols-4">
+      {{>donation_listing donations=allDonations}}
+    </div>
+</div>
+{{/if}}
 </div>
