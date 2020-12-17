@@ -43,7 +43,7 @@ const userSchema = new Schema(
       enum: ['Male', 'Female', 'Other'],
     },
     role_id: { type: String, ref: 'Role', required: true },
-    address: [{ type: String, ref: 'Address' }],
+    address_id: { type: String, ref: 'Address' },
   },
   {
     timestamps: true,

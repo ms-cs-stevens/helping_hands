@@ -31,6 +31,10 @@
     dataType: 'json',
     success: function (data) {
       authToken = data.auth_token;
+      var stateElement = $('#inputState');
+      if (stateElement.attr('value')) {
+        fetchCitiesByStateElement();
+      }
     },
   });
 
@@ -125,14 +129,22 @@
       dataType: 'json',
       success: function (data) {
         cities = [];
+
         data.map((city) => cities.push(city.city_name));
 
         var cityElement = $('#inputCity');
-        var ele = ['<option selected="">Choose City</option>'];
-        cities.map((city) =>
-          ele.push(`<option value='${city.toLowerCase()}'>${city}</option>`)
-        );
+        var ele = ['<option value="">Choose City</option>'];
+        cities.map((city) => {
+          ele.push(
+            `<option value='${city.toLowerCase()}' ${
+              cityElement.attr('value') === city.toLowerCase() ? 'selected' : ''
+            }>${city}</option>`
+          );
+        });
         cityElement.html(ele);
+      },
+      error: function (resp) {
+        alert(resp);
       },
     });
   };

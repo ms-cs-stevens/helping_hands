@@ -1,8 +1,10 @@
 const express = require('express');
 const data = require('../data');
 const donationData = data.donations;
+const addressData = data.addresses;
 const orderData = data.orders;
 const userData = data.users;
+
 const router = express.Router();
 const authMiddleWare = require('../middlewares/auth');
 
@@ -226,12 +228,108 @@ router.get(
   }
 );
 
-router.get('/:id/settings', async (req, res) => {
-  res.status(404).render('customError', {
-    title: 'Not found',
-    errorReason: 'Page is not implemented',
-    pageName: 'Error',
-  });
+router.get('/:id/address', authMiddleWare.loginRequired, async (req, res) => {
+  let searchedUser;
+  try {
+    // search for user from id given in params
+    searchedUser = await userData.getById(req.params.id);
+  } catch (error) {
+    res.status(404).render('customError', {
+      title: 'Not found',
+      errorReason: e,
+      pageName: 'Error',
+    });
+  }
+
+  try {
+    let sessionUser = req.session.user;
+    if (searchedUser && searchedUser._id != sessionUser._id)
+      throw 'Invalid User';
+    let options = {};
+    let addressOldData = await addressData.getByUser(req.params.id);
+    if (!addressOldData) {
+      options = {
+        pageName: 'My Address',
+        title: 'Address',
+      };
+    } else {
+      options = {
+        pageName: 'My Address',
+        title: 'Address',
+        userAddress: addressOldData,
+      };
+    }
+    res.render('users/addressData', options);
+  } catch (error) {
+    console.log(`Error occurred: ${error}`);
+    res.status(500).render('customError', {
+      title: 'Internal Server Error',
+      pageName: 'Error',
+      errorReason: 'Please contact administrator of the site for more details.',
+    });
+  }
+});
+
+// //Address Route
+router.post('/:id/address', authMiddleWare.loginRequired, async (req, res) => {
+  let searchedUser;
+  try {
+    // search for user from id given in params
+    searchedUser = await userData.getById(req.params.id);
+  } catch (error) {
+    res.status(404).render('customError', {
+      title: 'Not found',
+      errorReason: e,
+      pageName: 'Error',
+    });
+  }
+
+  try {
+    let address = await addressData.getByUser(req.params.id);
+    let { street, apartment, state, city, zipcode } = req.body;
+
+    if (address) {
+      let updatedAddress = await addressData.update(address._id, {
+        street,
+        apartment,
+        state,
+        city,
+        zipcode,
+      });
+      if (updatedAddress) req.flash('success', 'Address updated successfully');
+    } else {
+      let createdAddress = await addressData.create(
+        street,
+        apartment,
+        state,
+        city,
+        zipcode,
+        req.session.user._id
+      );
+      if (createdAddress) req.flash('success', 'Address added successfully');
+    }
+    res.redirect(`/users/${searchedUser._id}/address`);
+  } catch (err) {
+    if (err.errors) {
+      let errorKeys = Object.keys(err.errors);
+      let errors = [];
+      errorKeys.forEach((key) => errors.push(err.errors[key].message));
+      res.status(422).render(`users/addressData`, {
+        title: 'My Address',
+        pageName: 'Address',
+        userAddress: req.body,
+        errors,
+      });
+    } else {
+      let error = err || err.message;
+      res.status(422).render(`users/addressData`, {
+        title: 'My Address',
+        pageName: 'Address',
+        userAddress: req.body,
+        errors: [error],
+      });
+    }
+  }
 });
 
 router.patch(

@@ -4,13 +4,16 @@
 <ul class="list-unstyled components">
   <li class="sidebar-link">
     <a href="/users/{{loggedInUser._id}}/edit"><i class="fa fa-address-card mr-2" aria-hidden="true"></i>
-      <span class="text-capitalize">{{userRole}}</span> Profile</a></li>
-  <li class="sidebar-link"><a href="/donations"><i class="fa fa-boxes mr-2" aria-hidden="true"></i> View Donations</a></li>
+      <span class="text-capitalize">{{userRole}}</span> Profile</a>
+  </li>
+  <li class="sidebar-link"><a href="/donations"><i class="fa fa-boxes mr-2" aria-hidden="true"></i> View Donations</a>
+  </li>
   {{#if (equal userRole 'admin')}}
-    <li class="sidebar-link"><a href="/users/{{loggedInUser._id}}/donations"><i class="fa fa-plus-square mr-2" aria-hidden="true"></i>
-        My Donations</a></li>
-    <li class="sidebar-link"><a href="/users/{{loggedInUser._id}}/review_donations"><i class="fa fa-clipboard-check mr-2"
+    <li class="sidebar-link"><a href="/users/{{loggedInUser._id}}/donations"><i class="fa fa-plus-square mr-2"
           aria-hidden="true"></i>
+        My Donations</a></li>
+    <li class="sidebar-link"><a href="/users/{{loggedInUser._id}}/review_donations"><i
+          class="fa fa-clipboard-check mr-2" aria-hidden="true"></i>
         Review Donations</a></li>
     <li class="sidebar-link"><a href="/orders/review"><i class="fa fa-dolly mr-2" aria-hidden="true"></i>
         Review Orders</a></li>
@@ -18,16 +21,20 @@
         View Users</a></li>
   {{else}}
     {{#if (equal userRole 'donor')}}
-      <li class="sidebar-link"><a href="/users/{{loggedInUser._id}}/donations"><i class="fa fa-plus-square mr-2" aria-hidden="true"></i>
+      <li class="sidebar-link"><a href="/users/{{loggedInUser._id}}/donations"><i class="fa fa-plus-square mr-2"
+            aria-hidden="true"></i>
           My Donations</a></li>
     {{else}}
-      <li class="sidebar-link"><a href="/users/{{loggedInUser._id}}/orders"><i class="fa fa-plus-square mr-2" aria-hidden="true"></i>
+      <li class="sidebar-link"><a href="/users/{{loggedInUser._id}}/orders"><i class="fa fa-plus-square mr-2"
+            aria-hidden="true"></i>
           My Orders</a></li>
     {{/if}}
   {{/if}}
-  <li class="sidebar-link"><a href="/users/{{loggedInUser._id}}/settings"><i class="fa fa-cog mr-2" aria-hidden="true"></i> Settings</a></li>
+  <li class="sidebar-link"><a href="/users/{{loggedInUser._id}}/address"><i class="fa fa-cog mr-2"
+        aria-hidden="true"></i> My Address</a></li>
   <li class="sidebar-link"><a href="/aboutUs"><i class="fa fa-briefcase mr-2" aria-hidden="true"></i> About Us</a></li>
-  <li class="sidebar-link"><a href="/auth/logout"><i class="fa fa-arrow-alt-circle-left mr-2" aria-hidden="true"></i> Logout</a></li>
+  <li class="sidebar-link"><a href="/auth/logout"><i class="fa fa-arrow-alt-circle-left mr-2" aria-hidden="true"></i>
+      Logout</a></li>
 </ul>
 {{#if (or (equal userRole 'admin') (equal userRole 'donor'))}}
   <ul class="list-unstyled CTAs">
