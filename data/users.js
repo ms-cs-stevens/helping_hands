@@ -100,8 +100,6 @@ let exportedMethods = {
 
     if (updateInfo.errors)
       throw `Error ecountered while updating the specified user: ${updateInfo.errors}`;
-
-    //return await this.getById(id);
   }, */
 
   validateUserInfo(user) {
@@ -166,6 +164,8 @@ let exportedMethods = {
   validateUpdateInfo(user) {
     if (user.firstname) this.checkName(user.firstname);
     if (user.lastname) this.checkName(user.lastname);
+    if (user.email) this.checkEmail(user.email);
+    if (user.password) this.checkPassword(user.password);
 
     if (user.password && user.password2) {
       if (user.password !== user.password2) throw 'Password does not match';
