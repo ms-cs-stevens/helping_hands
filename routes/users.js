@@ -229,24 +229,21 @@ router.get(
 );
 
 router.get('/:id/address', async (req, res) => {
-  options = {
-    pageName: 'Add Address',
-    title: 'Update Address',
-  };
-
+  let options = {};
   let addressOldData = await addressData.getById(req.params.id);
   if (!addressOldData) {
-    res.render('users/addressData', options);
-    return;
+    options = {
+      pageName: 'My Address',
+      title: 'Address',
+    };
   } else {
-    res.render('users/addressData', {
-      options: {
-        pageName: 'Add Address',
-        title: 'Update Address',
-      },
+    options = {
+      pageName: 'My Address',
+      title: 'Address',
       userAddress: addressOldData,
-    });
+    };
   }
+  res.render('users/addressData', options);
 });
 
 // //Address Route

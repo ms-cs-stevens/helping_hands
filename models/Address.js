@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const { nanoid } = require('nanoid');
-mongoose.Promise = global.Promise;
 
 const addressSchema = new mongoose.Schema(
   {
