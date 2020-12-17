@@ -3,6 +3,7 @@ $.getScript(`${basePath}/public/js/location.js`);
 $.getScript(`${basePath}/public/js/auth.js`);
 $.getScript(`${basePath}/public/js/home.js`);
 $.getScript(`${basePath}/public/js/users.js`);
+$.getScript(`${basePath}/public/js/order.js`);
 
 // autoclose the alert message
 window.setTimeout(function () {
@@ -13,9 +14,6 @@ window.setTimeout(function () {
 
 $(function () {
   $('[data-toggle="tooltip"]').tooltip();
-});
-
-$(document).ready(function () {
   $('#sidebar').mCustomScrollbar({
     theme: 'minimal',
   });

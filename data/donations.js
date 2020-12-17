@@ -64,7 +64,12 @@ module.exports = {
   },
 
   async getById(id) {
-    let donation = await Donation.findById(id).exec();
+    if (!id) throw 'You must provide an id';
+    if (typeof id != 'string' || id.trim().length === 0)
+      throw 'You must provide a valid id';
+
+    let donation = await Donation.findById(id);
+    if (!donation) throw 'Donation not found';
     return donation;
   },
 
@@ -101,13 +106,15 @@ module.exports = {
       zipcode,
       images,
       donor_id,
-      status,
     };
     const newDonation = await Donation.create(donationObj);
     return newDonation;
   },
 
   async delete(id) {
+    if (!id) throw 'You must provide an donation id';
+    if (typeof id != 'string' || id.trim().length === 0)
+      throw 'You must provide a valid donation id';
     let deletedDonation = await Donation.findOneAndDelete({ _id: id });
     return deletedDonation;
   },
@@ -118,16 +125,24 @@ module.exports = {
   },
 
   //update donation info
-  async updateDonation(id, donationUpdateInfo, rejectApprove = false) {
+  async updateDonation(id, donationUpdateInfo, skipValidations = false) {
     //find the specified donation and all his/her information
     const donation = await this.getById(id);
 
     if (!donation) throw 'Donation not found';
     //handle no information being provided for a specified donation
-    if (!rejectApprove) {
+    if (!skipValidations) {
       checkForInvalidCredentials(donationUpdateInfo, donation);
       // change the state back to submitted if updated the donation so that admin reviews it again
       donationUpdateInfo.status = 'submitted';
+    }
+
+    if (
+      donationUpdateInfo &&
+      Object.keys(donationUpdateInfo).includes('in_stock') &&
+      donationUpdateInfo.in_stock < 1
+    ) {
+      donationUpdateInfo.status = 'ordered';
     }
 
     const updateInfo = await Donation.findOneAndUpdate(

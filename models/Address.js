@@ -8,7 +8,7 @@ const addressSchema = new Schema(
     state: String,
     city: String,
     zipcode: String,
-    user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    user_id: { type: String, ref: 'User', required: true },
   },
   { timestamps: true }
 );

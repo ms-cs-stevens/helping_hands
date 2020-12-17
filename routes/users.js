@@ -1,62 +1,31 @@
 const express = require('express');
-const donationData = require('../data/donations');
-const { update } = require('../data/users');
-const userData = require('../data/users');
-const { users } = require('../dump');
+const data = require('../data');
+const donationData = data.donations;
+const orderData = data.orders;
+const userData = data.users;
 const router = express.Router();
 const authMiddleWare = require('../middlewares/auth');
 
 router.get('/', authMiddleWare.adminRequired, async (req, res) => {
-  let users = await userData.allUsers();
-  res.status(200).render('users/index', {
-    pageName: 'Users',
-    users: users,
-    title: 'User Donations',
-    messages: req.flash(),
-  });
-});
-
-router.get('/:id/donations', authMiddleWare.donorRequired, async (req, res) => {
-  let allDonations = await donationData.allDonations();
-  let myDonations =
-    allDonations && allDonations.filter((d) => d.donor_id == req.params.id);
-  options = {
-    pageName: 'My Donations',
-    myDonations,
-  };
-  res.status(200).render('users/my_donations', {
-    ...options,
-    title: 'User Donations',
-    messages: req.flash(),
-  });
-});
-
-router.get('/:id/edit', authMiddleWare.loginRequired, async (req, res) => {
   try {
-    let userOldData = await userData.getUserById(req.params.id);
-    if (!userOldData) throw 'User Does Not Exist!';
-
-    res.render('users/edit', {
-      title: 'Profile Page',
-      pageName: 'Edit User Info',
-      currentUser: userOldData,
-      genders: ['Male', 'Female', 'Others'],
+    let users = await userData.allUsers();
+    res.status(200).render('users/index', {
+      pageName: 'Users',
+      users: users,
+      title: 'User Donations',
       messages: req.flash(),
     });
-  } catch (e) {
-    res.status(404).render('customError', {
-      title: 'Not found',
-      errorReason: e,
+  } catch (error) {
+    console.log(`Error occurred: ${error}`);
+    res.status(500).render('customError', {
+      title: 'Internal Server Error',
       pageName: 'Error',
-      messages: req.flash(),
+      errorReason: 'Please contact administrator of the site for more details.',
     });
   }
 });
 
-router.patch('/:id/update', authMiddleWare.loginRequired, async (req, res) => {
-  let id = req.params.id;
-  let updateData = req.body;
-  let updatedUserProfile = {};
+router.get('/:id/donations', authMiddleWare.donorRequired, async (req, res) => {
   let user;
   try {
     user = await userData.getUserById(id);
@@ -72,20 +41,51 @@ router.patch('/:id/update', authMiddleWare.loginRequired, async (req, res) => {
       updatedUserProfile.password = updateData.password;
     if (updateData.password2.length > 0)
       updatedUserProfile.password2 = updateData.password2;
-  } catch (e) {
+  } catch (error) {
     res.status(404).render('customError', {
       title: 'Not found',
-      errorReason: e,
+      errorReason: error,
       pageName: 'Error',
     });
   }
-  if (Object.keys(updatedUserProfile).length) {
+
+  try {
+    let allDonations = await donationData.allDonations();
+    let myDonations =
+      allDonations && allDonations.filter((d) => d.donor_id == req.params.id);
+    options = {
+      pageName: 'My Donations',
+      myDonations,
+    };
+    res.status(200).render('users/my_donations', {
+      ...options,
+      title: 'User Donations',
+      messages: req.flash(),
+    });
+  } catch (error) {
+    console.log(`Error occurred: ${error}`);
+    res.status(500).render('customError', {
+      title: 'Internal Server Error',
+      pageName: 'Error',
+      errorReason: 'Please contact administrator of the site for more details.',
+    });
+  }
+});
+
+router.get(
+  '/:id/edit',
+  authMiddleWare.authorizedUserRequired,
+  async (req, res) => {
     try {
-      const updated = await userData.update(id, updatedUserProfile);
-      if (updated) {
-        req.flash('success', 'User profile updated successfully');
-        res.redirect(`/users/${id}/edit`);
-      }
+      let userOldData = await userData.getById(req.params.id);
+
+      res.render('users/edit', {
+        title: 'Profile Page',
+        pageName: 'Edit User Info',
+        loggedInUser: userOldData,
+        genders: ['Male', 'Female', 'Others'],
+        messages: req.flash(),
+      });
     } catch (e) {
       res.status(422).render('users/edit', {
         title: 'Profile Page',
@@ -96,48 +96,113 @@ router.patch('/:id/update', authMiddleWare.loginRequired, async (req, res) => {
         messages: req.flash(),
       });
     }
-  } else {
-    req.flash(
-      'error',
-      'No fields have been changed from their inital values, so no update has occurred'
-    );
-    res.status(422).redirect('/donations');
   }
-});
+);
+
+router.patch(
+  '/:id/update',
+  authMiddleWare.authorizedUserRequired,
+  async (req, res) => {
+    let id = req.params.id;
+    let updateData = req.body;
+    let updatedUserProfile = {};
+    let user;
+    try {
+      user = await userData.getById(id);
+      if (updateData.firstname && updateData.firstname !== user.firstname)
+        updatedUserProfile.firstname = updateData.firstname;
+      if (updateData.lastname && updateData.lastname !== user.lastname)
+        updatedUserProfile.lastname = updateData.lastname;
+      if (updateData.email && updateData.email !== user.email)
+        updatedUserProfile.email = updateData.email;
+      if (updateData.gender && updateData.gender !== user.gender)
+        updatedUserProfile.gender = updateData.gender;
+      if (updateData.password.length > 0)
+        updatedUserProfile.password = updateData.password;
+    } catch (e) {
+      res.status(404).render('customError', {
+        title: 'Not found',
+        errorReason: e,
+        pageName: 'Error',
+      });
+    }
+    if (Object.keys(updatedUserProfile).length) {
+      try {
+        const updated = await userData.update(id, updatedUserProfile);
+        if (updated) {
+          req.flash('success', 'User profile updated successfully');
+          res.redirect(`/users/${id}/edit`);
+        }
+      } catch (e) {
+        res.status(500).render('customError', {
+          title: 'Internal Server Error',
+          errorReason: 'Something went wrong',
+          pageName: 'Internal Server Error',
+        });
+      }
+    } else {
+      req.flash(
+        'error',
+        'No fields have been changed from their inital values, so no update has occurred'
+      );
+      res.status(422).redirect('/donations');
+    }
+  }
+);
 
 router.get(
   '/:id/review_donations',
   authMiddleWare.adminRequired,
   async (req, res) => {
-    let sessionUser = req.session.user;
-    // search for user from id given in params
-    let searchedUser = await userData.getUserById(req.params.id);
-    if (searchedUser && searchedUser._id != sessionUser._id)
-      throw 'Invalid User';
+    let searchedUser;
+    try {
+      // search for user from id given in params
+      searchedUser = await userData.getById(req.params.id);
+    } catch (error) {
+      res.status(404).render('customError', {
+        title: 'Not found',
+        errorReason: e,
+        pageName: 'Error',
+      });
+    }
 
-    // proceed if user is valid and checks are passed
-    let role_name = sessionUser.role_name;
-    let allDonations = await donationData.allDonations();
+    try {
+      let sessionUser = req.session.user;
+      if (searchedUser && searchedUser._id != sessionUser._id)
+        throw 'Invalid User';
 
-    let options = {};
-    if (role_name == 'admin') {
-      let reviewedDonations =
-        allDonations &&
-        allDonations.filter((d) => ['approved', 'rejected'].includes(d.status));
-      let submittedDonations =
-        allDonations &&
-        allDonations.filter((d) => ['submitted'].includes(d.status));
+      // proceed if user is valid and checks are passed
+      let role_name = sessionUser.role_name;
+      let allDonations = await donationData.allDonations();
 
-      options = {
-        pageName: 'Review Donations',
-        showApproveReject: true,
-        reviewedDonations,
-        submittedDonations,
-        title: 'Review Donations',
-        messages: req.flash(),
-      };
+      let options = {};
+      if (role_name == 'admin') {
+        let reviewedDonations =
+          allDonations &&
+          allDonations.filter((d) =>
+            ['approved', 'rejected'].includes(d.status)
+          );
+        let submittedDonations =
+          allDonations &&
+          allDonations.filter((d) => ['submitted'].includes(d.status));
 
-      res.render('users/review_donations', options);
+        options = {
+          pageName: 'Review Donations',
+          showApproveReject: true,
+          reviewedDonations,
+          submittedDonations,
+          title: 'Review Donations',
+          messages: req.flash(),
+        };
+
+        res.render('users/review_donations', options);
+      }
+    } catch (error) {
+      res.status(500).render('customError', {
+        title: 'Internal Server Error',
+        errorReason: 'Something went wrong',
+        pageName: 'Internal Server Error',
+      });
     }
   }
 );
@@ -146,12 +211,48 @@ router.get(
   '/:id/orders',
   authMiddleWare.recipientRequired,
   async (req, res) => {
-    res.json({ messages: 'Implement my orders page here' });
+    let searchedUser;
+    try {
+      // search for user from id given in params
+      searchedUser = await userData.getById(req.params.id);
+    } catch (error) {
+      res.status(404).render('customError', {
+        title: 'Not found',
+        errorReason: e,
+        pageName: 'Error',
+      });
+    }
+
+    try {
+      let orders = await orderData.getOrdersByUser(req.session.user._id);
+      orders = orders.filter((order) => order.items.length > 0);
+      options = {
+        pageName: 'My Orders',
+        orders,
+      };
+      res.status(200).render('users/orders', {
+        ...options,
+        title: 'Orders',
+        message: req.flash(),
+      });
+    } catch (error) {
+      console.log(`Error occurred: ${error}`);
+      res.status(500).render('customError', {
+        title: 'Internal Server Error',
+        pageName: 'Error',
+        errorReason:
+          'Please contact administrator of the site for more details.',
+      });
+    }
   }
 );
 
 router.get('/:id/settings', async (req, res) => {
-  res.json({ messages: 'Implement Settings page here' });
+  res.status(404).render('customError', {
+    title: 'Not found',
+    errorReason: 'Page is not implemented',
+    pageName: 'Error',
+  });
 });
 
 router.patch(
@@ -159,10 +260,20 @@ router.patch(
   authMiddleWare.adminRequired,
   async (req, res) => {
     let id = req.params.id;
-    let updatedObject = { active: !req.user.active };
+
+    let user;
     try {
-      let user = await userData.getById(id);
-      if (!user) throw 'User Not found';
+      user = await userData.getById(id);
+    } catch (error) {
+      res.status(404).render('customError', {
+        title: 'Not found',
+        errorReason: e,
+        pageName: 'Error',
+      });
+    }
+
+    try {
+      let updatedObject = { active: !req.user.active };
       let updatedUser = await userData.update(id, updatedObject);
       if (updatedUser) {
         req.flash('info', 'Status updated for the user.');

@@ -191,3 +191,7 @@ a.article:hover {
   margin-left: 20px;
   font-size: 0.5em;
 }
+
+.hide {
+  display: none !important;
+}

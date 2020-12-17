@@ -31,6 +31,26 @@ const handlebarsInstance = exphbs.create({
     returnFirst: (array) => {
       return array[0];
     },
+    itemQuantity: (items, donationId) => {
+      let item = items;
+      if (Array.isArray(items)) {
+        item = items.find((item) => item.donation_id === donationId);
+      }
+      return item ? item.quantity : 0;
+    },
+    cartCount: (order) => {
+      if (!order) return 0;
+      return order.quantity;
+    },
+    ordersAvailable: (orders) => {
+      return orders.length !== 0;
+    },
+    placed: (order) => {
+      return order.status === 'placed';
+    },
+    donation_available: (inStock) => {
+      return inStock > 0;
+    },
   },
   partialsDir: ['views/partials/'],
 });

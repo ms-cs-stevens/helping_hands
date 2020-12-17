@@ -1,0 +1,17 @@
+<div class="add-remove">
+  <div class="input-group" data-donation-id={{id}}>
+    <span class="input-group-prepend">
+      <button type="button" class="quantity-left-minus btn btn-danger btn-number" data-type="minus" data-field="">
+        <span class="fa fa-minus"></span>
+      </button>
+    </span>
+    <input type="number" id="quantity" name="quantity" class="form-control input-number" value={{itemQuantity items id}}
+      min="0" max={{in_stock}} readonly>
+    <span class="input-group-append">
+      <button type="button" class="quantity-right-plus btn btn-success btn-number" data-type="plus" data-field="">
+        <i class="fa fa-plus"></i>
+      </button>
+    </span>
+  </div>
+  <span class="small text-danger hide error">klfjhg</span>
+</div>

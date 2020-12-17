@@ -1,0 +1,54 @@
+<ul class="list-group list-group-flush">
+  {{#each items}}
+    <li class="list-group-item">
+      <div class="row card-footer">
+        <div class="col-3">
+          <div class="images-carousel" data-slick='{"slidesToShow": 1, "slidesToScroll": 1}'>
+            {{#each donation.images as |image|}}
+              <img src={{image}} height="50"
+                onerror="this.src='https://res.cloudinary.com/helpinghands101/image/upload/v1608081700/Images/no_preview_bw93bc.jpg'"
+                alt="{{../donation.name}}">
+            {{else}}
+              <img
+                src='https://res.cloudinary.com/helpinghands101/image/upload/v1608081700/Images/no_preview_bw93bc.jpg'
+                height="50" onerror="this.src='/public/images/no_preview.jpg'" alt="{{../donation.name}}">
+            {{/each}}
+          </div>
+        </div>
+        <div class="col-9">
+          <p>
+            <a href="/donations/{{donation._id}}" class="font-weight-bold">
+              {{donation.name}}
+            </a>
+            <br>
+            {{#if ../order_status}}
+              <span class="small text-info"> Quantity ordered: {{quantity}}</span>
+            {{else}}
+              <span class="small text-danger"> In Stock {{donation.in_stock}}</span>
+            {{/if}}
+            <br>
+            <span class="font-italic">
+              {{donation.description}}
+            </span>
+            <br>
+            <span>
+              Available At: {{donation.region}}, {{donation.zipcode}}
+            </span>
+            <br>
+            <span>
+              Donation On: {{dateToString donation.createdAt}}
+            </span>
+          </p>
+          <div class="row">
+            <div class="col-4">
+              {{#if ../order_status}}
+              {{else}}
+                {{>add_remove items= ../items id=donation._id in_stock=donation.in_stock}}
+              {{/if}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+  {{/each}}
+</ul>
