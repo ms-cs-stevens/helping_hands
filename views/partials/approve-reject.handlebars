@@ -4,16 +4,6 @@
       <div class="col-6">
         <a class="btn btn-outline-success form-control" href="/donations/{{id}}/approve">Approve</a>
       </div>
-      {{#if errors}}
-        <div class="validation-errors">
-          <ul class='error-list'>
-            <p class="error-header">Your submission has {{errors.length}} error(s)!</p>
-            {{#each errors as |error|}}
-              <li>{{error}}</li>
-            {{/each}}
-          </ul>
-        </div>
-      {{/if}}
       <div class="col-6">
         <a class="btn btn-outline-danger form-control" href="/donations/{{id}}/reject">Reject</a>
       </div>
