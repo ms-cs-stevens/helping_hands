@@ -171,20 +171,19 @@ router.get(
 
       let options = {};
       if (role_name == 'admin') {
-        let reviewedDonations =
-          allDonations &&
-          allDonations.filter((d) =>
-            ['approved', 'rejected'].includes(d.status)
-          );
-        let submittedDonations =
-          allDonations &&
-          allDonations.filter((d) => ['submitted'].includes(d.status));
+        // let reviewedDonations =
+        //   allDonations &&
+        //   allDonations.filter((d) =>
+        //     ['approved', 'rejected'].includes(d.status)
+        //   );
+        // let submittedDonations =
+        //   allDonations &&
+        //   allDonations.filter((d) => ['submitted'].includes(d.status));
 
         options = {
           pageName: 'Review Donations',
           showApproveReject: true,
-          reviewedDonations,
-          submittedDonations,
+          allDonations,
           title: 'Review Donations',
           messages: req.flash(),
         };

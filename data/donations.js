@@ -63,6 +63,11 @@ module.exports = {
     return donations && donations.filter((d) => d.status == 'approved');
   },
 
+  async filterByState(state) {
+    let donations = await this.allDonations();
+    return donations && donations.filter((d) => d.status == state);
+  },
+
   async getById(id) {
     if (!id) throw 'You must provide an id';
     if (typeof id != 'string' || id.trim().length === 0)

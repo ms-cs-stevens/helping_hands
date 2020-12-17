@@ -70,6 +70,25 @@ router.get('/recent', async (req, res) => {
   }
 });
 
+// filter by state
+router.get('/filter', async (req, res) => {
+  try {
+    let filteredDonations = await donationData.filterByState(req.query.state);
+    res.render('partials/donation_listing', {
+      layout: null,
+      donations: filteredDonations,
+      showApproveReject: true,
+    });
+  } catch (error) {
+    console.log(`Error occurred: ${error}`);
+    res.status(500).render('customError', {
+      title: 'Internal Server Error',
+      pageName: 'Error',
+      errorReason: 'Please contact administrator of the site for more details.',
+    });
+  }
+});
+
 router.post('/search', async (req, res) => {
   let searchTerm = req.body.searchTerm;
   try {

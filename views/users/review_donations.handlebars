@@ -1,16 +1,29 @@
 <div class="container-fluid">
-  {{#if (equal userRole 'admin')}}
-    {{#if submittedDonations}}
-      <h2>Pending For Review</h2>
-      <div class="row row-cols-4 recent-donations">
-        {{>donation_listing donations=submittedDonations}}
+  {{#if (and (equal userRole 'admin') allDonations)}}
+    <div class="form-row" id='filter-donations'>
+      <div class="form-group col-md-6">
+        <label for="donationStateFilter">Filter</label>
+        <select id="donationStateFilter" class="form-control" name="filter">
+          <option value='Approved'>
+            Approved
+          </option>
+          <option value='Submitted'>
+            Submitted
+          </option>
+          <option value='Rejected'>
+            Rejected
+          </option>
+        </select>
       </div>
-    {{/if}}
-    {{#if reviewedDonations}}
+      <div class="donation-listing row row-cols-4">
+        {{>donation_listing donations=allDonations}}
+      </div>
+    </div>
+    {{!-- {{#if reviewedDonations}}
       <h2>Reviewed Donations</h2>
       <div class="row row-cols-4 recent-donations">
         {{>donation_listing donations=reviewedDonations}}
       </div>
-    {{/if}}
+    {{/if}} --}}
   {{/if}}
 </div>
