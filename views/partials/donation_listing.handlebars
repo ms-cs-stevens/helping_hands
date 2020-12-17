@@ -2,26 +2,29 @@
   {{#each donations}}
     <div class="col">
       <div class="card bg-light mb-5 box-shadow">
-        <a class="donation-card-link" href="/donations/{{_id}}">
-          <div class="card-header text-center">
-            {{name}}({{in_stock}})
-          </div>
-          <div class="images-carousel-listing" data-slick='{"slidesToShow": 1, "slidesToScroll": 1}'>
-            {{#each images}}
-              <img src="{{this}}" class="card-img-top card-image" onerror="this.src='/public/images/no_preview.jpg'" alt={{../name}}>
-            {{else}}
+        <div class="images-carousel-listing" data-slick='{"slidesToShow": 1, "slidesToScroll": 1}'>
+          {{#each images as |image|}}
+            <a class="donation-card-link" href="/donations/{{../_id}}">
+              <img src="{{image}}" class="card-img-top card-image" onerror="this.src='/public/images/no_preview.jpg'" alt={{../name}}>
+            </a>
+          {{else}}
+            <a class="donation-card-link" href="/donations/{{../_id}}">
               <img src='https://res.cloudinary.com/helpinghands101/image/upload/v1608081700/Images/no_preview_bw93bc.jpg'
                 height="50" class="card-img-top card-image" onerror="this.src='/public/images/no_preview.jpg'" alt="{{../name}}">
-            {{/each}}
-          </div>
-        </a>
-        {{#if ../showApproveReject}}
-          {{>approve-reject status=status id=_id}}
-        {{/if}}
-        <div class="card-body">
-          {{#if ../showAddRemove}}
-            {{>add_remove quantity=quantity items= ../items id=_id in_stock=in_stock}}
-          {{/if}}
+            </a>
+          {{/each}}
+        </div>
+        <div class="card-footer">
+          <a href="/donations/{{_id}}" class="card-link">
+            <span class="card-title">{{name}}
+              <span class="small text-danger card-text">In Stock {{in_stock}}</span>
+            </span>
+            <br>
+            <span class="card-text small text-muted">Donated 3 days ago</span>
+          </a>
+          <span>{{#if ../showApproveReject}}
+              {{>approve-reject status=status id=_id}}
+            {{/if}}</span>
         </div>
       </div>
     </div>

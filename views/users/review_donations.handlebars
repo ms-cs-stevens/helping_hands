@@ -3,18 +3,23 @@
     <div class="row">
       <div class="col-5 offset-md-7" id='filter-donations'>
         <div class="form-group">
-          <label for="donationStateFilter"><span class="small">Filter By Donation State:</span> </label>
+          <label for="donationStateFilter">
+            <span class="small">Filter By Donation State:</span>
+          </label>
+          <span id="clear-filters" class="hide">
+            <a class="small text-danger" href="/users/{{loggedInUser._id}}/review_donations">Clear all filters</a>
+          </span>
           <select id="donationStateFilter" class="form-control" name="filter">
             <option value="none" selected disabled hidden>
               Select an Option
             </option>
-            <option value='Approved'>
+            <option value='approved'>
               Approved
             </option>
-            <option value='Submitted'>
+            <option value='submitted'>
               Submitted
             </option>
-            <option value='Rejected'>
+            <option value='rejected'>
               Rejected
             </option>
           </select>

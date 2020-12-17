@@ -199,7 +199,3 @@ a.article:hover {
 .card-image {
   min-height: 16rem !important;
 }
-
-.sidebar-user-role {
-  text-transform: capitalize;
-}

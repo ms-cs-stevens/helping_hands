@@ -74,7 +74,7 @@ router.get('/recent', async (req, res) => {
 router.get('/filter', async (req, res) => {
   try {
     let state = req.query.state;
-    if (!state) throw 'You need to provide a state for filtering the item";
+    if (!state) throw 'You need to provide a state for filtering the item';
     let filteredDonations = await donationData.filterByState(state);
     res.render('partials/donation_listing', {
       layout: null,
