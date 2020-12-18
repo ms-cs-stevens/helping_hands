@@ -9,6 +9,7 @@ const router = express.Router();
 const multer = require('multer');
 const multerHelper = require('../helpers/multer');
 const cloudinaryHelper = require('../helpers/cloudinary');
+const xss = require('xss');
 
 //file system
 const fs = require('fs');
@@ -73,7 +74,7 @@ router.get('/recent', async (req, res) => {
 // filter by state
 router.get('/filter', async (req, res) => {
   try {
-    let state = req.query.state;
+    let state = xss(req.query.state);
     if (!state) throw 'You need to provide a state for filtering the item';
     let filteredDonations = await donationData.filterByState(state);
     res.render('partials/donation_listing', {
@@ -92,7 +93,7 @@ router.get('/filter', async (req, res) => {
 });
 
 router.post('/search', async (req, res) => {
-  let searchTerm = req.body.searchTerm;
+  let searchTerm = xss(req.body.searchTerm);
   try {
     if (!searchTerm.trim().length) {
       req.flash('danger', 'Please enter search term.');
@@ -142,6 +143,8 @@ router.post(
   authMiddleware.donorRequired,
   multerHelper.upload,
   async (req, res) => {
+    let reqBod = {};
+
     try {
       const uploader = async (path) =>
         await cloudinaryHelper.uploads(path, 'Images');
@@ -165,14 +168,19 @@ router.post(
         images.push(u.url);
       });
 
-      let { name, description, quantity, region, zipcode } = req.body;
+      reqBod.name = xss(req.body.name);
+      reqBod.description = xss(req.body.description);
+      reqBod.quantity = xss(req.body.quantity);
+      reqBod.region = xss(req.body.region);
+      reqBod.zipcode = xss(req.body.zipcode);
+
       createdDonation = await donationData.create(
-        name,
-        description,
-        quantity,
-        region,
-        zipcode,
-        images,
+        reqBod.name,
+        reqBod.description,
+        reqBod.quantity,
+        reqBod.region,
+        reqBod.zipcode,
+        reqBod.images,
         req.session.user._id
       );
 
@@ -186,14 +194,14 @@ router.post(
         res.status(422).render(`donations/new`, {
           title: 'Donate Goods',
           pageName: 'New Donation',
-          donation: req.body,
+          donation: reqBod,
           errors,
         });
       } else {
         res.status(422).render(`donations/new`, {
           title: 'Donate Goods',
           pageName: 'New Donation',
-          donation: req.body,
+          donation: reqBod,
           errors: [err],
         });
       }
@@ -206,7 +214,7 @@ router.get('/:id', async (req, res) => {
   let donation,
     user = req.session.user;
   try {
-    donation = await donationData.getById(req.params.id);
+    donation = await donationData.getById(xss(req.params.id));
   } catch (error) {
     // TODO: Investigate the issue
     // Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
@@ -253,7 +261,7 @@ router.get(
   donationMiddleware.canPerformActions,
   async (req, res) => {
     try {
-      let donation = await donationData.getById(req.params.id);
+      let donation = await donationData.getById(xss(req.params.id));
       res.render('donations/edit', {
         title: 'Edit Donation',
         pageName: 'Edit Donation',
@@ -278,8 +286,15 @@ router.patch(
   donationMiddleware.canPerformActions,
   async (req, res) => {
     let donation;
-    let id = req.params.id;
-    let donationInfo = req.body;
+    let id = xss(req.params.id);
+    let donationInfo = {};
+
+    let reqBod = req.body;
+    let keys = Object.keys(reqBod);
+
+    for (let i = 0; i < keys.length; i++)
+      donationInfo[keys[i]] = reqBod[keys[i]];
+
     try {
       donation = await donationData.getById(id);
       if (!donation) throw `Donation not found`;
