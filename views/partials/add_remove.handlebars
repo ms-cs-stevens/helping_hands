@@ -4,7 +4,7 @@
     <span class="input-group-prepend">
       <label for="add-item" class="small hide">Add Item</label>
       <button type="button" class="quantity-left-minus btn btn-danger btn-number" data-type="minus" id="add-item"
-        data-field="" name="Add Item">
+        data-field="" name="Add Item" data-toggle="tooltip" data-placement="top" title="Remove from cart">
         <span class="fa fa-minus"></span>
       </button>
     </span>
@@ -12,7 +12,8 @@
       min="0" max={{in_stock}} readonly>
     <span class="input-group-append">
       <label for="remove-item" class="small hide">Remove Item</label>
-      <button type="button" class="quantity-right-plus btn btn-success btn-number" data-type="plus" id="remove-item"
+
+      <button type="button" class="quantity-right-plus btn btn-success btn-number" data-toggle="tooltip" data-placement="top" title="Add to cart" data-type="plus" id="remove-item"
         data-field="">
         <i class="fa fa-plus"></i>
       </button>
