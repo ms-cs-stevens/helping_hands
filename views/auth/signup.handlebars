@@ -5,30 +5,30 @@
     <div class="form-row">
       <div class="form-group col-md-6">
         <label for="firstname">First Name</label>
-        <input type="text" class="form-control" id="firstname" name="firstname" required autofocus>
+        <input type="text" class="form-control" id="firstname" name="firstname" required="required" autofocus>
       </div>
       <div class="form-group col-md-6">
         <label for="lastname">Last Name</label>
-        <input type="text" class="form-control" id="lastname" name="lastname" required>
+        <input type="text" class="form-control" id="lastname" name="lastname" required="required">
       </div>
     </div>
     <div class="form-group">
       <label for="inputEmail">Email</label>
-      <input type="email" class="form-control" id="inputEmail" name="email" required>
+      <input type="email" class="form-control" id="inputEmail" name="email" required="required">
     </div>
     <div class="form-row">
       <div class="form-group col-md-6">
         <label for="inputRole">Type</label>
         {{#each roles}}
           {{#if (equal name ../uType)}}
-            <input type="hidden" class="form-control" id="inputRole" name="role_id" required value={{_id}}>
-            <input type="text" class="form-control" id="inputRole" name="role" readonly value={{name}}>
+            <input type="hidden" class="form-control" id="inputRole" name="role_id" required="required" value={{_id}}>
+            <input type="text" class="form-control" id="inputRole" name="role" readonly='readonly' value={{name}}>
           {{/if}}
         {{/each}}
       </div>
       <div class="form-group col-md-6">
         <label for="inputGender">Gender</label>
-        <select id="inputGender" class="form-control" name="gender" required>
+        <select id="inputGender" class="form-control" name="gender" required="required">
           <option>Male</option>
           <option>Female</option>
           <option>Other</option>
@@ -37,7 +37,7 @@
     </div>
     <div class="form-group">
       <label for="inputPassword">Password</label>
-      <input type="password" class="form-control" id="inputPassword" name="password" required>
+      <input type="password" class="form-control" id="inputPassword" name="password" required="required">
     </div>
     <div class="form-group">
       <label for="inputPassword2">Confirm Password</label>
