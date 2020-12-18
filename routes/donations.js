@@ -26,7 +26,7 @@ router.get('/', async (req, res) => {
         req.session.user.order = order;
       }
       if (order.quantity > 0) items = await itemData.getByOrder(order._id);
-      showAddRemove = ['admin', 'recipient'].includes(sessionUser.role_name);
+      showAddRemove = 'recipient' == sessionUser.role_name;
     }
 
     let options = {
@@ -233,7 +233,7 @@ router.get('/:id', async (req, res) => {
       title: 'Donation',
       pageName: 'Donation Details',
       allowActions,
-      showAddRemove: user && ['admin', 'recipient'].includes(user.role_name),
+      showAddRemove: user && 'recipient' == user.role_name,
       layout: req.session.user ? 'main2' : 'main',
       messages: req.flash(),
     });

@@ -6,13 +6,13 @@
           {{#if images}}
             {{#each images as |image|}}
               <a class="donation-card-link" href="/donations/{{../_id}}">
-                <img src="{{image}}" class="card-img-top card-image" onerror="this.src='/public/images/no_preview.jpg'" alt={{../name}}>
+                <img src="{{image}}" class="card-img-top card-image" onerror="this.src='/public/images/no_preview.jpg'" alt="{{../name}}">
               </a>
             {{/each}}
           {{else}}
             <a class="donation-card-link" href="/donations/{{_id}}">
               <img src='https://res.cloudinary.com/helpinghands101/image/upload/v1608081700/Images/no_preview_bw93bc.jpg'
-                height="50" class="card-img-top card-image" onerror="this.src='/public/images/no_preview.jpg'" alt="{{../name}}">
+                height="50" class="card-img-top card-image" onerror="this.src='/public/images/no_preview.jpg'" alt="{{name}}">
             </a>
           {{/if}}
 
@@ -23,7 +23,7 @@
               <span class="small text-danger card-text">In Stock {{in_stock}}</span>
             </span>
             <br>
-            <span class="card-text small text-muted">{{dateToString createdAt}}</span>
+            <span class="card-text small text-muted">Donated {{dateToString createdAt}}</span>
           </a>
           <span>{{#if ../showApproveReject}}
               {{>approve-reject status=status id=_id}}
