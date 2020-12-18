@@ -4,8 +4,10 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-const xss = require('xss-clean');
-app.use(xss());
+const xssClean = require('xss-clean');
+app.use(xssClean());
+
+const xss = require('xss');
 
 const session = require('express-session');
 const cookieParser = require('cookie-parser');

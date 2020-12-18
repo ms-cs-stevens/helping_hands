@@ -24,10 +24,20 @@ Make sure you have MongoDB installed on your system and it's running.
 
 1. `yarn install` or `npm install`
 
+<<<<<<< HEAD
+
 ### Creating dummy data on the app
 
 1. `yarn seed` or `npm run seed`
    Checkout dump.js file for login credentials
+   =======
+
+### Creating starter data on the application
+
+1. `yarn seed` or `npm run seed`
+   We need to add admin user from the backend (Will be done automatically when we run the seed file).
+   We must have roles(donor, admin and recipient) set up in our application before running it. So `yarn seed` is very important.
+   > > > > > > > 2159acaaa25abd6820a0822b97d64a10cc2dbfd0
 
 #### Running the app on local
 
