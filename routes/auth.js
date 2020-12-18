@@ -58,8 +58,7 @@ router.get('/logout', authMiddlewares.loginRequired, async (req, res) => {
 });
 
 router.get('/signup', authMiddlewares.isLoggedIn, async (req, res) => {
-  let uType;
-  if (req.query.uType) uType = xss(req.query.uType);
+  let uType = xss(req.query.uType);
   if (!uType || !['Donor', 'Recipient'].includes(uType)) {
     res.status(404).render('customError', {
       title: 'Not found',

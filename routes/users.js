@@ -30,7 +30,7 @@ router.get('/', authMiddleWare.adminRequired, async (req, res) => {
 
 router.get('/:id/donations', authMiddleWare.donorRequired, async (req, res) => {
   let user;
-  let id = req.params.id;
+  let id = xss(req.params.id);
   try {
     user = await userData.getById(id);
   } catch (error) {
@@ -44,7 +44,8 @@ router.get('/:id/donations', authMiddleWare.donorRequired, async (req, res) => {
   try {
     let allDonations = await donationData.allDonations();
     let myDonations =
-      allDonations && allDonations.filter((d) => d.donor_id == req.params.id);
+      allDonations &&
+      allDonations.filter((d) => d.donor_id == xss(req.params.id));
     options = {
       pageName: 'My Donations',
       myDonations,
@@ -69,7 +70,7 @@ router.get(
   authMiddleWare.authorizedUserRequired,
   async (req, res) => {
     try {
-      let userOldData = await userData.getById(req.params.id);
+      let userOldData = await userData.getById(xss(req.params.id));
 
       res.render('users/edit', {
         title: 'Profile Page',
@@ -95,11 +96,12 @@ router.patch(
   '/:id/update',
   authMiddleWare.authorizedUserRequired,
   async (req, res) => {
-    let id = req.params.id;
+    let id = xss(req.params.id);
 
     let reqBod = req.body;
     let keys = Object.keys(reqBod);
 
+    let updateData = {};
     for (let i = 0; i < keys.length; i++) updateData[keys[i]] = reqBod[keys[i]];
 
     let updatedUserProfile = {};
@@ -154,7 +156,7 @@ router.get(
     let searchedUser;
     try {
       // search for user from id given in params
-      searchedUser = await userData.getById(req.params.id);
+      searchedUser = await userData.getById(xss(req.params.id));
     } catch (error) {
       res.status(404).render('customError', {
         title: 'Not found',
@@ -201,7 +203,7 @@ router.get(
     let searchedUser;
     try {
       // search for user from id given in params
-      searchedUser = await userData.getById(req.params.id);
+      searchedUser = await userData.getById(xss(req.params.id));
     } catch (error) {
       res.status(404).render('customError', {
         title: 'Not found',
@@ -238,7 +240,7 @@ router.get('/:id/address', authMiddleWare.loginRequired, async (req, res) => {
   let searchedUser;
   try {
     // search for user from id given in params
-    searchedUser = await userData.getById(req.params.id);
+    searchedUser = await userData.getById(xss(req.params.id));
   } catch (error) {
     res.status(404).render('customError', {
       title: 'Not found',
@@ -252,7 +254,7 @@ router.get('/:id/address', authMiddleWare.loginRequired, async (req, res) => {
     if (searchedUser && searchedUser._id != sessionUser._id)
       throw 'Invalid User';
     let options = {};
-    let addressOldData = await addressData.getByUser(req.params.id);
+    let addressOldData = await addressData.getByUser(xss(req.params.id));
     if (!addressOldData) {
       options = {
         pageName: 'My Address',
@@ -279,9 +281,11 @@ router.get('/:id/address', authMiddleWare.loginRequired, async (req, res) => {
 // //Address Route
 router.post('/:id/address', authMiddleWare.loginRequired, async (req, res) => {
   let searchedUser;
+  let reqBod;
+
   try {
     // search for user from id given in params
-    searchedUser = await userData.getById(req.params.id);
+    searchedUser = await userData.getById(xss(req.params.id));
   } catch (error) {
     res.status(404).render('customError', {
       title: 'Not found',
@@ -291,8 +295,15 @@ router.post('/:id/address', authMiddleWare.loginRequired, async (req, res) => {
   }
 
   try {
-    let address = await addressData.getByUser(req.params.id);
-    let { street, apartment, state, city, zipcode } = req.body;
+    let address = await addressData.getByUser(xss(req.params.id));
+
+    reqBod = req.body;
+
+    let street = xss(reqBod.street),
+      apartment = xss(reqBod.apartment),
+      state = xss(reqBod.state),
+      city = xss(reqBod.city),
+      zipcode = xss(reqBod.zipcode);
 
     if (address) {
       let updatedAddress = await addressData.update(address._id, {
@@ -323,7 +334,7 @@ router.post('/:id/address', authMiddleWare.loginRequired, async (req, res) => {
       res.status(422).render(`users/addressData`, {
         title: 'My Address',
         pageName: 'Address',
-        userAddress: req.body,
+        userAddress: reqBod,
         errors,
       });
     } else {
@@ -331,7 +342,7 @@ router.post('/:id/address', authMiddleWare.loginRequired, async (req, res) => {
       res.status(422).render(`users/addressData`, {
         title: 'My Address',
         pageName: 'Address',
-        userAddress: req.body,
+        userAddress: reqBod,
         errors: [error],
       });
     }
@@ -342,7 +353,7 @@ router.patch(
   '/:id/toggle_active',
   authMiddleWare.adminRequired,
   async (req, res) => {
-    let id = req.params.id;
+    let id = xss(req.params.id);
 
     let user;
     try {
