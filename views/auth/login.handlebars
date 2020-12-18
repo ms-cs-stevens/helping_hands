@@ -1,5 +1,5 @@
 <div class="container col-lg-4 my-5">
-  <h2 class="page_title">Login</h2>
+  <h1 class="page_title">Login</h1>
   <form id="login-form" method="post" action="/auth/login">
     <div class="form-group">
       <label for="email">Email:</label>
@@ -10,8 +10,8 @@
       <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="password" required>
     </div>
     <div class="form-group">
-      <a href="/auth/signup?uType=Donor">Sign up as Donor?</a>&nbsp; &nbsp;<a href="/auth/signup?uType=Recipient">Sign up as Recipient?</a>
+      <a class="text-primary" href="/auth/signup?uType=Donor">Sign up as Donor?</a>&nbsp; &nbsp;<a class="text-primary" href="/auth/signup?uType=Recipient">Sign up as Recipient?</a>
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-success">Submit</button>
   </form>
 </div>

@@ -65,8 +65,7 @@
         <div class="images-carousel" data-slick='{"slidesToShow": 1, "slidesToScroll": 1}'>
           {{#each donation.images as |image|}}
             <img src={{image}} height="50"
-              onerror="this.src='https://res.cloudinary.com/helpinghands101/image/upload/v1608081700/Images/no_preview_bw93bc.jpg'"
-              alt="{{../donation.name}}">
+              onerror="this.src='https://res.cloudinary.com/helpinghands101/image/upload/v1608081700/Images/no_preview_bw93bc.jpg'" alt="{{../donation.name}}">
           {{else}}
             <img src='https://res.cloudinary.com/helpinghands101/image/upload/v1608081700/Images/no_preview_bw93bc.jpg'
               height="50" onerror="this.src='/public/images/no_preview.jpg'" alt="{{../donation.name}}">
