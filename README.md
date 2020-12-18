@@ -15,3 +15,17 @@
 ### Donors will sign up on our platform and register as donors. Once they are validated and login, they will be given accessibility to create “donation(s)”
 
 ### Recipients will be the needy; they will log on to the website to view the listed items and contact the donors for receiving the listed donation
+
+#### Login credentials for dummy users in the system: 
+
+##### Admin Credentials
+email: admin@gmail.com
+password: elementarymydearwatson
+
+##### Donor Credentials
+email: donor@gmail.com
+password: damnyoujackdonaghy
+
+##### Recipient Credentials
+email: recipient@gmail.com
+password: quidditch
