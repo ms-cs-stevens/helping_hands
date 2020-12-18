@@ -29,7 +29,7 @@ let exportedMethods = {
 
     const user = await User.findById(id);
 
-    if (!user) throw 'User not found';
+    if (!user) throw 'Invalid email or password!';
     return user;
   },
 
@@ -40,7 +40,7 @@ let exportedMethods = {
 
     const user = await User.findOne({ email: email });
 
-    if (!user) throw 'User not found';
+    if (!user) throw 'Invalid email or password!';
 
     return user;
   },
@@ -98,8 +98,8 @@ let exportedMethods = {
     if (!user.email) throw 'Provide email';
 
     if (!user.password) throw 'Provide password';
-    if (user.password !== user.password2) throw 'Password does not match';
-    if (user.password < 6) throw 'Password is less than 6 characters';
+
+    this.validateUpdateInfo(user);
   },
 
   checkName(input) {
@@ -118,21 +118,19 @@ let exportedMethods = {
 
   checkEmail(input) {
     if (typeof input !== 'string') throw `E-Mail Address has to be a string.`;
-    const emailformat = new RegExp(
-      '(([^<>()[]\\.,;:s@"]+(.[^<>()[]\\.,;:s@"]+)*)|(".+"))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))'
-    );
+
+    const emailformat = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
     if (!emailformat.test(input.toLowerCase()))
       throw `${input} is not a valid E-Mail Address.`;
   },
 
   checkPassword(input) {
-    const passwordFormat = new RegExp(
-      '(?=.*d)(?=.*[a-zA-Z])[a-zA-Z0-9].{6,16}'
-    );
+    const passwordFormat = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,16}$/;
 
     if (input.length >= 6 && input.length <= 16) {
-      if (passwordFormat.test(input))
-        throw `Password needs to be a valid string of 6-16 characters with at least 1 digit and 1 special character`;
+      if (!passwordFormat.test(input))
+        throw `Password needs to be a valid string of 6 - 16 characters with at least one uppercase letter, one lowercase letter, one number and one special character`;
     } else
       throw `Invalid length of password, password needs to be a minimum of 6 characters and a maximum of 16 characters`;
   },

@@ -28,13 +28,25 @@ router.post('/login', authMiddlewares.isLoggedIn, async (req, res) => {
     req.flash('success', 'Logged in successfully!');
 
     res.redirect(`/donations`);
-  } catch (e) {
-    res.status(401).render('auth/login', {
-      title: 'Signin',
-      pageName: 'Login',
-      error: e,
-      layout: 'main.handlebars',
-    });
+  } catch (err) {
+    if (err.errors) {
+      let errorKeys = Object.keys(err.errors);
+      let errors = [];
+      errorKeys.forEach((key) => errors.push(err.errors[key].message));
+      res.status(401).render(`auth/login`, {
+        title: 'Signin',
+        pageName: 'Login',
+        layout: 'main',
+        errors,
+      });
+    } else {
+      res.status(401).render('auth/login', {
+        title: 'Signin',
+        pageName: 'Login',
+        errors: [err],
+        layout: 'main',
+      });
+    }
   }
 });
 
@@ -77,28 +89,50 @@ router.get('/signup', authMiddlewares.isLoggedIn, async (req, res) => {
 });
 
 router.post('/register', authMiddlewares.isLoggedIn, async (req, res) => {
+  let userInfo = req.body;
+  let role = await Role.findById(userInfo.role_id);
+  let role_name = role.name.toLocaleLowerCase();
   try {
-    let userInfo = req.body;
     userData.validateUserInfo(userInfo);
     let user = await userData.create(userInfo);
     if (user) {
       let order = await orderData.findOrCreateDraftOrder(user._id);
       user.order = order; // Save draft order in session
-      let role = await Role.findById(user.role_id);
-      let role_name = role.name.toLocaleLowerCase();
       user.role_name = role_name; // Save user role name in session
       req.session.user = user;
 
       res.redirect(`/donations`);
     }
-  } catch (error) {
-    req.flash('error', error);
-    res.status(422).render('customError', {
-      title: 'Invalid Parameter',
-      pageName: 'Sign Up',
-      errorReason: error,
-      layout: 'main.handlebars',
-    });
+  } catch (err) {
+    let roles = await Role.find(
+      { name: { $in: ['Donor', 'Recipient'] } },
+      '_id name'
+    );
+    if (err.errors) {
+      let errorKeys = Object.keys(err.errors);
+      let errors = [];
+      errorKeys.forEach((key) => errors.push(err.errors[key].message));
+      res.status(422).render(`auth/signup`, {
+        title: 'Sign Up',
+        pageName: 'Sign Up',
+        roles: roles,
+        uType: role_name,
+        layout: 'main.handlebars',
+        newUser: userInfo,
+        errors,
+      });
+    } else {
+      let error = err || err.message;
+      res.status(422).render(`auth/signup`, {
+        title: 'Sign Up',
+        pageName: 'Sign Up',
+        roles: roles,
+        uType: role_name,
+        layout: 'main.handlebars',
+        newUser: userInfo,
+        errors: [error],
+      });
+    }
   }
 });
 
