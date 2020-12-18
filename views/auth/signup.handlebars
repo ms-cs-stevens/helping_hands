@@ -33,7 +33,8 @@
         {{#each roles}}
           {{#if (equal name ../uType)}}
             <input type="hidden" class="form-control" id="inputRole" name="role_id" required value={{_id}}>
-            <input type="text" class="form-control" id="inputRole" name="role" readonly value={{name}}>
+            <label for="inputType" class="hide">Type</label>
+            <input type="text" class="form-control" id="inputType" name="role" readonly value={{name}}>
           {{/if}}
         {{/each}}
       </div>

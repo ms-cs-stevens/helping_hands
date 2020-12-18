@@ -2,12 +2,13 @@
   <div class="row justify-content-between">
     <div class='col-7'></div>
     <div class="col-5">
-      <form id="search-donation" action="/donations/search" method="post">
+      <form id="search-donation-form" action="/donations/search" method="post">
         <div class="input-group mb-3">
           <label for="search-donation" class="small hide">Search</label>
-          <input id="search-donation" type="text" class="form-control" name="searchTerm" placeholder="Enter search term here"
-            aria-label="Search for any donation by name, region, etc." aria-describedby="button-addon2"
-            aria-placeholder="Search for any donation by name, region, etc." value={{searchTerm}}>
+          <input id="search-donation" type="text" class="form-control" name="searchTerm"
+            placeholder="Enter search term here" aria-label="Search for any donation by name, region, etc."
+            aria-describedby="button-addon2" aria-placeholder="Search for any donation by name, region, etc."
+            value={{searchTerm}}>
           <button class="btn btn-outline-success" type="submit">search</button>
         </div>
       </form>
