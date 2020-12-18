@@ -21,30 +21,39 @@ Create a file with the exact name `variables.env` and copy the contents from `va
 Make sure you have MongoDB installed on your system and it's running.
 
 #### Setting up the installation
+
 1. `yarn install` or `npm install`
 
 ### Creating dummy data on the app
+
 1. `yarn seed` or `npm run seed`
-Checkout dump.js file for login credentials
+   Checkout dump.js file for login credentials
 
 #### Running the app on local
+
 1. `yarn start` or `npm start`
 
 app will start running on localhost:3000
 
-### Login credentials for dummy users in the system: 
+### Login credentials for dummy users in the system:
 
 #### Admin Credentials
+
 ###### email: admin@gmail.com
-###### password: elementarymydearwatson
+
+###### password: HelpingHand@2020
 
 #### Donor Credentials
+
 ###### email: donor@gmail.com
-###### password: damnyoujackdonaghy
+
+###### password: HelpingHand@2020
 
 #### Recipient Credentials
+
 ###### email: recipient@gmail.com
-###### password: quidditch
+
+###### password: HelpingHand@2020
 
 ### Default Features
 
@@ -52,9 +61,9 @@ app will start running on localhost:3000
 2. XSS attack prevention
 3. Landing page
 
-
 ### Core Features in the application
-1. Donations CRUD 
+
+1. Donations CRUD
 2. Order and Cart feature
 3. Adding more than 1 images for donation
 4. Search and Filter features for donations

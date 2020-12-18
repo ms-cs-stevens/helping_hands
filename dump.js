@@ -24,8 +24,7 @@ module.exports = {
       gender: 'Male',
       role_id: 1,
       hashedPassword:
-        '$2a$16$7JKSiEmoP3GNDSalogqgPu0sUbwder7CAN/5wnvCWe6xCKAKwlTD.',
-      // Password: 'elementarymydearwatson'
+        '$2a$16$CVsoxBlSgxVJqAVkTsGxvew.VPuwVMNAacsvXXevnM2DvJLSOFR/C',
     },
     {
       // donor user
@@ -36,8 +35,7 @@ module.exports = {
       gender: 'Female',
       role_id: 2,
       hashedPassword:
-        '$2a$16$SsR2TGPD24nfBpyRlBzINeGU61AH0Yo/CbgfOlU1ajpjnPuiQaiDm',
-      // Password: 'damnyoujackdonaghy'
+        '$2a$16$CVsoxBlSgxVJqAVkTsGxvew.VPuwVMNAacsvXXevnM2DvJLSOFR/C',
     },
     {
       // recipient user
@@ -48,8 +46,7 @@ module.exports = {
       gender: 'Male',
       role_id: 3,
       hashedPassword:
-        '$2a$16$4o0WWtrq.ZefEmEbijNCGukCezqWTqz1VWlPm/xnaLM8d3WlS5pnK',
-      // Password: 'quidditch'
+        '$2a$16$CVsoxBlSgxVJqAVkTsGxvew.VPuwVMNAacsvXXevnM2DvJLSOFR/C',
     },
   ],
   donations: [
