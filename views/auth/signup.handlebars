@@ -1,20 +1,31 @@
 <div class="container col-md-6 my-5">
   <h1 class="page_title">Signup</h1>
+  {{#if errors}}
+    <div class="validation-errors">
+      <ul class='error-list'>
+        <p class="error-header">Your submission has {{errors.length}} error(s)!</p>
+        {{#each errors as |error|}}
+          <li>{{error}}</li>
+        {{/each}}
+      </ul>
+    </div>
+  {{/if}}
   <form id="signup_form" action="/auth/register" method="POST"
     oninput='password2.setCustomValidity(password2.value != password.value ? "Passwords do not match." : "")'>
     <div class="form-row">
       <div class="form-group col-md-6">
         <label for="firstname">First Name</label>
-        <input type="text" class="form-control" id="firstname" name="firstname" required autofocus>
+        <input type="text" class="form-control" id="firstname" name="firstname" value="{{newUser.firstname}}" autofocus
+          required>
       </div>
       <div class="form-group col-md-6">
         <label for="lastname">Last Name</label>
-        <input type="text" class="form-control" id="lastname" name="lastname" required>
+        <input type="text" class="form-control" id="lastname" name="lastname" value="{{newUser.lastname}}" required>
       </div>
     </div>
     <div class="form-group">
       <label for="inputEmail">Email</label>
-      <input type="email" class="form-control" id="inputEmail" name="email" required>
+      <input type="email" class="form-control" id="inputEmail" name="email" value="{{newUser.email}}" required>
     </div>
     <div class="form-row">
       <div class="form-group col-md-6">
@@ -28,10 +39,10 @@
       </div>
       <div class="form-group col-md-6">
         <label for="inputGender">Gender</label>
-        <select id="inputGender" class="form-control" name="gender" required>
-          <option>Male</option>
-          <option>Female</option>
-          <option>Other</option>
+        <select id="inputGender" class="form-control" name="gender" value="{{newUser.gender}}" required>
+          <option {{optionSelected 'Male' newUser.gender}}>Male</option>
+          <option {{optionSelected 'Female' newUser.gender}}>Female</option>
+          <option {{optionSelected 'Other' newUser.gender}}>Other</option>
         </select>
       </div>
     </div>

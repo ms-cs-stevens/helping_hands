@@ -18,7 +18,7 @@ const handlebarsInstance = exphbs.create({
       return moment(date).fromNow();
     },
     equal: (a, b) => {
-      return a == b;
+      return a.toLocaleLowerCase() == b.toLocaleLowerCase();
     },
     or: (exp1, exp2) => {
       return exp1 || exp2;
@@ -48,6 +48,9 @@ const handlebarsInstance = exphbs.create({
     },
     donation_available: (inStock) => {
       return inStock > 0;
+    },
+    optionSelected: (option, value) => {
+      return option === value ? 'selected' : '';
     },
   },
   partialsDir: ['views/partials/'],
