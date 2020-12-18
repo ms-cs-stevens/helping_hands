@@ -16,16 +16,16 @@
 
 ### Recipients will be the needy; they will log on to the website to view the listed items and contact the donors for receiving the listed donation
 
-#### Login credentials for dummy users in the system: 
+### Login credentials for dummy users in the system: 
 
-##### Admin Credentials
-email: admin@gmail.com
-password: elementarymydearwatson
+#### Admin Credentials
+###### email: admin@gmail.com
+###### password: elementarymydearwatson
 
-##### Donor Credentials
-email: donor@gmail.com
-password: damnyoujackdonaghy
+#### Donor Credentials
+###### email: donor@gmail.com
+###### password: damnyoujackdonaghy
 
-##### Recipient Credentials
-email: recipient@gmail.com
-password: quidditch
+#### Recipient Credentials
+###### email: recipient@gmail.com
+###### password: quidditch
