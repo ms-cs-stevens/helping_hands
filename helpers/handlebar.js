@@ -18,8 +18,12 @@ const handlebarsInstance = exphbs.create({
       return moment(date).fromNow();
     },
     equal: (a, b) => {
-      a ||= '';
-      b ||= '';
+      if (!a) {
+        a = '';
+      }
+      if (!b) {
+        b = '';
+      }
       return a.toLocaleLowerCase() == b.toLocaleLowerCase();
     },
     or: (exp1, exp2) => {
