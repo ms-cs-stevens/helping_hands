@@ -1,5 +1,7 @@
 # HelpingHands
 
+[Video presentation Link](https://youtu.be/7pqO0ecH5oM)
+
 People are always up to support a good cause, but most are put off by the hassle it entails. Today, most people are caught up with their own lives and need a better way of helping the less fortunate. Like all other activities, a more efficient platform might even stimulate more frequent donations to the needy
 
 Often, people that don't have enough money to donate want to contribute by giving out goods, but there are very limited avenues for easily donating goods in a manner that ensures
